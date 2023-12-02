@@ -1,0 +1,40 @@
+server:
+    port: 80
+    servlet:
+        context-path: /
+        application-display-name: hhp
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+
+# Spring
+spring:
+    #profiles
+    profiles:
+        active: 
+        - local
+        # - dev
+        # - prod
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 300MB
+            max-request-size: 315MB
+            location: /DATA/upload
+    mvc:
+        pathmatch:
+            matching-strategy: ant-path-matcher
+
+springdoc:
+    swagger-ui:
+        groups-order: DESC
+        doc-expansion: none
+        tags-sorter: alpha
+        operationsSorter: method
+        display-request-duration: true
+    default-consumes-media-type: application/json
+    default-produces-media-type: application/json
+
+

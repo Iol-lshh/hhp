@@ -1,0 +1,26 @@
+server:
+    port: 8080
+    servlet:
+        application-display-name: hhp-dev
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+
+# 액추에이터 설정
+management:
+  endpoint:
+    health:
+      show-details: always
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+# 스웨거 설정
+springdoc:
+    api-docs:
+        enabled: true
+

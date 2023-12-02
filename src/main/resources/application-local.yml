@@ -1,0 +1,33 @@
+# server
+server:
+    port: 80
+    servlet:
+        application-display-name: hhp-local
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+# Spring
+spring:
+    devtools:
+        livereload:
+            enabled: true
+        restart:
+            enabled: true
+
+# 액추에이터
+management:
+  endpoint:
+    health:
+      show-details: always
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+# 스웨거
+springdoc:
+    api-docs:
+        enabled: true
