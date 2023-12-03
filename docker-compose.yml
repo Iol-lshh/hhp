@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  hhp:
+    build:
+      context: "./"
+    container_name: "hhp"
+  ports:
+    - 80:80
+  # environment:
+  #   SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOSTNAME}:${DB_PORT}/${DB_NAME}
+  #   SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+  #   SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}

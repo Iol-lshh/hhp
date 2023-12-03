@@ -1,8 +1,6 @@
 server:
-    port: 80
     servlet:
         context-path: /
-        application-display-name: hhp
         encoding:
             charset: UTF-8
             enabled: true
@@ -15,14 +13,8 @@ spring:
         active: 
         - local
         # - dev
+        # - stg
         # - prod
-    servlet:
-        multipart:
-            enabled: true
-            file-size-threshold: 2KB
-            max-file-size: 300MB
-            max-request-size: 315MB
-            location: /DATA/upload
     mvc:
         pathmatch:
             matching-strategy: ant-path-matcher
