@@ -18,6 +18,13 @@ spring:
     mvc:
         pathmatch:
             matching-strategy: ant-path-matcher
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 300MB
+            max-request-size: 315MB
+            location: /DATA/upload
 
 springdoc:
     swagger-ui:

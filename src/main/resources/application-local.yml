@@ -10,13 +10,6 @@ spring:
       enabled: true
     restart:
       enabled: true
-  servlet:
-    multipart:
-      enabled: true
-      file-size-threshold: 2KB
-      max-file-size: 300MB
-      max-request-size: 315MB
-      location: /DATA/upload
 
 # 액추에이터
 management:
@@ -29,8 +22,9 @@ management:
     web:
       exposure:
         include: 
-          - health
-          - info
+          - "*"
+          # - health
+          # - info
   info:    
     build:
       enabled: true
