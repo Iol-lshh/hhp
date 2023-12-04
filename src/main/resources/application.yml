@@ -10,11 +10,11 @@ server:
 spring:
     #profiles
     profiles:
-        active: 
-        - local
-        # - dev
-        # - stg
-        # - prod
+        active:
+            - local
+            # - dev
+            # - stg
+            # - prod
     mvc:
         pathmatch:
             matching-strategy: ant-path-matcher
