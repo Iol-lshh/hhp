@@ -27,14 +27,14 @@ jobs:
     # 이미지 빌드
     - name: Build the Docker image
       id: image_build
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:${{ steps.set_timestamp.outputs.timestamp }}
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}
           
     # 실패 처리
     - name: Check build logs if the build fails
       if: steps.image_build.outcome != 'success'
-      run: echo "빌드 실패!" && docker buildx inspect ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:${{ steps.set_timestamp.outputs.timestamp }}
+      run: echo "빌드 실패!" && docker buildx inspect ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}
 
     # 성공 처리
     - name: Push the Docker image to Docker Hub
       if: steps.image_build.outcome == 'success'
-      run: docker push docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:${{ steps.set_timestamp.outputs.timestamp }}
+      run: docker push docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}
