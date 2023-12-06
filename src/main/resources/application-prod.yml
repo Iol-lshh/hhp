@@ -1,7 +1,27 @@
 server:
-    port: 80
-    servlet:
-        application-display-name: hhp
+  port: 80
+  servlet:
+    application-display-name: hhp
+
+spring:
+  # Database
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  sql:
+    init:
+      platform: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
 
 # 액추에이터 설정
 management:
@@ -17,5 +37,5 @@ management:
 
 # 스웨거 설정
 springdoc:
-    api-docs:
-        enabled: false
+  api-docs:
+    enabled: false
