@@ -24,10 +24,7 @@ jobs:
 
     # 이미지 빌드
     - name: Build the Docker image
-      uses: docker/build-action@v3
-      with:
-        context: .
-        dockerfile: Dockerfile
+      run: docker build . --file Dockerfile --tag hhp-app:$(date +%s)
           
     # 실패 처리
     - name: Check build logs if the build fails
