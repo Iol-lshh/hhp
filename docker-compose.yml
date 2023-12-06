@@ -13,11 +13,6 @@ services:
       - db
     env_file:
       - "./compose_data/local/hhp.env"
-    environment:
-      spring.profiles.active: ${ENV_SPRING_PROFILES_ACTIVE}
-      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOSTNAME}:${DB_PORT}/${DB_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
 
   db:
     build:
