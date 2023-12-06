@@ -8,7 +8,7 @@ COPY build.gradle settings.gradle ./
 COPY src/ ./src/
 
 ## 프로젝트 빌드
-RUN gradle build
+RUN gradle shadowJar
 
 
 # 두 번째 스테이지
@@ -16,8 +16,5 @@ RUN gradle build
 FROM openjdk:17-slim
 WORKDIR /app
 
-## 빌드된 어플리케이션 JAR 파일을 복사
-COPY --from=builder /build/build/libs/hhp-0.0.1-SNAPSHOT.jar app.jar
-
 ## 어플리케이션 실행
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "/build/libs/hhp-0.0.1-SNAPSHOT-all.jar"]
