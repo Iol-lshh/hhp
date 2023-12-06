@@ -13,7 +13,6 @@ jobs:
     steps:
     - name: checkout repository
       uses: actions/checkout@v3
-    outputs:
 
     # 도커허브 접속
     - name: login Docker Hub
