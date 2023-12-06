@@ -37,4 +37,4 @@ jobs:
     # 성공 처리
     - name: Push the Docker image to Docker Hub
       if: steps.build.outcome == 'success'
-      run: docker push docker.io/my-organization/hhp-app:$(date +%s)
+      run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:$(date +%s)
