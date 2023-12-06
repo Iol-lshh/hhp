@@ -24,10 +24,6 @@ services:
       - "5432:5432"  # 호스트 포트와 컨테이너 포트 매핑
     env_file:
       - "./compose_data/local/hhp-db.env"
-    environment:
-      POSTGRES_USER: lshh
-      POSTGRES_PASSWORD: lshh.com
-      POSTGRES_DB: api_repository
     volumes:
       - ../db/pgdata:/var/lib/postgresql/data    
 
