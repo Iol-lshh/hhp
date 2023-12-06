@@ -24,6 +24,7 @@ jobs:
 
     # 이미지 빌드
     - name: Build the Docker image
+      id: build
       run: docker build . --file Dockerfile --tag hhp-app:$(date +%s)
           
     # 실패 처리
