@@ -13,6 +13,7 @@ jobs:
     steps:
     - name: checkout repository
       uses: actions/checkout@v3
+    outputs:
 
     # 도커허브 접속
     - name: login Docker Hub
@@ -21,18 +22,20 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
         registry: docker.io
-
+    # 스탬프
+    - id: timestamp
+      run: echo $(date +%s) >> $GITHUB_OUTPUT
     # 이미지 빌드
     - name: Build the Docker image
-      id: build
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:$(date +%s)
+      id: image_build
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:${{ steps.timestamp.outcome }}
           
     # 실패 처리
     - name: Check build logs if the build fails
-      if: steps.build.outcome != 'success'
-      run: echo "빌드 실패!" && docker buildx inspect ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:$(date +%s)
+      if: steps.image_build.outcome != 'success'
+      run: echo "빌드 실패!" && docker buildx inspect ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:${{ steps.timestamp.outcome }}
 
     # 성공 처리
     - name: Push the Docker image to Docker Hub
-      if: steps.build.outcome == 'success'
-      run: docker push docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:$(date +%s)
+      if: steps.image_build.outcome == 'success'
+      run: docker push docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:${{ steps.timestamp.outcome }}
