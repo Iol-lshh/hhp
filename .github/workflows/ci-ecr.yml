@@ -45,14 +45,12 @@ jobs:
       run: echo "빌드 실패!" && docker buildx inspect ${{ steps.login-ecr.outputs.registry }}/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}
 
     # 성공 처리
-    - name: Push the Docker image to Docker Hub
+    - name: Push the Docker image to ECR
       id: ci_image
-      env: 
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       if: steps.image_build.outcome == 'success'
       run: |
+        echo "image=${{ steps.login-ecr.outputs.registry }}/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}"
         docker push ${{ steps.login-ecr.outputs.registry }}/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}
-        echo "image=${{ steps.login-ecr.outputs.registry }}/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}" >> $GITHUB_OUTPUT
 
     # ecs 띄우기 - task 정의
     # ecs 띄우기 - 배포
