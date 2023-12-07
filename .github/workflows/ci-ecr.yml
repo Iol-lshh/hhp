@@ -48,9 +48,11 @@ jobs:
     - name: Push the Docker image to ECR
       id: ci_image
       if: steps.image_build.outcome == 'success'
+      env: 
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        echo "image=${{ steps.login-ecr.outputs.registry }}/hhp-ecr/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}"
-        docker push ${{ steps.login-ecr.outputs.registry }}/hhp-ecr/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}
+        echo "image=$ECR_REGISTRY/hhp-ecr/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}"
+        docker push $ECR_REGISTRY/hhp-ecr/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}
 
     # ecs 띄우기 - task 정의
     # ecs 띄우기 - 배포
