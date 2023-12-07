@@ -52,7 +52,7 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
         echo "image=$ECR_REGISTRY/hhp-ecr/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}"
-        docker push $ECR_REGISTRY/hhp-ecr/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}
+        docker push 588630098141.dkr.ecr.ap-northeast-2.amazonaws.com/hhp-ecr/hhp-app:dev${{ steps.set_timestamp.outputs.timestamp }}
 
     # ecs 띄우기 - task 정의
     # ecs 띄우기 - 배포
