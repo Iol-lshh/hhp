@@ -2,7 +2,7 @@ name: Docker Image CI to ECR - dev
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "step3" ]
   # pull_request:
   #   branches: [ "dev" ]
 
