@@ -37,20 +37,20 @@ jobs:
     # 이미지 빌드
     - name: Build the Docker image
       id: image_build
-      run: docker build . --file Dockerfile --tag public.ecr.aws/j6f8n7k3/hhp-app:step3${{ steps.set_timestamp.outputs.timestamp }}
+      run: docker build . --file Dockerfile --tag ${{ steps.login-ecr.outputs.registry }}/hhp-app:step3${{ steps.set_timestamp.outputs.timestamp }}
           
     # 실패 처리
     - name: Check build logs if the build fails
       if: steps.image_build.outcome != 'success'
-      run: echo "빌드 실패!" && docker buildx inspect public.ecr.aws/j6f8n7k3/hhp-app:step3${{ steps.set_timestamp.outputs.timestamp }}
+      run: echo "빌드 실패!" && docker buildx inspect ${{ steps.login-ecr.outputs.registry }}/hhp-app:step3${{ steps.set_timestamp.outputs.timestamp }}
 
     # 성공 처리
     - name: Push the Docker image to ECR
       id: ci_image
       if: steps.image_build.outcome == 'success'
       run: |
-        echo "image=public.ecr.aws/j6f8n7k3/hhp-app:step3${{ steps.set_timestamp.outputs.timestamp }}"
-        docker push public.ecr.aws/j6f8n7k3/hhp-app:step3${{ steps.set_timestamp.outputs.timestamp }}
+        echo "image=${{ steps.login-ecr.outputs.registry }}/hhp-app:step3${{ steps.set_timestamp.outputs.timestamp }}"
+        docker push ${{ steps.login-ecr.outputs.registry }}/hhp-app:step3${{ steps.set_timestamp.outputs.timestamp }}
 
     # ecs 띄우기 - task 정의
     
