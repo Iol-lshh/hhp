@@ -9,23 +9,23 @@ services:
       - 8078:80
     networks:
       - hhp-net
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
     env_file:
       - "./compose_data/local/hhp.env"
 
-  db:
-    build:
-      context: "./db_data"
-    container_name: "hhp-db"
-    networks:
-      - hhp-net
-    ports:
-      - "5432:5432"  # 호스트 포트와 컨테이너 포트 매핑
-    env_file:
-      - "./compose_data/local/hhp-db.env"
-    volumes:
-      - ../db/pgdata:/var/lib/postgresql/data    
+  # db:
+  #   build:
+  #     context: "./db_data"
+  #   container_name: "hhp-db"
+  #   networks:
+  #     - hhp-net
+  #   ports:
+  #     - "5432:5432"  # 호스트 포트와 컨테이너 포트 매핑
+  #   env_file:
+  #     - "./compose_data/local/hhp-db.env"
+  #   volumes:
+  #     - ../db/pgdata:/var/lib/postgresql/data    
 
 networks:
   hhp-net:
