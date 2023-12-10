@@ -34,7 +34,6 @@ public class OrderServiceDefault implements OrderService{
             .userId(userId)
             .state(Result.Start.ordinal());
         order = orderRepository.save(order);
-        // # todo 병렬로 처리
         // ## 0. product
         ProductDto productDto = productService
             .find(productId)
@@ -52,7 +51,6 @@ public class OrderServiceDefault implements OrderService{
             throw new Exception();
         }
         // # 2. 구매 처리
-        // # todo 병렬로 처리
         // ## 1. 구매 생성
 
         // ## 2. 아이디 포인트 차감
@@ -61,7 +59,7 @@ public class OrderServiceDefault implements OrderService{
 
         // # 3. 주문 완료: 종료
         orderRepository.save(order.state(Result.OK.ordinal()));
-        return null;
+        return Result.OK;
     }
 
     @Override
