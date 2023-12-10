@@ -1,0 +1,41 @@
+name: Docker Image CI to DockerHub - dev
+
+on:
+  push:
+    branches: [ "ch1st2" ]
+
+#  pull_request:
+#    branches: [ "ch1st2" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v3
+
+    # 도커허브 접속
+    - name: login Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        registry: docker.io
+    # 스탬프
+    - id: set_timestamp
+      run: echo "timestamp=$(date +%s)" >> $GITHUB_OUTPUT
+    # 이미지 빌드
+    - name: Build the Docker image
+      id: image_build
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:ch1st2_${{ steps.set_timestamp.outputs.timestamp }}
+          
+    # 실패 처리
+    - name: Check build logs if the build fails
+      if: steps.image_build.outcome != 'success'
+      run: echo "빌드 실패!" && docker buildx inspect ${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:ch1st2_${{ steps.set_timestamp.outputs.timestamp }}
+
+    # 성공 처리
+    - name: Push the Docker image to Docker Hub
+      if: steps.image_build.outcome == 'success'
+      run: docker push docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/hhp-app:ch1st2_${{ steps.set_timestamp.outputs.timestamp }}
