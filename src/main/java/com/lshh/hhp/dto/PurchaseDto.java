@@ -11,7 +11,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 public class PurchaseDto {
     Long id;
-    String name;
     Integer paid;
 
     Long productId;

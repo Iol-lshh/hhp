@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    Response.Result save(UserDto dto);
+    Response.Result save(UserDto dto) throws Exception;
 
     List<UserDto> findAll();
-    Optional<UserDto> find(long userId);
+    Optional<UserDto> find(long id);
 }

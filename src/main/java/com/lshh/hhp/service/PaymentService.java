@@ -1,14 +1,14 @@
 package com.lshh.hhp.service;
 
-import com.lshh.hhp.common.dto.Response;
+import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.dto.PaymentDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface PaymentService {
-    Response.Result save(PaymentDto dto);
+    Result exchange(long userId, int toNeed) throws Exception;
 
     List<PaymentDto> findAll();
-    Optional<PaymentDto> find(long userId);
+    Optional<PaymentDto> find(long id);
 }

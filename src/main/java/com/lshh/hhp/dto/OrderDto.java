@@ -1,5 +1,6 @@
 package com.lshh.hhp.dto;
 
+import com.lshh.hhp.common.dto.Response.Result;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +12,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 public class OrderDto {
     Long id;
-    String name;
-
     Long userId;
+    Result state;
 }

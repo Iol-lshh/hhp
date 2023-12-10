@@ -11,9 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 public class PaymentDto {
     Long id;
-    String name;
-    Integer exchanged;
+    Integer into;
 
-    Long pointSourceId;
     Long userId;
 }
