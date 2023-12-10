@@ -10,8 +10,12 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true, fluent = true)
-public class User {
+public class Purchase {
     @Id
     Long id;
     String name;
+    Integer paid;
+
+    Long productId;
+    Long userId;
 }
