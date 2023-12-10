@@ -17,7 +17,7 @@ public class OrderController {
     final OrderService orderService;
 
     @PostMapping("/")
-    public ResponseDto<Result> order(@RequestBody long userId, @RequestBody long productId){
+    public ResponseDto<Result> order(@RequestBody long userId, @RequestBody long productId) throws Exception {
         return new ResponseDto<>(orderService.order(userId, productId));
     }
 
