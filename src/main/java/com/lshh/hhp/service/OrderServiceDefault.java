@@ -52,11 +52,11 @@ public class OrderServiceDefault implements OrderService{
             .orElseThrow(Exception::new);
         // ## 1. 재고 확인
         if(!stockService.isInStock(productId)){
-            throw new Exception();
+            throw new Exception("재고 부족");
         }
         //  ## 2. 아이디 포인트 확인
         if(!pointService.isPayable(userId, productDto.price())){
-            throw new Exception();
+            throw new Exception("포인트 부족");
         }
         // # 2. 구매 처리
         // ## 1. 구매 생성
