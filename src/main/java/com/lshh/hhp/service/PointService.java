@@ -2,6 +2,7 @@ package com.lshh.hhp.service;
 
 import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResultDto;
+import com.lshh.hhp.common.point.PointHelperService;
 import com.lshh.hhp.dto.PaymentDto;
 import com.lshh.hhp.dto.PointDto;
 import com.lshh.hhp.dto.PurchaseDto;
@@ -9,7 +10,7 @@ import com.lshh.hhp.dto.PurchaseDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface PointService {
+public interface PointService extends PointHelperService {
 
     enum PointType{
         PAYMENT(1),
