@@ -1,9 +1,13 @@
 package com.lshh.hhp.service;
 
 import com.lshh.hhp.common.dto.Response.Result;
+import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.PointDto;
+import com.lshh.hhp.dto.ProductDto;
 import com.lshh.hhp.dto.PurchaseDto;
+import com.lshh.hhp.orm.entity.Product;
 import com.lshh.hhp.orm.entity.Purchase;
+import com.lshh.hhp.orm.repository.ProductRepository;
 import com.lshh.hhp.orm.repository.PurchaseRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -20,6 +24,7 @@ public class PurchaseServiceDefault implements PurchaseService{
     final PurchaseRepository purchaseRepository;
     final UserService userService;
     final PointService pointService;
+    final ProductService productService;
 
     public PurchaseDto toDto(Purchase entity){
         return new PurchaseDto()
@@ -38,22 +43,20 @@ public class PurchaseServiceDefault implements PurchaseService{
 
     @Override
     @Transactional
-    public Result purchase(long userId, int paid) throws Exception {
+    public ResultDto<PurchaseDto> purchase(long userId, long productId) throws Exception {
         userService.find(userId).orElseThrow(Exception::new);
+        ProductDto productDto = productService.find(productId).orElseThrow(Exception::new);
 
         Purchase purchase = new Purchase()
                 .userId(userId)
-                .paid(paid);
+                .productId(productId)
+                .paid(productDto.price());
+
         purchase = purchaseRepository.save(purchase);
+        PurchaseDto purchaseDto = this.toDto(purchase);
+        pointService.purchase(purchaseDto);
 
-        PointDto pointDto = new PointDto()
-            .userId(userId)
-            .count(paid * -1)
-            .fromId(purchase.id())
-            .fromType(PointService.PointType.PURCHASE.ordinal());
-        pointService.save(pointDto);
-
-        return Result.OK;
+        return new ResultDto<>(Result.OK, purchaseDto);
     }
 
     @Override

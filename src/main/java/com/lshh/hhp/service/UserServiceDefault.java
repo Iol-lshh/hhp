@@ -1,6 +1,7 @@
 package com.lshh.hhp.service;
 
 import com.lshh.hhp.common.dto.Response.Result;
+import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.UserDto;
 import com.lshh.hhp.orm.entity.User;
 import com.lshh.hhp.orm.repository.UserRepository;
@@ -30,7 +31,7 @@ public class UserServiceDefault implements UserService{
 
     @Override
     @Transactional
-    public Result save(UserDto dto) throws Exception {
+    public ResultDto<UserDto> save(UserDto dto) throws Exception {
         User entity;
 
         if (Optional.ofNullable(dto.id()).isEmpty()) {
@@ -40,8 +41,8 @@ public class UserServiceDefault implements UserService{
                     .orElseThrow(Exception::new);
             entity.name(dto.name() != null ? dto.name() : entity.name());
         }
-        userRepository.save(entity);
-        return Result.OK;
+        entity = userRepository.save(entity);
+        return new ResultDto<>(Result.OK, toDto(entity));
     }
 
     @Override

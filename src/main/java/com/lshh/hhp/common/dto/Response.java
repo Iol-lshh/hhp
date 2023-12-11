@@ -1,5 +1,11 @@
 package com.lshh.hhp.common.dto;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Stream;
+
 public interface Response {
     enum Result {
         Start(0),
@@ -9,5 +15,8 @@ public interface Response {
         Result(int i) {
         }
 
+        public static Result of(final int code){
+            return Result.values()[code];
+        }
     }
 }

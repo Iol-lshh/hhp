@@ -1,7 +1,8 @@
 package com.lshh.hhp.controller;
 
-import com.lshh.hhp.common.dto.Response.*;
 import com.lshh.hhp.common.dto.ResponseDto;
+import com.lshh.hhp.dto.ExchangeRequestDto;
+import com.lshh.hhp.dto.PaymentDto;
 import com.lshh.hhp.service.PaymentService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     final PaymentService paymentService;
+    
+    // 포인트 생성
     @PostMapping("/exchange")
-    public ResponseDto<Result> exchange(@RequestBody long userId, @RequestBody int toNeed) throws Exception {
-        return new ResponseDto<>(paymentService.exchange(userId, toNeed));
+    public ResponseDto<PaymentDto> exchange(@RequestBody ExchangeRequestDto dto) throws Exception {
+        return paymentService.exchange(dto.getUserId(), dto.getToNeed()).toResponseDto();
     }
 }

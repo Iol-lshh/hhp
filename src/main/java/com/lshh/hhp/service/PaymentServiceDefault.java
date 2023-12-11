@@ -1,12 +1,9 @@
 package com.lshh.hhp.service;
 
 import com.lshh.hhp.common.dto.Response.Result;
+import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.PaymentDto;
-import com.lshh.hhp.dto.PointDto;
-import com.lshh.hhp.dto.UserDto;
 import com.lshh.hhp.orm.entity.Payment;
-import com.lshh.hhp.orm.entity.Point;
-import com.lshh.hhp.orm.entity.User;
 import com.lshh.hhp.orm.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -38,22 +35,17 @@ public class PaymentServiceDefault implements PaymentService{
 
     @Override
     @Transactional
-    public Result exchange(long userId, int toNeed) throws Exception {
+    public ResultDto<PaymentDto> exchange(long userId, int toNeed) throws Exception {
         userService.find(userId).orElseThrow(Exception::new);
 
         Payment payment = new Payment()
             .userId(userId)
             .into(toNeed);
         payment = paymentRepository.save(payment);
+        PaymentDto paymentDto = toDto(payment);
+        pointService.payment(paymentDto);
 
-        PointDto pointDto = new PointDto()
-            .userId(userId)
-            .count(toNeed)
-            .fromId(payment.id())
-            .fromType(PointService.PointType.PAYMENT.ordinal());
-        pointService.save(pointDto);
-
-        return Result.OK;
+        return new ResultDto<>(Result.OK, paymentDto);
     }
 
     @Override

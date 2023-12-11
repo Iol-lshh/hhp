@@ -1,8 +1,12 @@
 package com.lshh.hhp.service;
 
 import com.lshh.hhp.common.dto.Response.Result;
+import com.lshh.hhp.common.dto.ResultDto;
+import com.lshh.hhp.dto.PaymentDto;
 import com.lshh.hhp.dto.PointDto;
+import com.lshh.hhp.dto.PurchaseDto;
 import com.lshh.hhp.orm.entity.Point;
+import com.lshh.hhp.orm.entity.VPoint;
 import com.lshh.hhp.orm.repository.PointRepository;
 import com.lshh.hhp.orm.repository.VPointRepository;
 import lombok.AllArgsConstructor;
@@ -35,9 +39,9 @@ public class PointServiceDefault implements PointService {
                 .count(dto.count());
     }
     @Override
-    public Result save(PointDto dto) throws Exception {
-        pointRepository.save(toEntity(dto));
-        return Result.OK;
+    public ResultDto<PointDto> save(PointDto dto) throws Exception {
+        dto = this.toDto(pointRepository.save(toEntity(dto)));
+        return new ResultDto<>(Result.OK, dto);
     }
 
     @Override
@@ -69,7 +73,28 @@ public class PointServiceDefault implements PointService {
     public Integer remain(long userId) {
         return vPointRepository
                 .findById(userId)
-                .map(e->e.remain())
+                .map(VPoint::remain)
                 .orElse(0);
     }
+
+    @Override
+    public ResultDto<PointDto> payment(PaymentDto dto) throws Exception {
+        PointDto pointDto = new PointDto()
+                .userId(dto.userId())
+                .count(dto.into())
+                .fromId(dto.id())
+                .fromType(PointType.PAYMENT.ordinal());
+        return this.save(pointDto);
+    }
+
+    @Override
+    public ResultDto<PointDto> purchase(PurchaseDto dto) throws Exception {
+        PointDto pointDto = new PointDto()
+                .userId(dto.userId())
+                .count(dto.paid() * -1)
+                .fromId(dto.id())
+                .fromType(PointService.PointType.PURCHASE.ordinal());
+        return this.save(pointDto);
+    }
+
 }

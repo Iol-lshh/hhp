@@ -1,10 +1,8 @@
 package com.lshh.hhp.service;
 
 import com.lshh.hhp.common.dto.Response.Result;
-import com.lshh.hhp.dto.OrderDto;
-import com.lshh.hhp.dto.PointDto;
-import com.lshh.hhp.dto.ProductDto;
-import com.lshh.hhp.dto.StockDto;
+import com.lshh.hhp.common.dto.ResultDto;
+import com.lshh.hhp.dto.*;
 import com.lshh.hhp.orm.entity.Order;
 import com.lshh.hhp.orm.repository.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -24,56 +22,75 @@ public class OrderServiceDefault implements OrderService{
     final PointService pointService;
     final ProductService productService;
     final StockService stockService;
+
+    public OrderDto toDto(Order entity){
+        return new OrderDto()
+                .id(entity.id())
+                .state(Result.of(entity.state()))
+                .userId(entity.userId());
+    }
+    public Order toEntity(OrderDto dto){
+        return new Order()
+                .id(dto.id())
+                .state(dto.state().ordinal())
+                .userId(dto.userId());
+    }
+
     @Override
     @Transactional
-    public Result order(long userId, long productId) throws Exception {
-
-        // # 1. 주문 생성: 시작
+    public ResultDto<OrderDto> order(long userId, long productId) throws Exception {
+        // # 0. user 확인
         userService.find(userId).orElseThrow(Exception::new);
+        // # 1. 주문 생성: 시작
         Order order = new Order()
             .userId(userId)
             .state(Result.Start.ordinal());
         order = orderRepository.save(order);
-        // ## 0. product
+        // ## 0. 상품 확인
         ProductDto productDto = productService
             .find(productId)
             .orElseThrow(Exception::new);
         // ## 1. 재고 확인
-        StockDto stockDto = stockService
-            .findAllByProductId(productId)
-            .stream()
-            .findFirst()
-            .orElseThrow(Exception::new);
+        if(!stockService.isInStock(productId)){
+            throw new Exception();
+        }
         //  ## 2. 아이디 포인트 확인
-        boolean isPossible = pointService
-            .remain(userId) > productDto.price();
-        if(!isPossible){
+        if(!pointService.isPayable(userId, productDto.price())){
             throw new Exception();
         }
         // # 2. 구매 처리
         // ## 1. 구매 생성
-
-        // ## 2. 아이디 포인트 차감
-
-        // ## 3. 상품 재고 처리
-
+        PurchaseDto purchaseDto = purchaseService.purchase(userId, productId).getValue();
+        // ## 2. 상품 재고 처리
+        stockService.output(productId, purchaseDto.id());
         // # 3. 주문 완료: 종료
-        orderRepository.save(order.state(Result.OK.ordinal()));
-        return Result.OK;
+        order = orderRepository.save(order.state(Result.OK.ordinal()));
+
+        return new ResultDto<>(Result.OK, this.toDto(order));
     }
 
     @Override
     public List<OrderDto> findAll() {
-        return null;
+        return orderRepository
+            .findAll()
+            .stream()
+            .map(this::toDto)
+            .toList();
     }
 
     @Override
     public Optional<OrderDto> find(long id) {
-        return Optional.empty();
+        return orderRepository
+            .findById(id)
+            .map(this::toDto);
     }
 
     @Override
     public List<OrderDto> findByUserId(long userId) {
-        return null;
+        return orderRepository
+            .findByUserId(userId)
+            .stream()
+            .map(this::toDto)
+            .toList();
     }
 }
