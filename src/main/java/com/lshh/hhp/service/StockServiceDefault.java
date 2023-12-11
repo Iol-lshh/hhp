@@ -2,10 +2,7 @@ package com.lshh.hhp.service;
 
 import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResultDto;
-import com.lshh.hhp.dto.PurchaseDto;
 import com.lshh.hhp.dto.StockDto;
-import com.lshh.hhp.dto.UserDto;
-import com.lshh.hhp.orm.entity.Purchase;
 import com.lshh.hhp.orm.entity.Stock;
 import com.lshh.hhp.orm.repository.StockRepository;
 import jakarta.transaction.Transactional;
@@ -15,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @Service
