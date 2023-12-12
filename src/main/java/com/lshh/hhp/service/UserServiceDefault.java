@@ -18,12 +18,12 @@ public class UserServiceDefault implements UserService{
 
     final UserRepository userRepository;
 
-    public UserDto toDto(User entity){
+    public static UserDto toDto(User entity){
         return new UserDto()
             .id(entity.id())
             .name(entity.name());
     }
-    public User toEntity(UserDto dto){
+    public static User toEntity(UserDto dto){
         return new User()
             .id(dto.id())
             .name(dto.name());
@@ -51,7 +51,7 @@ public class UserServiceDefault implements UserService{
         return userRepository
                 .findAll()
                 .stream()
-                .map(this::toDto)
+                .map(UserServiceDefault::toDto)
                 .toList();
     }
 
@@ -60,6 +60,6 @@ public class UserServiceDefault implements UserService{
     public Optional<UserDto> find(long id) {
         return userRepository
                 .findById(id)
-                .map(this::toDto);
+                .map(UserServiceDefault::toDto);
     }
 }

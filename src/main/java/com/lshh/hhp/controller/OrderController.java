@@ -4,6 +4,7 @@ import com.lshh.hhp.common.dto.ResponseDto;
 import com.lshh.hhp.dto.OrderDto;
 import com.lshh.hhp.dto.PurchaseOrderDto;
 import com.lshh.hhp.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +17,13 @@ public class OrderController {
 
     final OrderService orderService;
 
-    // 주문
+    @Operation(summary = "주문")
     @PostMapping("/purchase")
     public ResponseDto<OrderDto> order(@RequestBody PurchaseOrderDto dto) throws Exception {
-        return orderService.order(dto.getUserId(), dto.getProductId()).toResponseDto();
+        return orderService.order(dto.getUserId(), dto.getPurchaseRequestList()).toResponseDto();
     }
 
-    // 주문 내역
+    @Operation(summary = "주문 내역")
     @GetMapping("/all/{userId}")
     public ResponseDto<List<OrderDto>> all(@PathVariable Long userId){
         return new ResponseDto<>(orderService.findByUserId(userId));

@@ -22,7 +22,7 @@ public class PointServiceDefault implements PointService {
     final PointRepository pointRepository;
     final VPointRepository vPointRepository;
 
-    public PointDto toDto(Point entity){
+    public static PointDto toDto(Point entity){
         return new PointDto()
                 .id(entity.id())
                 .userId(entity.userId())
@@ -30,7 +30,7 @@ public class PointServiceDefault implements PointService {
                 .fromId(entity.fromId())
                 .count(entity.count());
     }
-    public Point toEntity(PointDto dto){
+    public static Point toEntity(PointDto dto){
         return new Point()
                 .id(dto.id())
                 .userId(dto.userId())
@@ -49,7 +49,7 @@ public class PointServiceDefault implements PointService {
         return pointRepository
                 .findAll()
                 .stream()
-                .map(this::toDto)
+                .map(PointServiceDefault::toDto)
                 .toList();
     }
 
@@ -57,7 +57,7 @@ public class PointServiceDefault implements PointService {
     public Optional<PointDto> find(long id) {
         return pointRepository
                 .findById(id)
-                .map(this::toDto);
+                .map(PointServiceDefault::toDto);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class PointServiceDefault implements PointService {
         return pointRepository
                 .findAllByUserId(userId)
                 .stream()
-                .map(this::toDto)
+                .map(PointServiceDefault::toDto)
                 .toList();
     }
 

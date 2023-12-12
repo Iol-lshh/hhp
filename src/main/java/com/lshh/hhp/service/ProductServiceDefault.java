@@ -16,13 +16,13 @@ import java.util.Optional;
 public class ProductServiceDefault implements ProductService{
     final ProductRepository productRepository;
 
-    public ProductDto toDto(Product entity){
+    static public ProductDto toDto(Product entity){
         return new ProductDto()
                 .id(entity.id())
                 .name(entity.name())
                 .price(entity.price());
     }
-    public Product toEntity(ProductDto dto){
+    static public Product toEntity(ProductDto dto){
         return new Product()
                 .id(dto.id())
                 .name(dto.name())
@@ -42,14 +42,14 @@ public class ProductServiceDefault implements ProductService{
                     .price(dto.price()==null?product.price():dto.price());
         }
         product = productRepository.save(product);
-        return new ResultDto<>(Result.OK, this.toDto(product));
+        return new ResultDto<>(Result.OK, ProductServiceDefault.toDto(product));
     }
 
     @Override
     public Optional<ProductDto> find(long id) {
         return productRepository
                 .findById(id)
-                .map(this::toDto);
+                .map(ProductServiceDefault::toDto);
     }
 
     @Override
@@ -57,7 +57,12 @@ public class ProductServiceDefault implements ProductService{
         return productRepository
                 .findAll()
                 .stream()
-                .map(this::toDto)
+                .map(ProductServiceDefault::toDto)
                 .toList();
+    }
+
+    @Override
+    public List<ProductDto> findAll(List<Long> productIdList) {
+        return productRepository.findAllById(productIdList).stream().map(ProductServiceDefault::toDto).toList();
     }
 }

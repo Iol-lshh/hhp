@@ -25,4 +25,6 @@ public interface StockService {
     }
     ResultDto<List<StockDto>> input(long productId, int cnt);
     ResultDto<StockDto> output(long productId, long purchaseId) throws Exception;
+
+    boolean isAllInStock(List<Long> productIdList);
 }

@@ -26,14 +26,14 @@ public class PurchaseServiceDefault implements PurchaseService{
     final PointService pointService;
     final ProductService productService;
 
-    public PurchaseDto toDto(Purchase entity){
+    public static PurchaseDto toDto(Purchase entity){
         return new PurchaseDto()
                 .id(entity.id())
                 .paid(entity.paid())
                 .productId(entity.productId())
                 .userId(entity.userId());
     }
-    public Purchase toEntity(PurchaseDto dto){
+    public static Purchase toEntity(PurchaseDto dto){
         return new Purchase()
                 .id(dto.id())
                 .paid(dto.paid())
@@ -53,7 +53,7 @@ public class PurchaseServiceDefault implements PurchaseService{
                 .paid(productDto.price());
 
         purchase = purchaseRepository.save(purchase);
-        PurchaseDto purchaseDto = this.toDto(purchase);
+        PurchaseDto purchaseDto = PurchaseServiceDefault.toDto(purchase);
         pointService.purchase(purchaseDto);
 
         return new ResultDto<>(Result.OK, purchaseDto);
@@ -63,7 +63,7 @@ public class PurchaseServiceDefault implements PurchaseService{
     public Optional<PurchaseDto> find(long id) {
         return purchaseRepository
             .findById(id)
-            .map(this::toDto);
+            .map(PurchaseServiceDefault::toDto);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PurchaseServiceDefault implements PurchaseService{
         return purchaseRepository
             .findAll()
             .stream()
-            .map(this::toDto)
+            .map(PurchaseServiceDefault::toDto)
             .toList();
     }
 }
