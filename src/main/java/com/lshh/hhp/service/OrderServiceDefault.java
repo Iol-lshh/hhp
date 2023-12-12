@@ -5,8 +5,8 @@ import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.*;
 import com.lshh.hhp.orm.entity.Order;
 import com.lshh.hhp.orm.repository.OrderRepository;
-//import com.lshh.hhp.orm.repository.PurchaseRepositoryDeluxe;
-//import com.querydsl.core.Tuple;
+import com.lshh.hhp.orm.repository.PurchaseRepositoryDeluxe;
+import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class OrderServiceDefault implements OrderService{
     final OrderRepository orderRepository;
     final UserService userService;
     final PurchaseService purchaseService;
-//    final PurchaseRepositoryDeluxe purchaseRepositoryDeluxe;
+    final PurchaseRepositoryDeluxe purchaseRepositoryDeluxe;
     final PointService pointService;
     final ProductService productService;
     final StockService stockService;
@@ -107,7 +107,7 @@ public class OrderServiceDefault implements OrderService{
     
     @Override
     public List<ViewOrderDto> findViewByUserId(long userId) {
-        //List<Tuple> a = purchaseRepositoryDeluxe.findViewByUserId(userId);
+        List<ViewOrderDto> a = purchaseRepositoryDeluxe.findViewByUserId(userId);
         // todo 
         // 관계 없이 조인하기
         return null;
