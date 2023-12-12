@@ -30,4 +30,16 @@ public class PointController {
         return new ResponseDto<>(pointService.findAllByUserId(userId));
     }
 
+    // 포인트 일괄 압축
+    @GetMapping("/squash")
+    public ResponseDto<List<PointDto>> squash(){
+        return pointService.squash().toResponseDto();
+    }
+
+    // 포인트 유저 압축
+    @GetMapping("/squash/{userId}")
+    public ResponseDto<PointDto> squash(@PathVariable Long userId) throws Exception {
+        return pointService.squash(userId).toResponseDto();
+    }
+
 }

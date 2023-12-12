@@ -18,4 +18,5 @@ public class Purchase {
 
     Long productId;
     Long userId;
+    Long orderId;
 }

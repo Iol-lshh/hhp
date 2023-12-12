@@ -1,7 +1,7 @@
 package com.lshh.hhp.controller;
 
 import com.lshh.hhp.common.dto.ResponseDto;
-import com.lshh.hhp.dto.ExchangeRequestDto;
+import com.lshh.hhp.dto.RequestExchangeDto;
 import com.lshh.hhp.dto.PaymentDto;
 import com.lshh.hhp.service.PaymentService;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ public class PaymentController {
     
     // 포인트 생성
     @PostMapping("/exchange")
-    public ResponseDto<PaymentDto> exchange(@RequestBody ExchangeRequestDto dto) throws Exception {
+    public ResponseDto<PaymentDto> exchange(@RequestBody RequestExchangeDto dto) throws Exception {
         return paymentService.exchange(dto.getUserId(), dto.getToNeed()).toResponseDto();
     }
 }

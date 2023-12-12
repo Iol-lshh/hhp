@@ -10,17 +10,15 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Getter
 @Setter
-@Accessors(chain = true, fluent = true)
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PointDto {
-    @JsonProperty
-    Long id;
-    @JsonProperty
-    Integer count;
-    @JsonProperty
+public class ViewPurchaseDto {
+
     Long userId;
-    @JsonProperty
-    Integer fromType;   // PointService.PointType
-    @JsonProperty
-    Long fromId;    // PaymentId or PurchaseId
+    Long orderId;
+    Long productId;
+    Long purchaseId;
+    String productName;
+    Integer productPrice;
+    Integer purchasePaid;
 }

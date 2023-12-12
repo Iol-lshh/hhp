@@ -19,13 +19,13 @@ public class StockServiceDefault implements StockService{
 
     final StockRepository stockRepository;
 
-    public StockDto toDto(Stock entity){
+    public static StockDto toDto(Stock entity){
         return new StockDto()
                 .id(entity.id())
                 .productId(entity.productId())
                 .purchaseId(entity.purchaseId());
     }
-    public Stock toEntity(StockDto dto){
+    public static Stock toEntity(StockDto dto){
         return new Stock()
                 .id(dto.id())
                 .productId(dto.productId())
@@ -37,7 +37,7 @@ public class StockServiceDefault implements StockService{
     public ResultDto<StockDto> save(StockDto dto) throws Exception {
         Stock stock;
         if(Optional.ofNullable(dto.id()).isEmpty()){
-            stock = this.toEntity(dto);
+            stock = StockServiceDefault.toEntity(dto);
         }else{
             stock = stockRepository
                     .findById(dto.id())
@@ -45,7 +45,7 @@ public class StockServiceDefault implements StockService{
             stock.purchaseId(dto.purchaseId() == null ? stock.purchaseId() : dto.purchaseId());
         }
 
-        dto = this.toDto(stockRepository.save(stock));
+        dto = StockServiceDefault.toDto(stockRepository.save(stock));
 
         return new ResultDto<>(Result.OK, dto);
     }
@@ -55,7 +55,7 @@ public class StockServiceDefault implements StockService{
         return stockRepository
                 .findAll()
                 .stream()
-                .map(this::toDto)
+                .map(StockServiceDefault::toDto)
                 .toList();
     }
 
@@ -63,7 +63,7 @@ public class StockServiceDefault implements StockService{
     public Optional<StockDto> find(long id) {
         return stockRepository
                 .findById(id)
-                .map(this::toDto);
+                .map(StockServiceDefault::toDto);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class StockServiceDefault implements StockService{
         return stockRepository
                 .findAllByProductId(productId)
                 .stream()
-                .map(this::toDto)
+                .map(StockServiceDefault::toDto)
                 .toList();
     }
 
@@ -80,7 +80,7 @@ public class StockServiceDefault implements StockService{
         return stockRepository
                 .findAllByProductIdAndPurchaseIdIsNull(productId)
                 .stream()
-                .map(this::toDto)
+                .map(StockServiceDefault::toDto)
                 .toList();
     }
 
@@ -94,9 +94,9 @@ public class StockServiceDefault implements StockService{
         List<StockDto> dtos = stockRepository
                 .saveAllAndFlush(stocks)
                 .stream()
-                .map(this::toDto)
+                .map(StockServiceDefault::toDto)
                 .toList();
-        return new ResultDto<>(Result.OK, dtos);
+        return new ResultDto<>(dtos);
     }
 
     @Override

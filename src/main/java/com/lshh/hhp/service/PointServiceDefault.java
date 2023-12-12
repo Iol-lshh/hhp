@@ -9,6 +9,7 @@ import com.lshh.hhp.orm.entity.Point;
 import com.lshh.hhp.orm.entity.VPoint;
 import com.lshh.hhp.orm.repository.PointRepository;
 import com.lshh.hhp.orm.repository.VPointRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class PointServiceDefault implements PointService {
     final PointRepository pointRepository;
     final VPointRepository vPointRepository;
 
-    public PointDto toDto(Point entity){
+    public static PointDto toDto(Point entity){
         return new PointDto()
                 .id(entity.id())
                 .userId(entity.userId())
@@ -30,7 +31,7 @@ public class PointServiceDefault implements PointService {
                 .fromId(entity.fromId())
                 .count(entity.count());
     }
-    public Point toEntity(PointDto dto){
+    public static Point toEntity(PointDto dto){
         return new Point()
                 .id(dto.id())
                 .userId(dto.userId())
@@ -49,7 +50,7 @@ public class PointServiceDefault implements PointService {
         return pointRepository
                 .findAll()
                 .stream()
-                .map(this::toDto)
+                .map(PointServiceDefault::toDto)
                 .toList();
     }
 
@@ -57,7 +58,7 @@ public class PointServiceDefault implements PointService {
     public Optional<PointDto> find(long id) {
         return pointRepository
                 .findById(id)
-                .map(this::toDto);
+                .map(PointServiceDefault::toDto);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class PointServiceDefault implements PointService {
         return pointRepository
                 .findAllByUserId(userId)
                 .stream()
-                .map(this::toDto)
+                .map(PointServiceDefault::toDto)
                 .toList();
     }
 
@@ -95,6 +96,67 @@ public class PointServiceDefault implements PointService {
                 .fromId(dto.id())
                 .fromType(PointService.PointType.PURCHASE.ordinal());
         return this.save(pointDto);
+    }
+
+    /**
+     * @return List<PointDto>
+     */
+    @Override
+    @Transactional
+    public ResultDto<List<PointDto>> squash() {
+        // 1. 각 user 마다, 이전 포인트들의 count를 0처리하고
+        // 2. sum의 count인 포인트를 추가해줌
+        // 의의: 0 처리 된 것을 백업하고 비울 수 있게된다. => payment와 purchase에 지불 정보는 남아있다.
+        // # sum group by user_id
+        List<Point> eachSums = vPointRepository
+                .findAll()
+                .stream()
+                .map(vPoint -> new Point()
+                        .userId(vPoint.userId())
+                        .fromType(PointType.SUM.ordinal())
+                        .count(vPoint.remain()))
+                .toList();
+
+        // # update count = 0
+        List<Point> all = pointRepository
+                .findAll()
+                .stream()
+                .map(el->el.count(0))
+                .toList();
+        pointRepository.saveAllAndFlush(all);
+
+        // # insert sum
+        eachSums = pointRepository.saveAllAndFlush(eachSums);
+
+        return new ResultDto<>(eachSums.stream().map(PointServiceDefault::toDto).toList());
+    }
+
+    /**
+     * @param userId
+     * @return List<PointDto>
+     */
+    @Override
+    public ResultDto<PointDto> squash(long userId) throws Exception {
+        Point sum = vPointRepository
+                .findByUserId(userId)
+                .map(vPoint -> new Point()
+                        .userId(vPoint.userId())
+                        .fromType(PointType.SUM.ordinal())
+                        .count(vPoint.remain()))
+                .orElseThrow(Exception::new);
+
+        // # update count = 0
+        List<Point> all = pointRepository
+                .findAllByUserId(userId)
+                .stream()
+                .map(el->el.count(0))
+                .toList();
+        pointRepository.saveAllAndFlush(all);
+
+        // # insert sum
+        sum = pointRepository.save(sum);
+
+        return new ResultDto<>(this.toDto(sum));
     }
 
 }

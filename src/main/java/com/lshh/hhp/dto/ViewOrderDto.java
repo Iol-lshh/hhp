@@ -7,20 +7,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Setter
-@Accessors(chain = true, fluent = true)
+@Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PointDto {
+public class ViewOrderDto {
     @JsonProperty
-    Long id;
+    OrderDto order;
     @JsonProperty
-    Integer count;
-    @JsonProperty
-    Long userId;
-    @JsonProperty
-    Integer fromType;   // PointService.PointType
-    @JsonProperty
-    Long fromId;    // PaymentId or PurchaseId
+    List<ViewPurchaseDto> purchaseList;
 }

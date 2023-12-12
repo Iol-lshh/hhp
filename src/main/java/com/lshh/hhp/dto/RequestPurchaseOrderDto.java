@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class InputRequestDto implements Request {
-    long productId;
-    int cnt;
+public class RequestPurchaseOrderDto implements Request {
+    Long userId;
+    Long productId;
 }

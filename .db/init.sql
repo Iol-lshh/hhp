@@ -45,7 +45,8 @@ CREATE TABLE tb_purchase(
     id SERIAL PRIMARY KEY,
     paid INTEGER,
     user_id INTEGER,
-    product_id INTEGER
+    product_id INTEGER,
+    order_id INTEGER
 );
 CREATE INDEX purchase_product_id ON tb_purchase(product_id);
 CREATE INDEX purchase_user_id ON tb_purchase(user_id);

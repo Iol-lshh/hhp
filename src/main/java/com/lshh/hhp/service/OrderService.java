@@ -1,8 +1,8 @@
 package com.lshh.hhp.service;
 
-import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.OrderDto;
+import com.lshh.hhp.dto.ViewOrderDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,4 +24,5 @@ public interface OrderService {
     Optional<OrderDto> find(long id);
 
     List<OrderDto> findByUserId(long userId);
+    List<ViewOrderDto> findViewByUserId(long userId);
 }

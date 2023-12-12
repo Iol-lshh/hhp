@@ -2,7 +2,7 @@ package com.lshh.hhp.controller;
 
 import com.lshh.hhp.common.dto.ResponseDto;
 import com.lshh.hhp.dto.OrderDto;
-import com.lshh.hhp.dto.PurchaseOrderDto;
+import com.lshh.hhp.dto.RequestPurchaseOrderDto;
 import com.lshh.hhp.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class OrderController {
 
     // 주문
     @PostMapping("/purchase")
-    public ResponseDto<OrderDto> order(@RequestBody PurchaseOrderDto dto) throws Exception {
+    public ResponseDto<OrderDto> order(@RequestBody RequestPurchaseOrderDto dto) throws Exception {
         return orderService.order(dto.getUserId(), dto.getProductId()).toResponseDto();
     }
 

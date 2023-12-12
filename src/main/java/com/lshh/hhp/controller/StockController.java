@@ -1,7 +1,7 @@
 package com.lshh.hhp.controller;
 
 import com.lshh.hhp.common.dto.ResponseDto;
-import com.lshh.hhp.dto.InputRequestDto;
+import com.lshh.hhp.dto.RequestInputDto;
 import com.lshh.hhp.dto.StockDto;
 import com.lshh.hhp.service.StockService;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ public class StockController {
     final StockService stockService;
     // stock 추가
     @PostMapping("/input")
-    public ResponseDto<List<StockDto>> input(@RequestBody InputRequestDto dto){
+    public ResponseDto<List<StockDto>> input(@RequestBody RequestInputDto dto){
         return stockService.input(dto.getProductId(), dto.getCnt()).toResponseDto();
     }
     

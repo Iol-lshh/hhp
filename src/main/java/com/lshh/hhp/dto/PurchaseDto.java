@@ -21,4 +21,6 @@ public class PurchaseDto {
     Long productId;
     @JsonProperty
     Long userId;
+    @JsonProperty
+    Long orderId;
 }

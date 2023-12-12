@@ -1,13 +1,9 @@
 package com.lshh.hhp.service;
 
-import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResultDto;
-import com.lshh.hhp.dto.PointDto;
 import com.lshh.hhp.dto.ProductDto;
 import com.lshh.hhp.dto.PurchaseDto;
-import com.lshh.hhp.orm.entity.Product;
 import com.lshh.hhp.orm.entity.Purchase;
-import com.lshh.hhp.orm.repository.ProductRepository;
 import com.lshh.hhp.orm.repository.PurchaseRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -26,44 +22,47 @@ public class PurchaseServiceDefault implements PurchaseService{
     final PointService pointService;
     final ProductService productService;
 
-    public PurchaseDto toDto(Purchase entity){
+    public static PurchaseDto toDto(Purchase entity){
         return new PurchaseDto()
                 .id(entity.id())
                 .paid(entity.paid())
                 .productId(entity.productId())
-                .userId(entity.userId());
+                .userId(entity.userId())
+                .orderId(entity.orderId());
     }
-    public Purchase toEntity(PurchaseDto dto){
+    public static Purchase toEntity(PurchaseDto dto){
         return new Purchase()
                 .id(dto.id())
                 .paid(dto.paid())
                 .productId(dto.productId())
-                .userId(dto.userId());
+                .userId(dto.userId())
+                .orderId(dto.orderId());
     }
 
     @Override
     @Transactional
-    public ResultDto<PurchaseDto> purchase(long userId, long productId) throws Exception {
+    public ResultDto<PurchaseDto> purchase(long userId, long productId, long orderId) throws Exception {
         userService.find(userId).orElseThrow(Exception::new);
         ProductDto productDto = productService.find(productId).orElseThrow(Exception::new);
 
         Purchase purchase = new Purchase()
                 .userId(userId)
                 .productId(productId)
+                .orderId(orderId)
                 .paid(productDto.price());
 
         purchase = purchaseRepository.save(purchase);
-        PurchaseDto purchaseDto = this.toDto(purchase);
+        PurchaseDto purchaseDto = PurchaseServiceDefault.toDto(purchase);
         pointService.purchase(purchaseDto);
 
-        return new ResultDto<>(Result.OK, purchaseDto);
+        return new ResultDto<>(purchaseDto);
     }
 
     @Override
     public Optional<PurchaseDto> find(long id) {
         return purchaseRepository
             .findById(id)
-            .map(this::toDto);
+            .map(PurchaseServiceDefault::toDto);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class PurchaseServiceDefault implements PurchaseService{
         return purchaseRepository
             .findAll()
             .stream()
-            .map(this::toDto)
+            .map(PurchaseServiceDefault::toDto)
             .toList();
     }
 }
