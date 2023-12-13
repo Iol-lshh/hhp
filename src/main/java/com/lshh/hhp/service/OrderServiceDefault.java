@@ -58,12 +58,12 @@ public class OrderServiceDefault implements OrderService{
                 throw new Exception("잘못된 상품");
             }
 
-            // ## 1. 재고 확인 -todo 상품 * 재고를 view로 해결
+            // ## 1. 재고 확인
             // product.id, count(stock.id) from product join stock group by product.id
             if (!stockService.isAllInStock(purchaseRequestList)) {
                 throw new Exception("재고 부족");
             }
-            //  ## 2. 아이디 포인트 확인 -todo 상품 * 갯수로 총 지불 가격 제공
+            //  ## 2. 아이디 포인트 확인
             if (!purchaseService.isPayable(userId, purchaseRequestList)) {
                 throw new Exception("포인트 부족");
             }
