@@ -1,16 +1,15 @@
 package com.lshh.hhp.service;
 
-import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResultDto;
-import com.lshh.hhp.dto.PointDto;
-import com.lshh.hhp.dto.ProductDto;
 import com.lshh.hhp.dto.PurchaseDto;
-import com.lshh.hhp.orm.entity.Product;
+import com.lshh.hhp.dto.RequestPurchaseDto;
+import com.lshh.hhp.dto.ViewPurchasedProductDto;
 import com.lshh.hhp.orm.entity.Purchase;
-import com.lshh.hhp.orm.repository.ProductRepository;
 import com.lshh.hhp.orm.repository.PurchaseRepository;
+import com.lshh.hhp.orm.repository.VTopPurchasedProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,45 +24,57 @@ public class PurchaseServiceDefault implements PurchaseService{
     final UserService userService;
     final PointService pointService;
     final ProductService productService;
+    final VTopPurchasedProductRepository vTopPurchasedProductRepository;
 
-    public PurchaseDto toDto(Purchase entity){
+    public static PurchaseDto toDto(Purchase entity){
         return new PurchaseDto()
                 .id(entity.id())
                 .paid(entity.paid())
+                .count(entity.count())
                 .productId(entity.productId())
-                .userId(entity.userId());
+                .userId(entity.userId())
+                .orderId(entity.orderId());
     }
-    public Purchase toEntity(PurchaseDto dto){
+    public static Purchase toEntity(PurchaseDto dto){
         return new Purchase()
                 .id(dto.id())
                 .paid(dto.paid())
+                .count(dto.count())
                 .productId(dto.productId())
-                .userId(dto.userId());
+                .userId(dto.userId())
+                .orderId(dto.orderId());
     }
 
     @Override
     @Transactional
-    public ResultDto<PurchaseDto> purchase(long userId, long productId) throws Exception {
-        userService.find(userId).orElseThrow(Exception::new);
-        ProductDto productDto = productService.find(productId).orElseThrow(Exception::new);
+    public ResultDto<List<PurchaseDto>> purchase(long userId, long orderId, List<RequestPurchaseDto> requestList) throws Exception {
 
-        Purchase purchase = new Purchase()
-                .userId(userId)
-                .productId(productId)
-                .paid(productDto.price());
+        List<Purchase> purchaseList = requestList
+                .stream()
+                .map(request -> new Purchase()
+                        .userId(userId)
+                        .orderId(orderId)
+                        .productId(request.getProductId())
+                        .paid(productService.find(request.getProductId()).map(e->e.price()).orElse(0) * request.getCount())
+                        .count(request.getCount()))
+                .toList();
 
-        purchase = purchaseRepository.save(purchase);
-        PurchaseDto purchaseDto = this.toDto(purchase);
-        pointService.purchase(purchaseDto);
+        List<PurchaseDto> purchaseDtoList = purchaseRepository
+                .saveAllAndFlush(purchaseList)
+                .stream()
+                .map(PurchaseServiceDefault::toDto)
+                .toList();
 
-        return new ResultDto<>(Result.OK, purchaseDto);
+        pointService.purchase(purchaseDtoList);
+
+        return new ResultDto<>(purchaseDtoList);
     }
 
     @Override
     public Optional<PurchaseDto> find(long id) {
         return purchaseRepository
             .findById(id)
-            .map(this::toDto);
+            .map(PurchaseServiceDefault::toDto);
     }
 
     @Override
@@ -71,7 +82,27 @@ public class PurchaseServiceDefault implements PurchaseService{
         return purchaseRepository
             .findAll()
             .stream()
-            .map(this::toDto)
+            .map(PurchaseServiceDefault::toDto)
             .toList();
+    }
+
+    @Override
+    public boolean isPayable(long userId, List<RequestPurchaseDto> requestList){
+        return pointService.remain(userId) >= requestList
+                .stream()
+                .mapToInt(e->productService.convertDtoByProductPrice(e).paid()).sum();
+    }
+
+    @Override
+    public List<ViewPurchasedProductDto> favorite(Integer count) {
+        return vTopPurchasedProductRepository
+                .findAll(Pageable.ofSize(count))
+                .stream()
+                .map(e->new ViewPurchasedProductDto()
+                        .setId(e.id())
+                        .setName(e.name())
+                        .setPrice(e.price())
+                        .setPaidCnt(e.paidCnt()))
+                .toList();
     }
 }

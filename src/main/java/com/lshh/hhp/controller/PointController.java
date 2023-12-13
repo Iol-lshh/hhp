@@ -1,9 +1,9 @@
 package com.lshh.hhp.controller;
 
-import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResponseDto;
 import com.lshh.hhp.dto.PointDto;
 import com.lshh.hhp.service.PointService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,16 +18,28 @@ import java.util.List;
 public class PointController {
     final PointService pointService;
 
-    // 포인트 잔액 확인
+    @Operation(summary = "포인트 잔액 확인")
     @GetMapping("/remain/{userId}")
     public ResponseDto<Integer> remain(@PathVariable Long userId){
         return new ResponseDto<>(pointService.remain(userId));
     }
 
-    // 포인트 사용 내역
+    @Operation(summary = "포인트 사용 내역")
     @GetMapping("/history/{userId}")
     public ResponseDto<List<PointDto>> history(@PathVariable Long userId){
         return new ResponseDto<>(pointService.findAllByUserId(userId));
+    }
+
+    // 포인트 일괄 압축
+    @GetMapping("/squash")
+    public ResponseDto<List<PointDto>> squash(){
+        return pointService.squash().toResponseDto();
+    }
+
+    // 포인트 유저 압축
+    @GetMapping("/squash/{userId}")
+    public ResponseDto<PointDto> squash(@PathVariable Long userId) throws Exception {
+        return pointService.squash(userId).toResponseDto();
     }
 
 }

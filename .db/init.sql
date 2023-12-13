@@ -1,11 +1,10 @@
 
-
-
+--
 CREATE TABLE tb_user(
   id SERIAL PRIMARY KEY,
   name VARCHAR(20)
 );
-
+--
 CREATE TABLE tb_order(
     id SERIAL PRIMARY KEY,
     user_id INTEGER,
@@ -14,7 +13,7 @@ CREATE TABLE tb_order(
 CREATE INDEX order_user_id ON tb_order(user_id);
 
 
-
+--
 CREATE TABLE tb_point(
     id SERIAL PRIMARY KEY,
     count INTEGER,
@@ -25,7 +24,7 @@ CREATE TABLE tb_point(
 CREATE INDEX point_user_id ON tb_point(user_id);
 CREATE INDEX point_from_id_from_type ON tb_point(from_id, from_type);
 
-
+--
 CREATE TABLE tb_payment(
     id SERIAL PRIMARY KEY,
     exchanged INTEGER,
@@ -33,25 +32,27 @@ CREATE TABLE tb_payment(
 );
 CREATE INDEX payment_user_id ON tb_payment(user_id);
 
-
+--
 CREATE TABLE tb_product(
     id SERIAL PRIMARY KEY,
     name VARCHAR(20),
     price INTEGER
 );
 
-
+--
 CREATE TABLE tb_purchase(
     id SERIAL PRIMARY KEY,
     paid INTEGER,
+    count INTEGER,
     user_id INTEGER,
-    product_id INTEGER
+    product_id INTEGER,
+    order_id INTEGER
 );
-CREATE INDEX purchase_product_id ON tb_purchase(product_id);
+CREATE INDEX purchase_product_id ON tb_purchase(product_id, count);
 CREATE INDEX purchase_user_id ON tb_purchase(user_id);
 
 
-
+--
 CREATE TABLE tb_stock(
       id SERIAL PRIMARY KEY,
       product_id INTEGER,
@@ -60,7 +61,7 @@ CREATE TABLE tb_stock(
 CREATE INDEX stock_product_id ON tb_stock(product_id);
 CREATE INDEX stock_purchase_id ON tb_stock(purchase_id);
 
-
+--
 CREATE VIEW v_point AS
 select
     user_id,
@@ -68,6 +69,22 @@ select
 from tb_point p
 group by user_id;
 
+--
+CREATE VIEW v_top_purchased_product AS
+with sum_paid_cnt AS (
+    select
+        tpc.product_id,
+        sum(tpc.count) as paid_cnt
+    from tb_purchase tpc
+    group by tpc.product_id
+)
+select
+    tp.*,
+    spc.paid_cnt
+from sum_paid_cnt spc
+inner join tb_product tp
+    on tp.id = spc.product_id
+order by paid_cnt;
 
 /*----------------------------------------*/
 INSERT INTO tb_user(name)

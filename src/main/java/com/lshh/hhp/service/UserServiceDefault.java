@@ -1,6 +1,5 @@
 package com.lshh.hhp.service;
 
-import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.UserDto;
 import com.lshh.hhp.orm.entity.User;
@@ -18,12 +17,12 @@ public class UserServiceDefault implements UserService{
 
     final UserRepository userRepository;
 
-    public UserDto toDto(User entity){
+    public static UserDto toDto(User entity){
         return new UserDto()
             .id(entity.id())
             .name(entity.name());
     }
-    public User toEntity(UserDto dto){
+    public static User toEntity(UserDto dto){
         return new User()
             .id(dto.id())
             .name(dto.name());
@@ -38,28 +37,28 @@ public class UserServiceDefault implements UserService{
             entity = toEntity(dto);
         } else {
             entity = userRepository.findById(dto.id())
-                    .orElseThrow(Exception::new);
+                .orElseThrow(Exception::new);
             entity.name(dto.name() != null ? dto.name() : entity.name());
         }
         entity = userRepository.save(entity);
-        return new ResultDto<>(Result.OK, toDto(entity));
+        return new ResultDto<>(toDto(entity));
     }
 
     @Override
     @Transactional
     public List<UserDto> findAll() {
         return userRepository
-                .findAll()
-                .stream()
-                .map(this::toDto)
-                .toList();
+            .findAll()
+            .stream()
+            .map(UserServiceDefault::toDto)
+            .toList();
     }
 
     @Override
     @Transactional
     public Optional<UserDto> find(long id) {
         return userRepository
-                .findById(id)
-                .map(this::toDto);
+            .findById(id)
+            .map(UserServiceDefault::toDto);
     }
 }
