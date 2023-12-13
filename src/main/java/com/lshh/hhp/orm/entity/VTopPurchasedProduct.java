@@ -18,4 +18,5 @@ public class VTopPurchasedProduct {
     String name;
     Integer price;
     Integer paidCnt;
+    Integer orderByPaidCnt;
 }

@@ -47,32 +47,39 @@ public class OrderServiceDefault implements OrderService{
             .state(Result.Start.ordinal());
 
         order = orderRepository.save(order);
-        // ## 0. 상품 확인
-        if(purchaseRequestList.stream()
-            .filter(request -> productService.find(request.getProductId()).isPresent())
-            .count() != purchaseRequestList.size()
-        ){
-            throw new Exception("잘못된 상품");
-        }
+        try {
 
-        // ## 1. 재고 확인 -todo 상품 * 재고를 view로 해결
-        // product.id, count(stock.id) from product join stock group by product.id
-        if(!stockService.isAllInStock(purchaseRequestList)){
-            throw new Exception("재고 부족");
-        }
-        //  ## 2. 아이디 포인트 확인 -todo 상품 * 갯수로 총 지불 가격 제공
-        if(!purchaseService.isPayable(userId, purchaseRequestList)){
-            throw new Exception("포인트 부족");
-        }
-        // # 2. 구매 처리
-        // ## 1. 구매 생성
-        List<PurchaseDto> purchaseList = purchaseService.purchase(userId, order.id(), purchaseRequestList).getValue();
-        // ## 2. 상품 재고 처리
-        stockService.output(purchaseList);
-        // # 3. 주문 완료: 종료
-        order = orderRepository.save(order.state(Result.OK.ordinal()));
 
-        return new ResultDto<>(Result.OK, toDto(order));
+            // ## 0. 상품 확인
+            if (purchaseRequestList.stream()
+                    .filter(request -> productService.find(request.getProductId()).isPresent())
+                    .count() != purchaseRequestList.size()
+            ) {
+                throw new Exception("잘못된 상품");
+            }
+
+            // ## 1. 재고 확인 -todo 상품 * 재고를 view로 해결
+            // product.id, count(stock.id) from product join stock group by product.id
+            if (!stockService.isAllInStock(purchaseRequestList)) {
+                throw new Exception("재고 부족");
+            }
+            //  ## 2. 아이디 포인트 확인 -todo 상품 * 갯수로 총 지불 가격 제공
+            if (!purchaseService.isPayable(userId, purchaseRequestList)) {
+                throw new Exception("포인트 부족");
+            }
+            // # 2. 구매 처리
+            // ## 1. 구매 생성
+            List<PurchaseDto> purchaseList = purchaseService.purchase(userId, order.id(), purchaseRequestList).getValue();
+            // ## 2. 상품 재고 처리
+            stockService.output(purchaseList);
+            // # 3. 주문 완료: 종료
+            order = orderRepository.save(order.state(Result.OK.ordinal()));
+            return new ResultDto<>(Result.OK, toDto(order));
+        }catch (Exception err){
+            order.state(Result.FAIL.ordinal());
+            orderRepository.save(order);
+            throw err;
+        }
     }
 
     @Override
