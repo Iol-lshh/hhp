@@ -96,13 +96,14 @@ public class PurchaseServiceDefault implements PurchaseService{
     @Override
     public List<ViewPurchasedProductDto> favorite(Integer count) {
         return vTopPurchasedProductRepository
-                .findAll(Pageable.ofSize(count))
+                .findAll(Pageable.ofSize(count).withPage(0))
                 .stream()
                 .map(e->new ViewPurchasedProductDto()
                         .setId(e.id())
                         .setName(e.name())
                         .setPrice(e.price())
-                        .setPaidCnt(e.paidCnt()))
+                        .setPaidCnt(e.paidCnt())
+                        .setOrderByPaidCnt(e.orderByPaidCnt()))
                 .toList();
     }
 }

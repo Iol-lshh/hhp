@@ -80,11 +80,12 @@ with sum_paid_cnt AS (
 )
 select
     tp.*,
-    spc.paid_cnt
+    spc.paid_cnt,
+    row_number() over(order by spc.paid_cnt desc) as order_by_paid_cnt
 from sum_paid_cnt spc
 inner join tb_product tp
     on tp.id = spc.product_id
-order by paid_cnt;
+order by paid_cnt desc;
 
 /*----------------------------------------*/
 INSERT INTO tb_user(name)
