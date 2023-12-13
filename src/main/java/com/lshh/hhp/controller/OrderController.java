@@ -2,7 +2,7 @@ package com.lshh.hhp.controller;
 
 import com.lshh.hhp.common.dto.ResponseDto;
 import com.lshh.hhp.dto.OrderDto;
-import com.lshh.hhp.dto.PurchaseOrderDto;
+import com.lshh.hhp.dto.RequestPurchaseOrderDto;
 import com.lshh.hhp.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
@@ -19,8 +19,8 @@ public class OrderController {
 
     @Operation(summary = "주문")
     @PostMapping("/purchase")
-    public ResponseDto<OrderDto> order(@RequestBody PurchaseOrderDto dto) throws Exception {
-        return orderService.order(dto.getUserId(), dto.getPurchaseRequestList()).toResponseDto();
+    public ResponseDto<OrderDto> order(@RequestBody RequestPurchaseOrderDto dto) throws Exception {
+        return orderService.order(dto.getUserId(), dto.getRequestPurchaseList()).toResponseDto();
     }
 
     @Operation(summary = "주문 내역")

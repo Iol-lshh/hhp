@@ -15,9 +15,9 @@ import java.util.List;
 public class UserController {
     UserService userService;
 
-    @Operation(summary = "user 생성")
+    @Operation(summary = "user 생성, 갱신")
     @PostMapping("/")
-    public ResponseDto<UserDto> create(@RequestBody UserDto userDto) throws Exception {
+    public ResponseDto<UserDto> save(@RequestBody UserDto userDto) throws Exception {
         return userService.save(userDto).toResponseDto();
     }
 

@@ -6,7 +6,7 @@ public interface Response {
         OK(1),
         FAIL(2);
 
-        Result(int i) {
+        Result(int code) {
         }
 
         public static Result of(final int code){

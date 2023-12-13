@@ -15,6 +15,7 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     Integer paid;
+    Integer count;
 
     Long productId;
     Long userId;

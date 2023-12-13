@@ -3,6 +3,8 @@ package com.lshh.hhp.service;
 import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.ProductDto;
+import com.lshh.hhp.dto.PurchaseDto;
+import com.lshh.hhp.dto.RequestPurchaseDto;
 import com.lshh.hhp.orm.entity.Product;
 import com.lshh.hhp.orm.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -28,6 +30,17 @@ public class ProductServiceDefault implements ProductService{
                 .name(dto.name())
                 .price(dto.price());
     }
+
+    public PurchaseDto convertDtoByProductPrice(RequestPurchaseDto requestDto){
+        int price =  find(requestDto.getProductId())
+                .map(ProductDto::price)
+                .orElse(0);
+
+        return new PurchaseDto()
+                .productId(requestDto.getProductId())
+                .count(requestDto.getCount())
+                .paid(price * requestDto.getCount());
+    }
     @Override
     public ResultDto<ProductDto> save(ProductDto dto) throws Exception {
         Product product;
@@ -42,7 +55,7 @@ public class ProductServiceDefault implements ProductService{
                     .price(dto.price()==null?product.price():dto.price());
         }
         product = productRepository.save(product);
-        return new ResultDto<>(Result.OK, ProductServiceDefault.toDto(product));
+        return new ResultDto<>(Result.OK, toDto(product));
     }
 
     @Override

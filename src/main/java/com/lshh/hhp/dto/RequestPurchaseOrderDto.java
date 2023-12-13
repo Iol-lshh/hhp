@@ -10,5 +10,5 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RequestPurchaseOrderDto implements Request {
     Long userId;
-    List<PurchaseRequestDto> purchaseRequestList;
+    List<RequestPurchaseDto> requestPurchaseList;
 }

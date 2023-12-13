@@ -1,6 +1,5 @@
 package com.lshh.hhp.service;
 
-import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.PaymentDto;
 import com.lshh.hhp.orm.entity.Payment;

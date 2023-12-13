@@ -18,6 +18,8 @@ public class PurchaseDto {
     @JsonProperty
     Integer paid;
     @JsonProperty
+    Integer count;
+    @JsonProperty
     Long productId;
     @JsonProperty
     Long userId;

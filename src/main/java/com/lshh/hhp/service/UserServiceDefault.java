@@ -37,7 +37,7 @@ public class UserServiceDefault implements UserService{
             entity = toEntity(dto);
         } else {
             entity = userRepository.findById(dto.id())
-                    .orElseThrow(Exception::new);
+                .orElseThrow(Exception::new);
             entity.name(dto.name() != null ? dto.name() : entity.name());
         }
         entity = userRepository.save(entity);
@@ -48,17 +48,17 @@ public class UserServiceDefault implements UserService{
     @Transactional
     public List<UserDto> findAll() {
         return userRepository
-                .findAll()
-                .stream()
-                .map(UserServiceDefault::toDto)
-                .toList();
+            .findAll()
+            .stream()
+            .map(UserServiceDefault::toDto)
+            .toList();
     }
 
     @Override
     @Transactional
     public Optional<UserDto> find(long id) {
         return userRepository
-                .findById(id)
-                .map(UserServiceDefault::toDto);
+            .findById(id)
+            .map(UserServiceDefault::toDto);
     }
 }

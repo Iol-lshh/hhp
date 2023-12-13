@@ -1,6 +1,5 @@
 package com.lshh.hhp.controller;
 
-import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResponseDto;
 import com.lshh.hhp.dto.PointDto;
 import com.lshh.hhp.service.PointService;

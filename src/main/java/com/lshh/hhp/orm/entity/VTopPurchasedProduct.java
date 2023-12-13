@@ -1,6 +1,8 @@
 package com.lshh.hhp.orm.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -9,11 +11,11 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true, fluent = true)
-@Table(name = "tb_product")
-public class Product {
+@Table(name = "v_top_purchased_product")
+public class VTopPurchasedProduct {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
     Integer price;
+    Integer paidCnt;
 }

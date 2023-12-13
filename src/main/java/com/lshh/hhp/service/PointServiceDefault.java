@@ -5,6 +5,7 @@ import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.PaymentDto;
 import com.lshh.hhp.dto.PointDto;
 import com.lshh.hhp.dto.PurchaseDto;
+import com.lshh.hhp.dto.RequestPurchaseDto;
 import com.lshh.hhp.orm.entity.Point;
 import com.lshh.hhp.orm.entity.VPoint;
 import com.lshh.hhp.orm.repository.PointRepository;
@@ -41,7 +42,7 @@ public class PointServiceDefault implements PointService {
     }
     @Override
     public ResultDto<PointDto> save(PointDto dto) throws Exception {
-        dto = this.toDto(pointRepository.save(toEntity(dto)));
+        dto = toDto(pointRepository.save(toEntity(dto)));
         return new ResultDto<>(Result.OK, dto);
     }
 
@@ -89,18 +90,25 @@ public class PointServiceDefault implements PointService {
     }
 
     @Override
-    public ResultDto<PointDto> purchase(PurchaseDto dto) throws Exception {
-        PointDto pointDto = new PointDto()
-                .userId(dto.userId())
-                .count(dto.paid() * -1)
-                .fromId(dto.id())
-                .fromType(PointService.PointType.PURCHASE.ordinal());
-        return this.save(pointDto);
+    public ResultDto<List<PointDto>> purchase(List<PurchaseDto> dtoList) throws Exception {
+
+        List<Point> pointList = dtoList.stream()
+                .map(dto->new Point()
+                    .userId(dto.userId())
+                    .count(dto.paid() * -1)
+                    .fromId(dto.id())
+                    .fromType(PointService.PointType.PURCHASE.ordinal()))
+                .toList();
+
+        List<PointDto> results = pointRepository
+                .saveAllAndFlush(pointList)
+                .stream()
+                .map(PointServiceDefault::toDto)
+                .toList();
+
+        return new ResultDto<>(results);
     }
 
-    /**
-     * @return List<PointDto>
-     */
     @Override
     @Transactional
     public ResultDto<List<PointDto>> squash() {
@@ -131,10 +139,6 @@ public class PointServiceDefault implements PointService {
         return new ResultDto<>(eachSums.stream().map(PointServiceDefault::toDto).toList());
     }
 
-    /**
-     * @param userId
-     * @return List<PointDto>
-     */
     @Override
     public ResultDto<PointDto> squash(long userId) throws Exception {
         Point sum = vPointRepository
@@ -156,7 +160,7 @@ public class PointServiceDefault implements PointService {
         // # insert sum
         sum = pointRepository.save(sum);
 
-        return new ResultDto<>(this.toDto(sum));
+        return new ResultDto<>(toDto(sum));
     }
 
 }
