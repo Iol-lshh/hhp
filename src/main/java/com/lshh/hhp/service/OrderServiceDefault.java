@@ -5,8 +5,6 @@ import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.*;
 import com.lshh.hhp.orm.entity.Order;
 import com.lshh.hhp.orm.repository.OrderRepository;
-//import com.lshh.hhp.orm.repository.PurchaseRepositoryDeluxe;
-//import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +19,6 @@ public class OrderServiceDefault implements OrderService{
     final OrderRepository orderRepository;
     final UserService userService;
     final PurchaseService purchaseService;
-//    final PurchaseRepositoryDeluxe purchaseRepositoryDeluxe;
     final PointService pointService;
     final ProductService productService;
     final StockService stockService;
@@ -41,7 +38,7 @@ public class OrderServiceDefault implements OrderService{
 
     @Override
     @Transactional
-    public ResultDto<OrderDto> order(long userId, long productId) throws Exception {
+    public ResultDto<OrderDto> order(long userId, List<PurchaseRequestDto> purchaseRequestList) throws Exception {
         // # 0. user 확인
         userService.find(userId).orElseThrow(Exception::new);
         // # 1. 주문 생성: 시작
@@ -49,35 +46,28 @@ public class OrderServiceDefault implements OrderService{
             .userId(userId)
             .state(Result.Start.ordinal());
         order = orderRepository.save(order);
-
-        try {
-            // ## 0. 상품 확인
-            ProductDto productDto = productService
-                    .find(productId)
-                    .orElseThrow(Exception::new);
-            // ## 1. 재고 확인
-            if (!stockService.isInStock(productId)) {
-                throw new Exception("재고 부족");
-            }
-            //  ## 2. 아이디 포인트 확인
-            if (!pointService.isPayable(userId, productDto.price())) {
-                throw new Exception("포인트 부족");
-            }
-            // # 2. 구매 처리
-            // ## 1. 구매 생성
-            PurchaseDto purchaseDto = purchaseService.purchase(userId, productId, order.id()).getValue();
-            // ## 2. 상품 재고 처리
-            stockService.output(productId, purchaseDto.id());
-            // # 3. 주문 완료: 종료
-            order = orderRepository.save(order.state(Result.OK.ordinal()));
-            
-        }catch (Exception err){
-            // 주문 실패 처리 - 사실 단일 서비스에서 의미없음 (롤백되니까)
-            orderRepository.save(order.state(Result.FAIL.ordinal()));
-            throw err;
+        // ## 0. 상품 확인
+        List<Long> productIdList = purchaseRequestList.stream().map(PurchaseRequestDto::getProductId).toList();
+        List<ProductDto> productDto = productService
+            .findAll(productIdList);
+        // ## 1. 재고 확인 -todo 상품 * 재고를 view로 해결
+        // product.id, count(stock.id) from product join stock group by product.id
+        if(!stockService.isAllInStock(productIdList)){
+            throw new Exception("재고 부족");
         }
+        //  ## 2. 아이디 포인트 확인 -todo 상품 * 갯수로 총 지불 가격 제공
+        if(!pointService.isPayable(userId, productDto.price())){
+            throw new Exception("포인트 부족");
+        }
+        // # 2. 구매 처리
+        // ## 1. 구매 생성
+        PurchaseDto purchaseDto = purchaseService.purchase(userId, productId).getValue();
+        // ## 2. 상품 재고 처리
+        stockService.output(productId, purchaseDto.id());
+        // # 3. 주문 완료: 종료
+        order = orderRepository.save(order.state(Result.OK.ordinal()));
 
-        return new ResultDto<>(OrderServiceDefault.toDto(order));
+        return new ResultDto<>(Result.OK, this.toDto(order));
     }
 
     @Override
@@ -103,13 +93,5 @@ public class OrderServiceDefault implements OrderService{
             .stream()
             .map(OrderServiceDefault::toDto)
             .toList();
-    }
-    
-    @Override
-    public List<ViewOrderDto> findViewByUserId(long userId) {
-        //List<Tuple> a = purchaseRepositoryDeluxe.findViewByUserId(userId);
-        // todo 
-        // 관계 없이 조인하기
-        return null;
     }
 }

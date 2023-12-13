@@ -11,4 +11,6 @@ public interface ProductService {
 
     Optional<ProductDto> find(long id);
     List<ProductDto> findAll();
+
+    List<ProductDto> findAll(List<Long> productIdList);
 }

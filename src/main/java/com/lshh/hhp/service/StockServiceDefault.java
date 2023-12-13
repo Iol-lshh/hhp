@@ -110,4 +110,10 @@ public class StockServiceDefault implements StockService{
         dto.purchaseId(purchaseId);
         return this.save(dto);
     }
+
+    @Override
+    public boolean isAllInStock(List<Long> productIdList) {
+        // todo
+        return false;
+    }
 }
