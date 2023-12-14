@@ -37,7 +37,7 @@ jobs:
     # 이미지 빌드
     - name: Build the Docker image
       id: image_build
-      run: docker build . --file Dockerfile --tag ${{ steps.login-ecr.outputs.registry }}/hhp-prod:ch1st3${{ steps.set_timestamp.outputs.timestamp }}
+      run: docker build . --file Dockerfile --tag ${{ steps.login-ecr.outputs.registry }}/hhp-prod:ch1st3${{ steps.set_timestamp.outputs.timestamp }} -e USE_PROFILE=prod
           
     # 실패 처리
     - name: Check build logs if the build fails
