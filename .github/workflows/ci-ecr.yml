@@ -57,7 +57,7 @@ jobs:
       id: render-task-definition
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: arn:aws:ecs:ap-northeast-2:588630098141:task-definition/hhp-prod:1
+        task-definition: arn:aws:ecs:ap-northeast-2:588630098141:task-definition/hhp-prod
         container-name: hhp-prod-service
         image: ${{ steps.login-ecr.outputs.registry }}/hhp-prod:ch1st3${{ steps.set_timestamp.outputs.timestamp }}
 
