@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.0'
 	id 'io.spring.dependency-management' version '1.1.4'
+//	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.lshh'
@@ -27,10 +28,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	
 	// DB
-	// implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	// implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	// implementation 'com.zaxxer:HikariCP'
-	// runtimeOnly 'org.postgresql:postgresql'
+	 implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	 implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	 implementation 'com.zaxxer:HikariCP'
+	 runtimeOnly 'org.postgresql:postgresql'
+	// QueryDsl
+//	implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
+//	implementation "com.querydsl:querydsl-apt:5.0.0:jakarta"
+//	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+//	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+//	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
 
 	// Actuator
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -45,6 +52,33 @@ dependencies {
 	// developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+//def querydslSrcDir = 'src/main/generated'
+//
+//querydsl {
+//	jpa = true
+//	querydslSourcesDir = querydslSrcDir
+//}
+//
+//sourceSets {
+//	main.java.srcDir querydslSrcDir
+//}
+//
+//compileQuerydsl{
+//	options.annotationProcessorPath = configurations.querydsl
+//}
+//
+//configurations {
+//	compileOnly {
+//		extendsFrom annotationProcessor
+//	}
+//	querydsl.extendsFrom compileClasspath
+//}
+//
+//task cleanGeneatedDir {
+//	// clean 실행 시 생성된 QClass 삭제
+//	delete file(querydslSrcDir)
+//}
 
 tasks.named('test') {
 	useJUnitPlatform()
