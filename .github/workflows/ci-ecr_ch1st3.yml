@@ -59,7 +59,7 @@ jobs:
       with:
         task-definition: .aws/ecr/task/task_ch1st3.json
         container-name: container-hhp-prod
-        image: ${{ steps.login-ecr.outputs.registry }}/hhp-prod:ch1st3${{ steps.set_timestamp.outputs.timestamp }}
+        image: ${{ steps.login-ecr.outputs.registry }}/hhp-prod
 
 
     # ecs 띄우기 - 배포
