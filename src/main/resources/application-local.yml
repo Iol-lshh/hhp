@@ -1,6 +1,6 @@
 # server
 server:
-  port: 80
+  port: 3000
   servlet:
     application-display-name: hhp-local
 # Spring
