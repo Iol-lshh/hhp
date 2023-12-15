@@ -58,7 +58,7 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: .aws/ecr/task/task_ch1st3.json
-        container-name: hhp-prod-service
+        container-name: container-hhp-prod
         image: ${{ steps.login-ecr.outputs.registry }}/hhp-prod:ch1st3${{ steps.set_timestamp.outputs.timestamp }}
 
 
