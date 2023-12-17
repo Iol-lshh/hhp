@@ -1,5 +1,6 @@
 package com.lshh.hhp.service;
 
+import com.lshh.hhp.service.component.PointComponent.PointType;
 import com.lshh.hhp.common.dto.Response.Result;
 import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.PaymentDto;
@@ -10,6 +11,7 @@ import com.lshh.hhp.orm.entity.Point;
 import com.lshh.hhp.orm.entity.VPoint;
 import com.lshh.hhp.orm.repository.PointRepository;
 import com.lshh.hhp.orm.repository.VPointRepository;
+import com.lshh.hhp.service.component.PointComponent;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -97,7 +99,7 @@ public class PointServiceDefault implements PointService {
                     .userId(dto.userId())
                     .count(dto.paid() * -1)
                     .fromId(dto.id())
-                    .fromType(PointService.PointType.PURCHASE.ordinal()))
+                    .fromType(PointType.PURCHASE.ordinal()))
                 .toList();
 
         List<PointDto> results = pointRepository

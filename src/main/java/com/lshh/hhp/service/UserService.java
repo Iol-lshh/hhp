@@ -11,5 +11,4 @@ public interface UserService {
     ResultDto<UserDto> save(UserDto dto) throws Exception;
 
     List<UserDto> findAll();
-    Optional<UserDto> find(long id);
 }

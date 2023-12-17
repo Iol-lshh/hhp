@@ -4,6 +4,8 @@ import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.PaymentDto;
 import com.lshh.hhp.orm.entity.Payment;
 import com.lshh.hhp.orm.repository.PaymentRepository;
+import com.lshh.hhp.service.component.PaymentComponent;
+import com.lshh.hhp.service.component.UserComponent;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,50 +17,33 @@ import java.util.Optional;
 @Service
 public class PaymentServiceDefault implements PaymentService{
 
-    final UserService userService;
-    final PointService pointService;
-    final PaymentRepository paymentRepository;
-
-    public static PaymentDto toDto(Payment entity){
-        return new PaymentDto()
-            .id(entity.id())
-            .into(entity.into())
-            .userId(entity.userId());
-    }
-    public static Payment toEntity(PaymentDto dto){
-        return new Payment()
-            .id(dto.id())
-            .into(dto.into())
-            .userId(dto.userId());
-    }
+    final UserComponent userComponent;
+    final PaymentComponent pointComponent;
+    final PaymentComponent paymentComponent;
 
     @Override
     @Transactional
     public ResultDto<PaymentDto> exchange(long userId, int toNeed) throws Exception {
-        userService.find(userId).orElseThrow(Exception::new);
+        userComponent.find(userId).orElseThrow(Exception::new);
 
-        Payment payment = new Payment()
+        PaymentDto payment = new PaymentDto()
             .userId(userId)
             .into(toNeed);
-        payment = paymentRepository.save(payment);
-        PaymentDto paymentDto = toDto(payment);
-        pointService.payment(paymentDto);
+        payment = paymentComponent.save(payment);
 
-        return new ResultDto<>(paymentDto);
+        pointComponent.payment(payment);
+
+        return new ResultDto<>(payment);
     }
 
     @Override
     public List<PaymentDto> findAll() {
-        return paymentRepository
-            .findAll()
-            .stream()
-            .map(PaymentServiceDefault::toDto)
-            .toList();
+        return paymentComponent
+            .findAll();
     }
 
     @Override
     public Optional<PaymentDto> find(long id) {
-        return paymentRepository.findById(id)
-            .map(PaymentServiceDefault::toDto);
+        return paymentComponent.find(id);
     }
 }

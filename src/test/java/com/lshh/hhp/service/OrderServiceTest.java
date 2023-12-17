@@ -7,6 +7,7 @@ import com.lshh.hhp.dto.*;
 import com.lshh.hhp.orm.entity.*;
 import com.lshh.hhp.orm.repository.OrderRepository;
 
+import com.lshh.hhp.service.component.OrderComponent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -103,7 +104,7 @@ public class OrderServiceTest {
                 .thenReturn(orderStarted.state(Result.OK.ordinal()));
         // 주문 전체 처리 과정 결과
         when(orderService.order(user.id(), requestPurchaseDtoList))
-                .thenReturn(new ResultDto<>(OrderServiceDefault.toDto(orderStarted.state(Result.OK.ordinal()))));
+                .thenReturn(new ResultDto<>(OrderComponent.toDto(orderStarted.state(Result.OK.ordinal()))));
 
         // # 테스트
         ResultDto<OrderDto> resultDto = orderService.order(user.id(), requestPurchaseDtoList);

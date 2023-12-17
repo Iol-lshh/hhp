@@ -7,6 +7,8 @@ import com.lshh.hhp.service.component.PaymentComponent;
 import java.util.List;
 import java.util.Optional;
 
-public interface PaymentService extends PaymentComponent {
+public interface PaymentService {
     ResultDto<PaymentDto> exchange(long userId, int toNeed) throws Exception;
+    List<PaymentDto> findAll();
+    Optional<PaymentDto> find(long id);
 }

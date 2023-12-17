@@ -1,6 +1,7 @@
 package com.lshh.hhp.service.component;
 
 import com.lshh.hhp.common.dto.ResultDto;
+import com.lshh.hhp.dto.PaymentDto;
 import com.lshh.hhp.dto.PointDto;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface PointComponent {
     Optional<PointDto> find(long id);
 
     List<PointDto> findAllByUserId(long userId);
+
+
 }
