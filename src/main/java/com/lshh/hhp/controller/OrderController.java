@@ -1,9 +1,9 @@
 package com.lshh.hhp.controller;
 
-import com.lshh.hhp.common.dto.ResponseDto;
-import com.lshh.hhp.dto.OrderDto;
-import com.lshh.hhp.dto.RequestPurchaseOrderDto;
-import com.lshh.hhp.service.OrderService;
+import com.lshh.hhp.dto.ResponseDto;
+import com.lshh.hhp.dto.origin.OrderDto;
+import com.lshh.hhp.dto.request.RequestPurchaseOrderDto;
+import com.lshh.hhp.biz.biz2.OrderBiz2;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 public class OrderController {
 
-    final OrderService orderService;
+    final OrderBiz2 orderService;
 
     @Operation(summary = "주문")
     @PostMapping("/purchase")
