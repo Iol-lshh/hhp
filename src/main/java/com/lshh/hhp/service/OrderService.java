@@ -3,6 +3,7 @@ package com.lshh.hhp.service;
 import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.OrderDto;
 import com.lshh.hhp.dto.RequestPurchaseDto;
+import com.lshh.hhp.service.component.OrderComponent;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +20,7 @@ public interface OrderService {
     //  2. 아이디 포인트 차감
     //  3. 상품 재고 처리
     // 2. 주문 완료: 종료
-
     List<OrderDto> findAll();
     Optional<OrderDto> find(long id);
-
     List<OrderDto> findByUserId(long userId);
 }

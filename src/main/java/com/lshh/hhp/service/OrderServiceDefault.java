@@ -5,8 +5,13 @@ import com.lshh.hhp.common.dto.ResultDto;
 import com.lshh.hhp.dto.*;
 import com.lshh.hhp.orm.entity.Order;
 import com.lshh.hhp.orm.repository.OrderRepository;
+import com.lshh.hhp.service.component.OrderComponent;
+import com.lshh.hhp.service.component.PointComponent;
+import com.lshh.hhp.service.component.PurchaseComponent;
+import com.lshh.hhp.service.component.UserComponent;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +21,12 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OrderServiceDefault implements OrderService{
 
-    final OrderRepository orderRepository;
+    final OrderComponent orderComponent;
+    final UserComponent userComponent;
+    final PurchaseComponent purchaseComponent;
+    final PointComponent pointComponent;
+
+
     final UserService userService;
     final PurchaseService purchaseService;
     final PointService pointService;
