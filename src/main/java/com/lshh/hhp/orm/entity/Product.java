@@ -16,4 +16,5 @@ public class Product {
     Long id;
     String name;
     Integer price;
+    Integer stockCnt;
 }

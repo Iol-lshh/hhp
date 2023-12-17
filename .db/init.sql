@@ -36,7 +36,8 @@ CREATE INDEX payment_user_id ON tb_payment(user_id);
 CREATE TABLE tb_product(
     id SERIAL PRIMARY KEY,
     name VARCHAR(20),
-    price INTEGER
+    price INTEGER,
+    stock_cnt INTEGER
 );
 
 --
@@ -50,16 +51,6 @@ CREATE TABLE tb_purchase(
 );
 CREATE INDEX purchase_product_id ON tb_purchase(product_id, count);
 CREATE INDEX purchase_user_id ON tb_purchase(user_id);
-
-
---
-CREATE TABLE tb_stock(
-      id SERIAL PRIMARY KEY,
-      product_id INTEGER,
-      purchase_id INTEGER
-);
-CREATE INDEX stock_product_id ON tb_stock(product_id);
-CREATE INDEX stock_purchase_id ON tb_stock(purchase_id);
 
 --
 CREATE VIEW v_point AS

@@ -1,8 +1,8 @@
 package com.lshh.hhp.controller;
 
-import com.lshh.hhp.common.dto.ResponseDto;
-import com.lshh.hhp.dto.PointDto;
-import com.lshh.hhp.service.PointService;
+import com.lshh.hhp.dto.ResponseDto;
+import com.lshh.hhp.dto.origin.PointDto;
+import com.lshh.hhp.biz.biz1.PointBiz1;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class PointController {
-    final PointService pointService;
+    final PointBiz1 pointService;
 
     @Operation(summary = "포인트 잔액 확인")
     @GetMapping("/remain/{userId}")
