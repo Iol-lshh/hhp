@@ -32,11 +32,10 @@ public interface ProductBiz {
 
     List<ProductDto> unstore(List<RequestPurchaseDto> purchaseList) throws Exception;
 
-    void tryUnstore(List<RequestPurchaseDto> purchaseList) throws Exception;
-
     List<ProductDto> restore(List<PurchaseDto> purchaseList) throws Exception;
 
     List<ProductDto> findAll();
 
     Optional<ProductDto> find(Long productId);
+
 }

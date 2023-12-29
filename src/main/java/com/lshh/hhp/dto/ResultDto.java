@@ -12,7 +12,7 @@ public class ResultDto<T> implements Response{
     T value;
 
     public ResultDto(T value){
-        this.result = Result.OK;
+        this.result = Result.SUCCESS;
         this.value = value;
     }
 

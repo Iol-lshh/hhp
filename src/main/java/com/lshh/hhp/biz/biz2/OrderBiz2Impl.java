@@ -2,12 +2,13 @@ package com.lshh.hhp.biz.biz2;
 
 import com.lshh.hhp.biz.Biz;
 import com.lshh.hhp.dto.Response.Result;
+import com.lshh.hhp.dto.event.CancelPurchasedOrderEvent;
 import com.lshh.hhp.dto.origin.OrderDto;
 import com.lshh.hhp.dto.origin.PurchaseDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import com.lshh.hhp.biz.base.*;
 import com.lshh.hhp.biz.biz1.PurchaseBiz1;
-import com.lshh.hhp.dto.event.OrderPurchaseEvent;
+import com.lshh.hhp.dto.event.PurchaseOrderEvent;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Isolation;
@@ -100,9 +101,9 @@ public class OrderBiz2Impl implements OrderBiz2 {
             throw new Exception("잘못된 상품");
         }
 
-        // 주문 발급 - fire and forget
+        // 주문 발행 - fire and forget
         publisher.publishEvent(
-            new OrderPurchaseEvent()
+            new PurchaseOrderEvent()
                 .userId(userId)
                 .orderId(order.id())
                 .purchaseRequestList(purchaseRequestList)
@@ -123,6 +124,13 @@ public class OrderBiz2Impl implements OrderBiz2 {
 
     @Override
     public OrderDto startCancel(long orderId) {
+
+        // 주문 취소 발행
+        publisher.publishEvent(
+            new CancelPurchasedOrderEvent()
+                .orderId(orderId)
+        );
+
         return orderComponent.startCancel(new OrderDto().id(orderId));
     }
 

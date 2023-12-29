@@ -43,7 +43,7 @@ public class OrderControllerTest {
     @DisplayName("주문")
     public void order() throws Exception {
         // given
-        OrderDto expectedOrderDto = new OrderDto().id(1L).userId(1L).state(Response.Result.OK);
+        OrderDto expectedOrderDto = new OrderDto().id(1L).userId(1L).state(Response.Result.SUCCESS);
         when(orderService.order(anyLong(), any())).thenReturn(expectedOrderDto);
 
         mockMvc.perform(post("/order/purchase")
@@ -57,8 +57,8 @@ public class OrderControllerTest {
     @DisplayName("주문 내역 조회")
     public void findOrder() throws Exception {
         // Given
-        OrderDto order1 = new OrderDto().id(1L).state( Response.Result.OK).userId(1L);
-        OrderDto order2 = new OrderDto().id(2L).state( Response.Result.OK).userId(2L);
+        OrderDto order1 = new OrderDto().id(1L).state( Response.Result.SUCCESS).userId(1L);
+        OrderDto order2 = new OrderDto().id(2L).state( Response.Result.SUCCESS).userId(2L);
         List<OrderDto> mockOrderList = Arrays.asList(order1, order2);
         when(orderService.findByUserId(anyLong())).thenReturn(mockOrderList);
 

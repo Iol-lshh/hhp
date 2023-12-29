@@ -72,12 +72,6 @@ public class ProductBizImpl implements ProductBiz {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
-    public void tryUnstore(List<RequestPurchaseDto> purchaseList) throws Exception {
-        unstore(purchaseList);
-    }
-
-    @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
     public List<ProductDto> restore(List<PurchaseDto> purchasedList) throws Exception {
 
         List<Product> products = purchasedList.stream()
@@ -112,4 +106,5 @@ public class ProductBizImpl implements ProductBiz {
                 .findById(productId)
                 .map(ProductBiz::toDto);
     }
+
 }

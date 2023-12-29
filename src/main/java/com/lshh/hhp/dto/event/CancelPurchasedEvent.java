@@ -1,20 +1,18 @@
 package com.lshh.hhp.dto.event;
 
-import com.lshh.hhp.dto.Response.Result;
+import com.lshh.hhp.dto.origin.PurchaseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true, fluent = true)
-public class OrderPurchaseResolved {
-
+public class CancelPurchasedEvent {
     long orderId;
-
-    Result orderState;  // 전체 트랜잭션
-    Result purchaseState;   // 구매 트랜잭션
-    Result stockState;  // 재고 트랜잭션
+    List<PurchaseDto> purchasedList;
 }

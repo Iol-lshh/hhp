@@ -73,6 +73,6 @@ public class PurchaseBiz1Impl implements PurchaseBiz1 {
         List<PurchaseDto> purchaseDtoList = purchaseComponent.cancledByOrderId(orderId);
 
         pointComponent.cancel(purchaseDtoList);
-        return null;
+        return purchaseDtoList;
     }
 }
