@@ -1,11 +1,13 @@
 package com.lshh.hhp.controller;
 
-import com.lshh.hhp.common.dto.ResponseDto;
-import com.lshh.hhp.dto.UserDto;
-import com.lshh.hhp.service.UserService;
+import com.lshh.hhp.biz.base.UserBiz;
+import com.lshh.hhp.dto.ResultDto;
+import com.lshh.hhp.dto.origin.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -13,17 +15,11 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class UserController {
-    UserService userService;
 
-    @Operation(summary = "user 생성, 갱신")
-    @PostMapping("/")
-    public ResponseDto<UserDto> save(@RequestBody UserDto userDto) throws Exception {
-        return userService.save(userDto).toResponseDto();
-    }
-
-    @Operation(summary = "user 내역")
+    final UserBiz userService;
+    @Operation(summary = "유저 리스트")
     @GetMapping("/all")
-    public ResponseDto<List<UserDto>> all(){
-        return new ResponseDto<>(userService.findAll());
+    public ResultDto<List<UserDto>> all(){
+        return new ResultDto<>(userService.findAll());
     }
 }

@@ -1,0 +1,7 @@
+package com.lshh.hhp.biz.biz1;
+
+import com.lshh.hhp.dto.origin.PaymentDto;
+
+public interface PaymentBiz1 {
+    PaymentDto exchange(long userId, int toNeed) throws Exception;
+}

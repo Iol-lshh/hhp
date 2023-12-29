@@ -36,7 +36,8 @@ CREATE INDEX payment_user_id ON tb_payment(user_id);
 CREATE TABLE tb_product(
     id SERIAL PRIMARY KEY,
     name VARCHAR(20),
-    price INTEGER
+    price INTEGER,
+    stock_cnt INTEGER
 );
 
 --
@@ -46,20 +47,11 @@ CREATE TABLE tb_purchase(
     count INTEGER,
     user_id INTEGER,
     product_id INTEGER,
-    order_id INTEGER
+    order_id INTEGER,
+    state INTEGER
 );
 CREATE INDEX purchase_product_id ON tb_purchase(product_id, count);
 CREATE INDEX purchase_user_id ON tb_purchase(user_id);
-
-
---
-CREATE TABLE tb_stock(
-      id SERIAL PRIMARY KEY,
-      product_id INTEGER,
-      purchase_id INTEGER
-);
-CREATE INDEX stock_product_id ON tb_stock(product_id);
-CREATE INDEX stock_purchase_id ON tb_stock(purchase_id);
 
 --
 CREATE VIEW v_point AS
@@ -91,19 +83,31 @@ order by paid_cnt desc;
 INSERT INTO tb_user(name)
 SELECT name
 FROM (
-    SELECT 'AAA' AS name UNION
-    SELECT 'BBB' AS name UNION
-    SELECT 'SSS' AS name
-) tmp;
+         SELECT 'AAA' AS name UNION
+         SELECT 'BBB' AS name UNION
+         SELECT 'SSS' AS name
+     ) tmp;
 
-INSERT INTO tb_product(name, price)
-SELECT name, price
+INSERT INTO tb_product(name, price, stock_cnt)
+SELECT *
 FROM (
-     SELECT 'Apple' AS name, 10 as price UNION
-     SELECT 'BravoCone', 8 UNION
-     SELECT 'Single', 1
- ) tmp;
+         SELECT 'Apple' AS name, 10 as price, 10 as stock_cnt UNION
+         SELECT 'BravoCone', 8, 100 UNION
+         SELECT 'Single', 1, 1
+     ) tmp;
 
 
+INSERT INTO tb_payment(exchanged, user_id)
+SELECT *
+FROM (
+         SELECT 100 AS count, 1 as user_id
+     ) tmp;
+
+
+INSERT INTO tb_point(count, user_id, from_type, from_id)
+SELECT *
+FROM (
+         SELECT 100 AS count, 1 as user_id, 1 as from_type, 1 as from_id
+     ) tmp;
 
 

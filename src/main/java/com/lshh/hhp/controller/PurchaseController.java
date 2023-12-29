@@ -1,8 +1,8 @@
 package com.lshh.hhp.controller;
 
-import com.lshh.hhp.common.dto.ResponseDto;
-import com.lshh.hhp.dto.ViewPurchasedProductDto;
-import com.lshh.hhp.service.PurchaseService;
+import com.lshh.hhp.dto.ResultDto;
+import com.lshh.hhp.dto.view.ViewPurchasedProductDto;
+import com.lshh.hhp.biz.biz1.PurchaseBiz1;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class PurchaseController {
-    final PurchaseService purchaseService;
+    final PurchaseBiz1 purchaseService;
 
     @Operation(summary = "전체 기간 인기 판매 상품")
     @GetMapping("/favorite/{count}")
-    public ResponseDto<List<ViewPurchasedProductDto>> favorite(@PathVariable Integer count){
-        return new ResponseDto<>(purchaseService.favorite(count));
+    public ResultDto<List<ViewPurchasedProductDto>> favorite(@PathVariable Integer count){
+        return new ResultDto<>(purchaseService.favorite(count));
     }
 }
