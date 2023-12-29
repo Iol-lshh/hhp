@@ -1,6 +1,6 @@
 package com.lshh.hhp.dto.event;
 
-import com.lshh.hhp.dto.origin.PurchaseDto;
+import com.lshh.hhp.purchase.PurchaseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

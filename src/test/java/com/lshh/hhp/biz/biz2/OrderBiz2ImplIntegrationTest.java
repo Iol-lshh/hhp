@@ -1,10 +1,11 @@
 package com.lshh.hhp.biz.biz2;
 
-import com.lshh.hhp.biz.base.PointBiz;
-import com.lshh.hhp.biz.base.ProductBiz;
-import com.lshh.hhp.dto.Response.Result;
-import com.lshh.hhp.dto.origin.OrderDto;
-import com.lshh.hhp.dto.origin.ProductDto;
+import com.lshh.hhp.order.OrderOrchestrator;
+import com.lshh.hhp.point.PointBiz;
+import com.lshh.hhp.product.ProductBiz;
+import com.lshh.hhp.common.Response.Result;
+import com.lshh.hhp.order.OrderDto;
+import com.lshh.hhp.product.ProductDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class OrderBiz2ImplIntegrationTest {
 
     @Autowired
-    private OrderBiz2 orderService;
+    private OrderOrchestrator orderService;
     @Autowired
     private PointBiz pointComponent;
     @Autowired

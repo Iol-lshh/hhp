@@ -2,10 +2,11 @@ package com.lshh.hhp.controller;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lshh.hhp.biz.biz2.OrderBiz2;
-import com.lshh.hhp.dto.Response;
-import com.lshh.hhp.dto.ResultDto;
-import com.lshh.hhp.dto.origin.OrderDto;
+import com.lshh.hhp.order.OrderOrchestrator;
+import com.lshh.hhp.order.OrderController;
+import com.lshh.hhp.common.Response;
+import com.lshh.hhp.common.ResultDto;
+import com.lshh.hhp.order.OrderDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class OrderControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private OrderBiz2 orderService;
+    private OrderOrchestrator orderService;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

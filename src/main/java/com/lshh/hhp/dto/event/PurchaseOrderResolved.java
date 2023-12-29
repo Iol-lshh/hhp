@@ -1,6 +1,6 @@
 package com.lshh.hhp.dto.event;
 
-import com.lshh.hhp.dto.Response.Result;
+import com.lshh.hhp.common.Response.Result;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

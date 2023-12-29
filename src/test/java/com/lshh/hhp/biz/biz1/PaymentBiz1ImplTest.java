@@ -1,11 +1,12 @@
 package com.lshh.hhp.biz.biz1;
 
-import com.lshh.hhp.dto.origin.PaymentDto;
-import com.lshh.hhp.biz.base.PaymentBiz;
-import com.lshh.hhp.biz.base.PointBiz;
-import com.lshh.hhp.biz.base.UserBiz;
-import com.lshh.hhp.dto.origin.PointDto;
-import com.lshh.hhp.dto.origin.UserDto;
+import com.lshh.hhp.payment.PaymentDto;
+import com.lshh.hhp.payment.PaymentBiz;
+import com.lshh.hhp.point.PointBiz;
+import com.lshh.hhp.payment.PaymentBiz1Impl;
+import com.lshh.hhp.user.UserBiz;
+import com.lshh.hhp.point.PointDto;
+import com.lshh.hhp.user.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

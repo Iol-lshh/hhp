@@ -1,6 +1,6 @@
 package com.lshh.hhp.dto.view;
 
-import com.lshh.hhp.dto.Response;
+import com.lshh.hhp.common.Response;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

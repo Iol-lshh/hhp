@@ -1,15 +1,16 @@
 package com.lshh.hhp.biz.biz2;
 
-import com.lshh.hhp.biz.base.OrderBiz;
-import com.lshh.hhp.biz.base.PointBiz;
-import com.lshh.hhp.biz.base.ProductBiz;
-import com.lshh.hhp.biz.base.UserBiz;
-import com.lshh.hhp.biz.biz1.PurchaseBiz1;
-import com.lshh.hhp.dto.Response.Result;
-import com.lshh.hhp.dto.origin.OrderDto;
-import com.lshh.hhp.dto.origin.ProductDto;
-import com.lshh.hhp.dto.origin.PurchaseDto;
-import com.lshh.hhp.dto.origin.UserDto;
+import com.lshh.hhp.order.OrderBiz;
+import com.lshh.hhp.order.OrderOrchestratorImpl;
+import com.lshh.hhp.point.PointBiz;
+import com.lshh.hhp.product.ProductBiz;
+import com.lshh.hhp.user.UserBiz;
+import com.lshh.hhp.purchase.PurchaseBiz1;
+import com.lshh.hhp.common.Response.Result;
+import com.lshh.hhp.order.OrderDto;
+import com.lshh.hhp.product.ProductDto;
+import com.lshh.hhp.purchase.PurchaseDto;
+import com.lshh.hhp.user.UserDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,7 @@ import static org.mockito.Mockito.*;
 public class OrderBiz2ImplTest {
 
     @InjectMocks
-    private OrderBiz2Impl orderService;
+    private OrderOrchestratorImpl orderService;
     @Mock
     private OrderBiz orderComponent;
 
