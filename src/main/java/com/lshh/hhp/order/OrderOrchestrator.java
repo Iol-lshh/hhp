@@ -4,6 +4,7 @@ import com.lshh.hhp.dto.request.RequestPurchaseDto;
 
 import java.util.List;
 
+// delux biz
 public interface OrderOrchestrator {
     
     List<OrderDto> findByUserId(long userId);
@@ -36,7 +37,7 @@ public interface OrderOrchestrator {
 
     
     // 주문 이벤트 발급
-    OrderDto start(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception;
+    OrderDto startOrder(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception;
 
     OrderDto success(long orderId);
     OrderDto fail(long orderId);

@@ -33,7 +33,7 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
 
     // order - 강결합 동기 주문 처리
     @Override
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public OrderDto order(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
         // # 0. user 확인
         userComponent.find(userId).orElseThrow(Exception::new);
@@ -92,7 +92,7 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
 
     // 약결합 - 주문 시작 처리
     @Override
-    public OrderDto start(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
+    public OrderDto startOrder(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
         // # 0. user 확인
         userComponent.find(userId).orElseThrow(Exception::new);
         // # 1. 주문 생성: 시작

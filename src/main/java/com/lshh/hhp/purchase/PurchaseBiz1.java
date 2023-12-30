@@ -5,6 +5,7 @@ import com.lshh.hhp.dto.view.ViewPurchasedProductDto;
 
 import java.util.List;
 
+// delux biz
 public interface PurchaseBiz1 {
     List<ViewPurchasedProductDto> favorite(Integer count);
 

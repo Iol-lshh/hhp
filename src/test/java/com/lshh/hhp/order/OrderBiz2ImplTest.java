@@ -1,13 +1,9 @@
-package com.lshh.hhp.biz.biz2;
+package com.lshh.hhp.order;
 
-import com.lshh.hhp.order.OrderBiz;
-import com.lshh.hhp.order.OrderOrchestratorImpl;
-import com.lshh.hhp.point.PointBiz;
 import com.lshh.hhp.product.ProductBiz;
 import com.lshh.hhp.user.UserBiz;
 import com.lshh.hhp.purchase.PurchaseBiz1;
 import com.lshh.hhp.common.Response.Result;
-import com.lshh.hhp.order.OrderDto;
 import com.lshh.hhp.product.ProductDto;
 import com.lshh.hhp.purchase.PurchaseDto;
 import com.lshh.hhp.user.UserDto;
@@ -41,8 +37,6 @@ public class OrderBiz2ImplTest {
     private PurchaseBiz1 purchaseComponent;
     @Mock
     private UserBiz userComponent;
-    @Mock
-    private PointBiz pointComponent;
     @Mock
     private ProductBiz productComponent;
 
@@ -83,7 +77,7 @@ public class OrderBiz2ImplTest {
         List<OrderDto> result = orderService.findByUserId(testUserId);
 
         // Assert
-        assertEquals(expectedOrderDtos, result);
+        assert expectedOrderDtos.equals(result);
     }
 
 

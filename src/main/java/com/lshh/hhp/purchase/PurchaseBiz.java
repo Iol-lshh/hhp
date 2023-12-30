@@ -5,6 +5,7 @@ import com.lshh.hhp.dto.view.ViewPurchasedProductDto;
 
 import java.util.List;
 
+// base biz
 public interface PurchaseBiz {
 
     static PurchaseDto toDto(Purchase entity){

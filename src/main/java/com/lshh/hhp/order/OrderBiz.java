@@ -5,6 +5,7 @@ import com.lshh.hhp.common.Response.Result;
 import java.util.List;
 import java.util.Optional;
 
+// base biz
 public interface OrderBiz {
 
     static OrderDto toDto(Order entity){

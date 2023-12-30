@@ -1,13 +1,12 @@
-package com.lshh.hhp.biz.biz2;
+package com.lshh.hhp.order;
 
-import com.lshh.hhp.order.OrderOrchestrator;
 import com.lshh.hhp.point.PointBiz;
 import com.lshh.hhp.product.ProductBiz;
 import com.lshh.hhp.common.Response.Result;
-import com.lshh.hhp.order.OrderDto;
 import com.lshh.hhp.product.ProductDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

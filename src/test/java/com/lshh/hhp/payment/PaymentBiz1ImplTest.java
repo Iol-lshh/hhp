@@ -1,4 +1,4 @@
-package com.lshh.hhp.biz.biz1;
+package com.lshh.hhp.payment;
 
 import com.lshh.hhp.payment.PaymentDto;
 import com.lshh.hhp.payment.PaymentBiz;

@@ -1,12 +1,9 @@
-package com.lshh.hhp.biz.biz1;
+package com.lshh.hhp.purchase;
 
 import com.lshh.hhp.point.PointBiz;
 import com.lshh.hhp.product.ProductBiz;
-import com.lshh.hhp.purchase.PurchaseBiz;
 import com.lshh.hhp.product.ProductDto;
-import com.lshh.hhp.purchase.PurchaseDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
-import com.lshh.hhp.purchase.PurchaseBiz1Impl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
