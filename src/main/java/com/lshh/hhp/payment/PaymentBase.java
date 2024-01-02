@@ -1,6 +1,6 @@
 package com.lshh.hhp.payment;
 
-public interface PaymentBiz {
+public interface PaymentBase {
 
     static PaymentDto toDto(Payment entity){
         return new PaymentDto()

@@ -9,20 +9,20 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Biz
-public class UserBizImpl implements UserBiz {
+public class UserBaseImpl implements UserBase {
     final UserRepository userRepository;
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         return userRepository.findAll()
                 .stream()
-                .map(UserBiz::toDto)
+                .map(UserBase::toDto)
                 .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<UserDto> find(long id) {
-        return userRepository.findById(id).map(UserBiz::toDto);
+        return userRepository.findById(id).map(UserBase::toDto);
     }
 }

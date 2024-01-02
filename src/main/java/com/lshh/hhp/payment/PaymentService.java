@@ -1,5 +1,5 @@
 package com.lshh.hhp.payment;
 
-public interface PaymentBiz1 {
+public interface PaymentService {
     PaymentDto exchange(long userId, int toNeed) throws Exception;
 }

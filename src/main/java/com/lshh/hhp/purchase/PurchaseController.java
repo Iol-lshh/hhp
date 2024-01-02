@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class PurchaseController {
-    final PurchaseBiz1 purchaseService;
+    final PurchaseService purchaseService;
 
     @Operation(summary = "전체 기간 인기 판매 상품")
     @GetMapping("/favorite/{count}")

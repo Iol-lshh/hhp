@@ -1,12 +1,16 @@
 package com.lshh.hhp.order;
 
+import com.lshh.hhp.dto.event.CancelOrderEvent;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import org.springframework.context.event.EventListener;
 
 import java.util.List;
 
 // delux biz
 public interface OrderOrchestrator {
-    
+
+    void onCancelOrderEvent(CancelOrderEvent event) throws Exception;
+
     List<OrderDto> findByUserId(long userId);
     
     // 주문 동기 처리
@@ -34,15 +38,5 @@ public interface OrderOrchestrator {
     // 5. 재고 취소
 
     // 6. 취소 완료 - 취소 실패시, 이전 상태로
-
-    
-    // 주문 이벤트 발급
-    OrderDto startOrder(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception;
-
-    OrderDto success(long orderId);
-    OrderDto fail(long orderId);
-
-    OrderDto startCancel(long orderId);
-    OrderDto finishedCancel(long orderId);
 
 }

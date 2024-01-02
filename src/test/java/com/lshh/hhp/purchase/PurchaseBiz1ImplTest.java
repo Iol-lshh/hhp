@@ -1,7 +1,7 @@
 package com.lshh.hhp.purchase;
 
-import com.lshh.hhp.point.PointBiz;
-import com.lshh.hhp.product.ProductBiz;
+import com.lshh.hhp.point.PointBase;
+import com.lshh.hhp.product.ProductBase;
 import com.lshh.hhp.product.ProductDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,14 +23,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class PurchaseBiz1ImplTest {
 
     @Mock
-    PointBiz pointComponent;
+    PointBase pointComponent;
     @Mock
-    PurchaseBiz purchaseComponent;
+    PurchaseBase purchaseComponent;
     @Mock
-    ProductBiz productComponent;
+    ProductBase productComponent;
 
     @InjectMocks
-    PurchaseBiz1Impl purchaseService;
+    PurchaseServiceImpl purchaseService;
 
     PurchaseDto purchase;
     RequestPurchaseDto requestPurchaseDto;

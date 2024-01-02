@@ -1,7 +1,7 @@
 package com.lshh.hhp.order;
 
-import com.lshh.hhp.point.PointBiz;
-import com.lshh.hhp.product.ProductBiz;
+import com.lshh.hhp.point.PointBase;
+import com.lshh.hhp.product.ProductBase;
 import com.lshh.hhp.common.Response.Result;
 import com.lshh.hhp.product.ProductDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +28,9 @@ public class OrderBiz2ImplIntegrationTest {
     @Autowired
     private OrderOrchestrator orderService;
     @Autowired
-    private PointBiz pointComponent;
+    private PointBase pointComponent;
     @Autowired
-    private ProductBiz productComponent;
+    private ProductBase productComponent;
 
     private List<RequestPurchaseDto> prepareRequestPurchaseDtoList() {
         // 30

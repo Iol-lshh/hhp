@@ -21,11 +21,7 @@ public class OrderController {
         return new ResultDto<>(orderService.order(dto.getUserId(), dto.getRequestPurchaseList()));
     }
 
-    @Operation(summary = "주문 시도 - 이벤트 발행 처리 (약결합)")
-    @PostMapping("/tryPurchase")
-    public ResultDto<OrderDto> tryOrder(@RequestBody RequestPurchaseOrderDto dto) throws Exception {
-        return new ResultDto<>(orderService.startOrder(dto.getUserId(), dto.getRequestPurchaseList()));
-    }
+
 
     @Operation(summary = "주문 내역")
     @GetMapping("/all/{userId}")

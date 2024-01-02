@@ -6,7 +6,7 @@ import com.lshh.hhp.dto.view.ViewPurchasedProductDto;
 import java.util.List;
 
 // delux biz
-public interface PurchaseBiz1 {
+public interface PurchaseService {
     List<ViewPurchasedProductDto> favorite(Integer count);
 
     List<PurchaseDto> purchase(long userId, Long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception;

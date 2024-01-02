@@ -6,9 +6,9 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @NoArgsConstructor
+@Accessors(chain = true, fluent = true)
 @Getter
 @Setter
-@Accessors(chain = true, fluent = true)
-public class CancelPurchasedOrderEvent {
+public class CancelOrderEvent {
     long orderId;
 }

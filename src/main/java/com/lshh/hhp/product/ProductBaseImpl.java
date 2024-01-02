@@ -3,7 +3,9 @@ package com.lshh.hhp.product;
 import com.lshh.hhp.common.Biz;
 import com.lshh.hhp.purchase.PurchaseDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +14,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Biz
-public class ProductBizImpl implements ProductBiz {
+public class ProductBaseImpl implements ProductBase {
     final ProductRepository productRepository;
     @Override
     @Transactional(readOnly = true)
@@ -41,8 +43,8 @@ public class ProductBizImpl implements ProductBiz {
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
-    public List<ProductDto> unstore(List<RequestPurchaseDto> purchaseList) throws Exception {
+    @Lock(LockModeType.OPTIMISTIC)
+    public List<ProductDto> deduct(List<RequestPurchaseDto> purchaseList) throws Exception {
 
         // ## 재고 확인
         if (!isInStock(purchaseList)) {
@@ -63,13 +65,13 @@ public class ProductBizImpl implements ProductBiz {
         return productRepository
                 .saveAll(products)
                 .stream()
-                .map(ProductBiz::toDto)
+                .map(ProductBase::toDto)
                 .toList();
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
-    public List<ProductDto> restore(List<PurchaseDto> purchasedList) throws Exception {
+    @Lock(LockModeType.OPTIMISTIC)
+    public List<ProductDto> conduct(List<PurchaseDto> purchasedList) throws Exception {
 
         List<Product> products = purchasedList.stream()
                 .map(purchased -> productRepository.findById(purchased.productId())
@@ -83,7 +85,7 @@ public class ProductBizImpl implements ProductBiz {
         return productRepository
                 .saveAll(products)
                 .stream()
-                .map(ProductBiz::toDto)
+                .map(ProductBase::toDto)
                 .toList();
     }
 
@@ -92,7 +94,7 @@ public class ProductBizImpl implements ProductBiz {
     public List<ProductDto> findAll() {
         return productRepository.findAll()
                 .stream()
-                .map(ProductBiz::toDto)
+                .map(ProductBase::toDto)
                 .toList();
     }
 
@@ -101,7 +103,7 @@ public class ProductBizImpl implements ProductBiz {
     public Optional<ProductDto> find(Long productId) {
         return productRepository
                 .findById(productId)
-                .map(ProductBiz::toDto);
+                .map(ProductBase::toDto);
     }
 
 }

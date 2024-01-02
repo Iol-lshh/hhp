@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PaymentController {
 
-    final PaymentBiz1 paymentService;
+    final PaymentService paymentService;
     
     @Operation(summary = "포인트 생성")
     @PostMapping("/exchange")

@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    final UserBiz userService;
+    final UserBase userService;
     @Operation(summary = "유저 리스트")
     @GetMapping("/all")
     public ResultDto<List<UserDto>> all(){

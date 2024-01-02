@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Biz
-public class PointBizImpl implements PointBiz {
+public class PointBaseImpl implements PointBase {
 
     final PointRepository pointRepository;
     final VPointRepository vPointRepository;
@@ -32,7 +32,7 @@ public class PointBizImpl implements PointBiz {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PointDto save(PointDto dto) {
-        return PointBiz.toDto(pointRepository.save(PointBiz.toEntity(dto)));
+        return PointBase.toDto(pointRepository.save(PointBase.toEntity(dto)));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class PointBizImpl implements PointBiz {
         return pointRepository
                 .saveAll(pointList)
                 .stream()
-                .map(PointBiz::toDto)
+                .map(PointBase::toDto)
                 .toList();
     }
 
@@ -69,7 +69,7 @@ public class PointBizImpl implements PointBiz {
                 .toList();
         return pointRepository.saveAll(pointList)
                 .stream()
-                .map(PointBiz::toDto)
+                .map(PointBase::toDto)
                 .toList();
     }
 
@@ -79,7 +79,7 @@ public class PointBizImpl implements PointBiz {
         return pointRepository
                 .findAllByUserId(userId)
                 .stream()
-                .map(PointBiz::toDto)
+                .map(PointBase::toDto)
                 .toList();
     }
 
@@ -95,7 +95,7 @@ public class PointBizImpl implements PointBiz {
                 .stream()
                 .map(vPoint -> new Point()
                         .userId(vPoint.userId())
-                        .fromType(PointBiz.PointType.SUM.ordinal())
+                        .fromType(PointBase.PointType.SUM.ordinal())
                         .count(vPoint.remain()))
                 .toList();
 
@@ -110,7 +110,7 @@ public class PointBizImpl implements PointBiz {
         // # insert sum
         eachSums = pointRepository.saveAll(eachSums);
 
-        return eachSums.stream().map(PointBiz::toDto).toList();
+        return eachSums.stream().map(PointBase::toDto).toList();
     }
 
     @Override
@@ -135,7 +135,7 @@ public class PointBizImpl implements PointBiz {
         // # insert sum
         sum = pointRepository.save(sum);
 
-        return PointBiz.toDto(sum);
+        return PointBase.toDto(sum);
     }
 
     @Override

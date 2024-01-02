@@ -10,12 +10,12 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Biz
-public class OrderBizImpl implements OrderBiz {
+public class OrderBaseImpl implements OrderBase {
     final OrderRepository orderRepository;
 
     @Override
     public OrderDto start(long userId) {
-        return  OrderBiz.toDto(orderRepository.save(
+        return  OrderBase.toDto(orderRepository.save(
             new Order()
                 .userId(userId)
                 .state(Result.START.ordinal())
@@ -24,16 +24,16 @@ public class OrderBizImpl implements OrderBiz {
 
     @Override
     public OrderDto success(OrderDto order) {
-        Order _order = OrderBiz.toEntity(order)
+        Order _order = OrderBase.toEntity(order)
             .state(Result.SUCCESS.ordinal());
-        return OrderBiz.toDto(orderRepository.save(_order));
+        return OrderBase.toDto(orderRepository.save(_order));
     }
 
     @Override
     public OrderDto fail(OrderDto order) {
-        Order _order = OrderBiz.toEntity(order)
+        Order _order = OrderBase.toEntity(order)
             .state(Result.FAIL.ordinal());
-        return OrderBiz.toDto(orderRepository.save(_order));
+        return OrderBase.toDto(orderRepository.save(_order));
     }
 
     @Override
@@ -42,27 +42,27 @@ public class OrderBizImpl implements OrderBiz {
         return orderRepository
             .findByUserId(userId)
             .stream()
-            .map(OrderBiz::toDto)
+            .map(OrderBase::toDto)
             .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<OrderDto> find(long orderId) {
-        return orderRepository.findById(orderId).map(OrderBiz::toDto);
+        return orderRepository.findById(orderId).map(OrderBase::toDto);
     }
 
     @Override
     public OrderDto startCancel(OrderDto order) {
-        Order _order = OrderBiz.toEntity(order)
+        Order _order = OrderBase.toEntity(order)
                 .state(Result.CANCELING.ordinal());
-        return OrderBiz.toDto(orderRepository.save(_order));
+        return OrderBase.toDto(orderRepository.save(_order));
     }
 
     @Override
     public OrderDto finishedCancel(OrderDto order) {
-        Order _order = OrderBiz.toEntity(order)
+        Order _order = OrderBase.toEntity(order)
                 .state(Result.CANCELED.ordinal());
-        return OrderBiz.toDto(orderRepository.save(_order));
+        return OrderBase.toDto(orderRepository.save(_order));
     }
 }

@@ -3,7 +3,7 @@ package com.lshh.hhp.user;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserBiz {
+public interface UserBase {
 
     static UserDto toDto(User entity){
         return new UserDto()

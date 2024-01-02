@@ -6,7 +6,7 @@ import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductBiz {
+public interface ProductBase {
     static ProductDto toDto(Product entity){
         return new ProductDto()
                 .id(entity.id())
@@ -28,9 +28,9 @@ public interface ProductBiz {
 
     int findPrice(Long productId);
 
-    List<ProductDto> unstore(List<RequestPurchaseDto> purchaseList) throws Exception;
+    List<ProductDto> deduct(List<RequestPurchaseDto> purchaseList) throws Exception;
 
-    List<ProductDto> restore(List<PurchaseDto> purchaseList) throws Exception;
+    List<ProductDto> conduct(List<PurchaseDto> purchaseList) throws Exception;
 
     List<ProductDto> findAll();
 

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 // base biz
-public interface OrderBiz {
+public interface OrderBase {
 
     static OrderDto toDto(Order entity){
         return new OrderDto()

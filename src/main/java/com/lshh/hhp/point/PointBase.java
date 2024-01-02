@@ -5,7 +5,7 @@ import com.lshh.hhp.purchase.PurchaseDto;
 
 import java.util.List;
 
-public interface PointBiz {
+public interface PointBase {
 
     enum PointType{
         SUM(0),

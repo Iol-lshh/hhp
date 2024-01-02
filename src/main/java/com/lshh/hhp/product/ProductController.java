@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class ProductController{
-    final ProductBiz productService;
+    final ProductBase productService;
 
     @Operation(summary = "상품 전체", description = "상품 전체 리스트 확인")
     @GetMapping("/all")

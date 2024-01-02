@@ -1,10 +1,7 @@
 package com.lshh.hhp.payment;
 
-import com.lshh.hhp.payment.PaymentDto;
-import com.lshh.hhp.payment.PaymentBiz;
-import com.lshh.hhp.point.PointBiz;
-import com.lshh.hhp.payment.PaymentBiz1Impl;
-import com.lshh.hhp.user.UserBiz;
+import com.lshh.hhp.point.PointBase;
+import com.lshh.hhp.user.UserBase;
 import com.lshh.hhp.point.PointDto;
 import com.lshh.hhp.user.UserDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,16 +21,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PaymentBiz1ImplTest {
 
     @InjectMocks
-    PaymentBiz1Impl paymentService;
+    PaymentServiceImpl paymentService;
 
     @Mock
-    UserBiz userComponent;
+    UserBase userComponent;
     
     @Mock
-    PaymentBiz paymentComponent;
+    PaymentBase paymentComponent;
     
     @Mock
-    PointBiz pointComponent;
+    PointBase pointComponent;
 
     long userId;
     int toNeed;

@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class PointController {
-    final PointBiz pointService;
+    final PointBase pointService;
 
     @Operation(summary = "포인트 잔액 확인")
     @GetMapping("/remain/{userId}")

@@ -4,9 +4,12 @@ import com.lshh.hhp.common.Biz;
 import com.lshh.hhp.product.ProductDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import com.lshh.hhp.dto.view.ViewPurchasedProductDto;
-import com.lshh.hhp.point.PointBiz;
-import com.lshh.hhp.product.ProductBiz;
+import com.lshh.hhp.point.PointBase;
+import com.lshh.hhp.product.ProductBase;
+import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,17 +17,19 @@ import java.util.List;
 
 @AllArgsConstructor
 @Biz(level = 1)
-public class PurchaseBiz1Impl implements PurchaseBiz1 {
+public class PurchaseServiceImpl implements PurchaseService {
 
-    final PointBiz pointComponent;
-    final PurchaseBiz purchaseComponent;
-    final ProductBiz productComponent;
+    final PointBase pointComponent;
+    final PurchaseBase purchaseComponent;
+    final ProductBase productComponent;
 
     @Override
-    @Transactional(readOnly = true)
+    @Cacheable
     public List<ViewPurchasedProductDto> favorite(Integer count) {
         return purchaseComponent.favorite(count);
     }
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -36,7 +41,7 @@ public class PurchaseBiz1Impl implements PurchaseBiz1 {
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
+    @Lock(LockModeType.OPTIMISTIC)
     public List<PurchaseDto> purchase(long userId, Long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
 
         //  ## 아이디 포인트 확인
@@ -65,7 +70,7 @@ public class PurchaseBiz1Impl implements PurchaseBiz1 {
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = Exception.class)
+    @Lock(LockModeType.OPTIMISTIC)
     public List<PurchaseDto> cancel(long orderId) throws Exception {
         List<PurchaseDto> purchaseDtoList = purchaseComponent.cancledByOrderId(orderId);
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Biz
-public class PurchaseBizImpl implements PurchaseBiz {
+public class PurchaseBaseImpl implements PurchaseBase {
 
     final VTopPurchasedProductRepository vTopPurchasedProductRepository;
     final PurchaseRepository purchaseRepository;
@@ -37,7 +37,7 @@ public class PurchaseBizImpl implements PurchaseBiz {
         return purchaseRepository
                 .saveAll(purchaseList)
                 .stream()
-                .map(PurchaseBiz::toDto)
+                .map(PurchaseBase::toDto)
                 .toList();
     }
 

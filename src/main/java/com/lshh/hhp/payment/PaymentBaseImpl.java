@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Biz
-public class PaymentBizImpl implements PaymentBiz {
+public class PaymentBaseImpl implements PaymentBase {
     final PaymentRepository paymentRepository;
 
 
@@ -17,7 +17,7 @@ public class PaymentBizImpl implements PaymentBiz {
                 .userId(userId)
                 .into(toNeed);
 
-        return PaymentBiz.toDto(paymentRepository.save(newOne));
+        return PaymentBase.toDto(paymentRepository.save(newOne));
     }
 
 }
