@@ -4,13 +4,13 @@ import com.lshh.hhp.dto.event.CancelOrderEvent;
 import com.lshh.hhp.point.PointBase;
 import com.lshh.hhp.product.ProductBase;
 import com.lshh.hhp.common.Biz;
-import com.lshh.hhp.common.Response.Result;
 import com.lshh.hhp.purchase.PurchaseDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import com.lshh.hhp.purchase.PurchaseService;
 import com.lshh.hhp.user.UserBase;
 import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.Lock;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 @Biz(level = 2)
 public class OrderOrchestratorImpl implements OrderOrchestrator {
@@ -35,10 +36,11 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
     @Override
     @EventListener
     public void onCancelOrderEvent(CancelOrderEvent event) {
+        log.trace("handle_cancel_order_event");
         try{
             cancel(event.orderId());
         }catch (Exception exception){
-            System.out.println(exception);
+            log.error(exception.getMessage());
         }
     }
 
@@ -70,10 +72,12 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
             productComponent.deduct(purchaseRequestList);
             // # 3. 주문 완료: 종료
             return orderComponent.success(order);
-        }catch (Exception err){
+        }catch (Exception exception){
             orderComponent.fail(order);
+            log.error(exception.getMessage());
+            log.trace("invoke_cancel_order_event");
             publisher.publishEvent(new CancelOrderEvent().orderId(order.id()));
-            throw err;
+            throw exception;
         }
     }
 
