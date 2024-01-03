@@ -53,7 +53,6 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
 
     // order - 동기 주문 처리
     @Override
-    @Transactional
     public OrderDto order(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
         // # 0. user 확인
         userComponent.find(userId).orElseThrow(Exception::new);
