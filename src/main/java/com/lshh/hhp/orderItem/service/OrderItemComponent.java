@@ -10,6 +10,7 @@ import java.util.List;
 // base biz
 public interface OrderItemComponent {
 
+    // todo 컨버팅 함수들 엔티티로 이동
     static OrderItemDto toDto(OrderItem entity){
         return new OrderItemDto()
                 .id(entity.id())
