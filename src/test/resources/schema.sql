@@ -42,7 +42,7 @@ CREATE TABLE tb_product(
 );
 
 --
-CREATE TABLE tb_purchase(
+CREATE TABLE tb_order_item(
     id SERIAL PRIMARY KEY,
     paid INTEGER,
     count INTEGER,
@@ -51,8 +51,8 @@ CREATE TABLE tb_purchase(
     order_id INTEGER,
     state INTEGER
 );
-CREATE INDEX purchase_product_id ON tb_purchase(product_id, count);
-CREATE INDEX purchase_user_id ON tb_purchase(user_id);
+CREATE INDEX purchase_product_id ON tb_order_item(product_id, count);
+CREATE INDEX purchase_user_id ON tb_order_item(user_id);
 
 --
 CREATE VIEW v_point AS
@@ -68,7 +68,7 @@ with sum_paid_cnt AS (
     select
         tpc.product_id,
         sum(tpc.count) as paid_cnt
-    from tb_purchase tpc
+    from tb_order_item tpc
     group by tpc.product_id
 )
 select

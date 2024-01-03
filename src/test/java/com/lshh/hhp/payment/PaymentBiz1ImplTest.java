@@ -1,8 +1,11 @@
 package com.lshh.hhp.payment;
 
-import com.lshh.hhp.point.PointBase;
+import com.lshh.hhp.payment.dto.PaymentDto;
+import com.lshh.hhp.payment.service.PaymentBase;
+import com.lshh.hhp.payment.service.PaymentServiceImpl;
+import com.lshh.hhp.point.service.PointBase;
 import com.lshh.hhp.user.UserBase;
-import com.lshh.hhp.point.PointDto;
+import com.lshh.hhp.point.dto.PointDto;
 import com.lshh.hhp.user.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +49,7 @@ public class PaymentBiz1ImplTest {
         // Arrange
         when(userComponent.find(userId)).thenReturn(Optional.of(new UserDto()));
         when(paymentComponent.create(userId, toNeed)).thenReturn(mockedPaymentDto);
-        doReturn(new PointDto()).when(pointComponent).pay(mockedPaymentDto);
+        doReturn(new PointDto()).when(pointComponent).add(mockedPaymentDto);
         
         // Act
         PaymentDto paymentDtoResult = paymentService.exchange(userId, toNeed);
@@ -57,7 +60,7 @@ public class PaymentBiz1ImplTest {
         assertEquals(mockedPaymentDto.userId(), paymentDtoResult.userId());
         verify(userComponent, times(1)).find(userId);
         verify(paymentComponent, times(1)).create(userId, toNeed);
-        verify(pointComponent, times(1)).pay(paymentDtoResult);
+        verify(pointComponent, times(1)).add(paymentDtoResult);
     }
 
     @Test
@@ -69,6 +72,6 @@ public class PaymentBiz1ImplTest {
         assertThrows(Exception.class, () -> paymentService.exchange(userId, toNeed));
         verify(userComponent, times(1)).find(userId);
         verify(paymentComponent, times(0)).create(userId, toNeed);
-        verify(pointComponent, times(0)).pay(mockedPaymentDto);
+        verify(pointComponent, times(0)).add(mockedPaymentDto);
     }
 }

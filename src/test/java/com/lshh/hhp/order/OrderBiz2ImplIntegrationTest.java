@@ -1,15 +1,16 @@
 package com.lshh.hhp.order;
 
-import com.lshh.hhp.point.PointBase;
-import com.lshh.hhp.product.ProductBase;
+import com.lshh.hhp.order.dto.OrderDto;
+import com.lshh.hhp.order.service.OrderOrchestrator;
+import com.lshh.hhp.point.service.PointBase;
+import com.lshh.hhp.product.service.ProductBase;
 import com.lshh.hhp.common.Response.Result;
-import com.lshh.hhp.product.ProductDto;
+import com.lshh.hhp.product.dto.ProductDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Arrays;
 import java.util.List;

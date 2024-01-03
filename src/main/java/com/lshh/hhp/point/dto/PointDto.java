@@ -1,23 +1,26 @@
-package com.lshh.hhp.dto.view;
+package com.lshh.hhp.point.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lshh.hhp.order.dto.OrderDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 @NoArgsConstructor
 @Getter
 @Setter
-@Accessors(chain = true)
+@Accessors(chain = true, fluent = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ViewOrderDto {
+public class PointDto {
     @JsonProperty
-    OrderDto order;
+    Long id;
     @JsonProperty
-    List<ViewPurchaseDto> purchaseList;
+    Integer count;
+    @JsonProperty
+    Long userId;
+    @JsonProperty
+    Integer fromType;   // PointService.PointType
+    @JsonProperty
+    Long fromId;    // PaymentId or PurchaseId
 }
