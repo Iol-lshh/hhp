@@ -52,11 +52,11 @@ public class OrderBiz2ImplIntegrationTest {
     @DisplayName("주문 성공 확인")
     public void testOrder() throws Exception {
         long userId = 1L;
-        System.out.println("주문 전 남은 잔액: "+pointComponent.remain(userId));
+        System.out.println("before 남은 잔액: "+pointComponent.remain(userId));
         // 100 - 40
         List<RequestPurchaseDto> purchaseRequestList = prepareRequestPurchaseDtoList();
         OrderDto orderDto = orderService.order(userId, purchaseRequestList);
-        System.out.println("주문 후 남은 잔액: "+pointComponent.remain(userId));
+        System.out.println("after 남은 잔액: "+pointComponent.remain(userId));
         
         assertEquals(1L, orderDto.id());
         assertEquals(Result.SUCCESS, orderDto.state());
@@ -76,11 +76,11 @@ public class OrderBiz2ImplIntegrationTest {
 
     // 동시성 테스트 - 주문 실패 케이스 - 포인트 부족
     @Test
-    @Order(4)
+    @Order(3)
     @DisplayName("동시성 - 포인트 부족 - 주문 하나만 실패")
     void orderPointlessWithConcurrentTest() throws Exception {
         long userId = 1L;   // 60
-
+        System.out.println("before 남은 잔액: "+pointComponent.remain(userId));
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         IntStream.range(0, 2)
             .parallel()
@@ -96,16 +96,17 @@ public class OrderBiz2ImplIntegrationTest {
                 })
             );
         executorService.awaitTermination(1, TimeUnit.SECONDS);
-        System.out.println("남은 잔액: "+pointComponent.remain(userId));
+        System.out.println("after 남은 잔액: "+pointComponent.remain(userId));
         assertTrue(pointComponent.remain(userId) >= 0);
     }
 
     // 동시성 테스트 - 재고 처리 실패 케이스 - 재고 부족
     @Test
-    @Order(3)
+    @Order(4)
     @DisplayName("동시성 - 재고 부족 - 주문 하나만 실패")
     void orderStocklessWithConcurrentTest() throws Exception {
         long userId = 1L;   // 20
+        System.out.println("before 남은 잔액: "+pointComponent.remain(userId));
         RequestPurchaseDto requestLessStockCase = new RequestPurchaseDto()
                 .setProductId(3L)   // price 1, cnt 1
                 .setCount(1);
@@ -126,6 +127,7 @@ public class OrderBiz2ImplIntegrationTest {
             );
         executorService.awaitTermination(1, TimeUnit.SECONDS);
         System.out.println("재고 수량: "+productComponent.find(requestLessStockCase.getProductId()).map(ProductDto::stockCnt).orElse(0));
+        System.out.println("after 남은 잔액: "+pointComponent.remain(userId));
         assertTrue(productComponent.find(requestLessStockCase.getProductId()).map(ProductDto::stockCnt).orElse(0) >= 0);
     }
 }

@@ -48,7 +48,8 @@ CREATE TABLE tb_purchase(
     count INTEGER,
     user_id INTEGER,
     product_id INTEGER,
-    order_id INTEGER
+    order_id INTEGER,
+    state INTEGER
 );
 CREATE INDEX purchase_product_id ON tb_purchase(product_id, count);
 CREATE INDEX purchase_user_id ON tb_purchase(user_id);

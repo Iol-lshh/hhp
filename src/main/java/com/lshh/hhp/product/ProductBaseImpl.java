@@ -44,6 +44,7 @@ public class ProductBaseImpl implements ProductBase {
 
     @Override
     @Lock(LockModeType.OPTIMISTIC)
+    @Transactional
     public List<ProductDto> deduct(List<RequestPurchaseDto> purchaseList) throws Exception {
 
         // ## 재고 확인

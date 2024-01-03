@@ -37,7 +37,7 @@ public interface PointBase {
     PointDto pay(PaymentDto paymentDto);
 
     List<PointDto> purchase(List<PurchaseDto> purchaseDtos) throws Exception;
-    List<PointDto> cancel(List<PurchaseDto> purchaseDtoList) throws Exception;
+    List<PointDto> cancelPurchase(List<PurchaseDto> purchaseDtoList) throws Exception;
 
     PointDto save(PointDto dto);
 

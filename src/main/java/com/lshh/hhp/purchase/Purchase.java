@@ -17,8 +17,8 @@ public class Purchase {
     Integer paid;
     Integer count;
 
-    Long productId;
     Long userId;
+    Long productId;
     Long orderId;
 
     Integer state;

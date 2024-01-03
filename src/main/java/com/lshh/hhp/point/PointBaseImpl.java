@@ -3,7 +3,9 @@ package com.lshh.hhp.point;
 import com.lshh.hhp.common.Biz;
 import com.lshh.hhp.payment.PaymentDto;
 import com.lshh.hhp.purchase.PurchaseDto;
+import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,7 @@ public class PointBaseImpl implements PointBase {
     final VPointRepository vPointRepository;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public PointDto pay(PaymentDto paymentDto) {
         PointDto pointDto = new PointDto()
                 .userId(paymentDto.userId())
@@ -30,13 +32,14 @@ public class PointBaseImpl implements PointBase {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public PointDto save(PointDto dto) {
         return PointBase.toDto(pointRepository.save(PointBase.toEntity(dto)));
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Transactional
     public List<PointDto> purchase(List<PurchaseDto> purchaseDtos) throws Exception {
         List<Point> pointList = purchaseDtos.stream()
                 .map(dto->new Point()
@@ -45,8 +48,6 @@ public class PointBaseImpl implements PointBase {
                         .fromId(dto.id())
                         .fromType(PointType.PURCHASE.ordinal()))
                 .toList();
-        System.out.println(remain(purchaseDtos.get(0).userId()));
-        System.out.println(pointList.stream().mapToInt(Point::count).sum());
         if(remain(purchaseDtos.get(0).userId()) + pointList.stream().mapToInt(Point::count).sum() < 0){
             throw new Exception("포인트 부족");
         }
@@ -59,8 +60,9 @@ public class PointBaseImpl implements PointBase {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
-    public List<PointDto> cancel(List<PurchaseDto> purchaseDtoList) throws Exception {
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Transactional
+    public List<PointDto> cancelPurchase(List<PurchaseDto> purchaseDtoList) throws Exception {
         List<Point> pointList = purchaseDtoList.stream()
                 .map(purchase->pointRepository.findByFromTypeAndFromId(PointType.PURCHASE.ordinal(), purchase.id()))
                 .filter(Optional::isPresent)
@@ -84,7 +86,7 @@ public class PointBaseImpl implements PointBase {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public List<PointDto> squash() {
         // 1. 각 user 마다, 이전 포인트들의 count를 0처리하고
         // 2. sum의 count인 포인트를 추가해줌
@@ -114,7 +116,8 @@ public class PointBaseImpl implements PointBase {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Transactional
     public PointDto squash(long userId) throws Exception {
         Point sum = vPointRepository
                 .findByUserId(userId)
@@ -139,6 +142,7 @@ public class PointBaseImpl implements PointBase {
     }
 
     @Override
+    @Lock(LockModeType.PESSIMISTIC_READ)
     @Transactional(readOnly = true)
     public int remain(long userId) {
         return vPointRepository

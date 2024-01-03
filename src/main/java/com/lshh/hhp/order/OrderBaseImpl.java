@@ -14,6 +14,7 @@ public class OrderBaseImpl implements OrderBase {
     final OrderRepository orderRepository;
 
     @Override
+    @Transactional
     public OrderDto start(long userId) {
         return  OrderBase.toDto(orderRepository.save(
             new Order()
@@ -23,6 +24,7 @@ public class OrderBaseImpl implements OrderBase {
     }
 
     @Override
+    @Transactional
     public OrderDto success(OrderDto order) {
         Order _order = OrderBase.toEntity(order)
             .state(Result.SUCCESS.ordinal());
@@ -30,6 +32,7 @@ public class OrderBaseImpl implements OrderBase {
     }
 
     @Override
+    @Transactional
     public OrderDto fail(OrderDto order) {
         Order _order = OrderBase.toEntity(order)
             .state(Result.FAIL.ordinal());
@@ -53,6 +56,7 @@ public class OrderBaseImpl implements OrderBase {
     }
 
     @Override
+    @Transactional
     public OrderDto startCancel(OrderDto order) {
         Order _order = OrderBase.toEntity(order)
                 .state(Result.CANCELING.ordinal());
@@ -60,6 +64,7 @@ public class OrderBaseImpl implements OrderBase {
     }
 
     @Override
+    @Transactional
     public OrderDto finishedCancel(OrderDto order) {
         Order _order = OrderBase.toEntity(order)
                 .state(Result.CANCELED.ordinal());

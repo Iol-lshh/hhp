@@ -34,8 +34,12 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
 
     @Override
     @EventListener
-    public void onCancelOrderEvent(CancelOrderEvent event) throws Exception {
-        cancel(event.orderId());
+    public void onCancelOrderEvent(CancelOrderEvent event) {
+        try{
+            cancel(event.orderId());
+        }catch (Exception exception){
+            System.out.println(exception);
+        }
     }
 
     @Override
@@ -47,6 +51,7 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
 
     // order - 동기 주문 처리
     @Override
+    @Transactional
     public OrderDto order(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
         // # 0. user 확인
         userComponent.find(userId).orElseThrow(Exception::new);
@@ -78,13 +83,10 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
     // order - 동기 주문 취소 처리
     @Override
     @Lock(LockModeType.OPTIMISTIC)
+    @Transactional
     public OrderDto cancel(long orderId) throws Exception {
-        // 1. 주문 확인 - fail 제외
+        // 1. 주문 확인
         OrderDto target = orderComponent.find(orderId).orElseThrow(()->new Exception("잘못된 주문"));
-        Result beforeState = target.state();
-        if(beforeState.equals(Result.FAIL)){
-            throw new Exception("실패한 주문");
-        }
 
         // 2. 주문 취소 시작
         target = orderComponent.startCancel(target);

@@ -34,7 +34,6 @@ class PurchaseBiz1ImplTest {
 
     PurchaseDto purchase;
     RequestPurchaseDto requestPurchaseDto;
-
     List<RequestPurchaseDto> requestPurchaseList;
 
     @BeforeEach

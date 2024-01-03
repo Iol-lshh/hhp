@@ -1,6 +1,7 @@
 package com.lshh.hhp.purchase;
 
 import com.lshh.hhp.common.Biz;
+import com.lshh.hhp.common.Response.Result;
 import com.lshh.hhp.product.ProductDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import com.lshh.hhp.dto.view.ViewPurchasedProductDto;
@@ -10,7 +11,6 @@ import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Lock;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -32,6 +32,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 
     @Override
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional(readOnly = true)
     public boolean isPayable(long userId, List<RequestPurchaseDto> requestList){
         return pointComponent.remain(userId) >= requestList
@@ -41,7 +42,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    @Lock(LockModeType.OPTIMISTIC)
+    @Lock(LockModeType.PESSIMISTIC_READ)
     public List<PurchaseDto> purchase(long userId, Long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
 
         //  ## 아이디 포인트 확인
@@ -59,7 +60,8 @@ public class PurchaseServiceImpl implements PurchaseService {
                         * productComponent.find(request.getProductId())
                             .map(ProductDto::price)
                             .orElse(0))
-                    .count(request.getCount()))
+                    .count(request.getCount())
+                    .state(Result.SUCCESS.ordinal()))
                 .toList();
 
         List<PurchaseDto> purchaseDtoList = purchaseComponent.save(purchaseList);
@@ -74,7 +76,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     public List<PurchaseDto> cancel(long orderId) throws Exception {
         List<PurchaseDto> purchaseDtoList = purchaseComponent.cancledByOrderId(orderId);
 
-        pointComponent.cancel(purchaseDtoList);
+        pointComponent.cancelPurchase(purchaseDtoList);
         return purchaseDtoList;
     }
 }
