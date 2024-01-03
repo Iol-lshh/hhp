@@ -36,7 +36,7 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
     @Override
     @EventListener
     public void onCancelOrderEvent(CancelOrderEvent event) {
-        log.trace("handle_cancel_order_event");
+        log.info("handle_cancel_order_event");
         try{
             cancel(event.orderId());
         }catch (Exception exception){
@@ -74,7 +74,7 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
         }catch (Exception exception){
             orderComponent.fail(order);
             log.error(exception.getMessage());
-            log.trace("invoke_cancel_order_event");
+            log.info("invoke_cancel_order_event");
             publisher.publishEvent(new CancelOrderEvent().orderId(order.id()));
             throw exception;
         }
