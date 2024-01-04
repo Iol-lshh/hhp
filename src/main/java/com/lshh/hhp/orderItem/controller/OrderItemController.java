@@ -2,7 +2,7 @@ package com.lshh.hhp.orderItem.controller;
 
 import com.lshh.hhp.common.ResultDto;
 import com.lshh.hhp.dto.view.ViewPurchasedProductDto;
-import com.lshh.hhp.orderItem.service.OrderItemService;
+import com.lshh.hhp.orderItem.service.OrderItem1Service;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 public class OrderItemController {
-    final OrderItemService purchaseService;
+    final OrderItem1Service purchaseService;
 
     @Operation(summary = "전체 기간 인기 판매 상품")
     @GetMapping("/favorite/{count}")

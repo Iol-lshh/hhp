@@ -1,4 +1,4 @@
-package com.lshh.hhp.user;
+package com.lshh.hhp.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

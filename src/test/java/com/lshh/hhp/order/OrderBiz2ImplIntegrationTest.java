@@ -1,9 +1,10 @@
 package com.lshh.hhp.order;
 
 import com.lshh.hhp.order.dto.OrderDto;
-import com.lshh.hhp.order.service.OrderOrchestrator;
-import com.lshh.hhp.point.service.PointBase;
-import com.lshh.hhp.product.service.ProductBase;
+import com.lshh.hhp.order.service.OrderOrchestratorService;
+import com.lshh.hhp.point.service.PointService;
+import com.lshh.hhp.product.Product;
+import com.lshh.hhp.product.service.ProductService;
 import com.lshh.hhp.common.Response.Result;
 import com.lshh.hhp.product.dto.ProductDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
@@ -27,11 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class OrderBiz2ImplIntegrationTest {
 
     @Autowired
-    private OrderOrchestrator orderService;
+    private OrderOrchestratorService orderService;
     @Autowired
-    private PointBase pointComponent;
+    private PointService pointComponent;
     @Autowired
-    private ProductBase productComponent;
+    private ProductService productComponent;
 
     private List<RequestPurchaseDto> prepareRequestPurchaseDtoList() {
         // 30
@@ -123,12 +124,12 @@ public class OrderBiz2ImplIntegrationTest {
                         System.out.println("주문 실패!");
                         System.out.println(e.getMessage());
                     }
-                    System.out.println(i + " 재고 수량: "+productComponent.find(requestLessStockCase.getProductId()).map(ProductDto::stockCnt).orElse(0));
+                    System.out.println(i + " 재고 수량: "+productComponent.find(requestLessStockCase.getProductId()).map(Product::stockCnt).orElse(0));
                 })
             );
         executorService.awaitTermination(1, TimeUnit.SECONDS);
-        System.out.println("재고 수량: "+productComponent.find(requestLessStockCase.getProductId()).map(ProductDto::stockCnt).orElse(0));
+        System.out.println("재고 수량: "+productComponent.find(requestLessStockCase.getProductId()).map(Product::stockCnt).orElse(0));
         System.out.println("after 남은 잔액: "+pointComponent.remain(userId));
-        assertTrue(productComponent.find(requestLessStockCase.getProductId()).map(ProductDto::stockCnt).orElse(0) >= 0);
+        assertTrue(productComponent.find(requestLessStockCase.getProductId()).map(Product::stockCnt).orElse(0) >= 0);
     }
 }

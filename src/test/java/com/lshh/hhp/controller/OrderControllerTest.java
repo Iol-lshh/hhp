@@ -2,7 +2,7 @@ package com.lshh.hhp.controller;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lshh.hhp.order.service.OrderOrchestrator;
+import com.lshh.hhp.order.service.OrderOrchestratorService;
 import com.lshh.hhp.order.controller.OrderController;
 import com.lshh.hhp.common.Response;
 import com.lshh.hhp.common.ResultDto;
@@ -36,7 +36,7 @@ public class OrderControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private OrderOrchestrator orderService;
+    private OrderOrchestratorService orderService;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

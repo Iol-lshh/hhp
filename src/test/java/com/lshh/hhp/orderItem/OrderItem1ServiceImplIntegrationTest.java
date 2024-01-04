@@ -2,10 +2,8 @@ package com.lshh.hhp.orderItem;
 
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
-import com.lshh.hhp.orderItem.service.OrderItemComponent;
-import com.lshh.hhp.orderItem.service.OrderItemService;
-import com.lshh.hhp.point.service.PointBase;
-import com.lshh.hhp.product.service.ProductBase;
+import com.lshh.hhp.orderItem.service.OrderItem1Service;
+import com.lshh.hhp.point.service.PointService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,16 +19,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PurchaseBiz1ImplIntegrationTest {
+public class OrderItem1ServiceImplIntegrationTest {
 
     @Autowired
-    OrderItemService purchaseService;
+    OrderItem1Service orderItem1Service;
     @Autowired
-    PointBase pointComponent;
-    @Autowired
-    OrderItemComponent purchaseComponent;
-    @Autowired
-    ProductBase productComponent;
+    PointService pointService;
 
     static long orderId = 0L;
 
@@ -57,14 +51,14 @@ public class PurchaseBiz1ImplIntegrationTest {
         long testOrderId = ++orderId;
         List<RequestPurchaseDto> requests = prepareRequestPurchaseDtoList();
         // Act
-        System.out.println("주문 전 남은 잔액: "+pointComponent.remain(testUserId));
-        List<OrderItemDto> result = purchaseService.purchase(testUserId, testOrderId, requests);
-        System.out.println("주문 후 남은 잔액: "+pointComponent.remain(testUserId));
+        System.out.println("주문 전 남은 잔액: "+pointService.remain(testUserId));
+        List<OrderItemDto> result = orderItem1Service.purchase(testUserId, testOrderId, requests);
+        System.out.println("주문 후 남은 잔액: "+pointService.remain(testUserId));
 
         // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertTrue(pointComponent.remain(testUserId) >= 0);
+        assertTrue(pointService.remain(testUserId) >= 0);
         //100 - 40 = 60
     }
 
@@ -84,17 +78,17 @@ public class PurchaseBiz1ImplIntegrationTest {
                         executorService.submit(() -> {
                             long testOrderId = orderId + i;
                             try {
-                                purchaseService.purchase(testUserId, testOrderId, prepareRequestPurchaseDtoList());
+                                orderItem1Service.purchase(testUserId, testOrderId, prepareRequestPurchaseDtoList());
                             } catch (Exception e) {
                                 System.out.println("주문 실패!");
                                 System.out.println(e.getMessage());
                             }
-                            System.out.println(i + " 남은 잔액: "+pointComponent.remain(testUserId));
+                            System.out.println(i + " 남은 잔액: "+pointService.remain(testUserId));
                         })
                 );
         executorService.awaitTermination(1, TimeUnit.SECONDS);
-        System.out.println("남은 잔액: "+pointComponent.remain(testUserId));
-        assertTrue(pointComponent.remain(testUserId) >= 0);
+        System.out.println("남은 잔액: "+pointService.remain(testUserId));
+        assertTrue(pointService.remain(testUserId) >= 0);
     }
 
 }

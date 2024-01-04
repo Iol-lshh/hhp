@@ -3,7 +3,7 @@ package com.lshh.hhp.order.controller;
 import com.lshh.hhp.common.ResultDto;
 import com.lshh.hhp.dto.request.RequestPurchaseOrderDto;
 import com.lshh.hhp.order.dto.OrderDto;
-import com.lshh.hhp.order.service.OrderOrchestrator;
+import com.lshh.hhp.order.service.OrderOrchestratorService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 public class OrderController {
 
-    final OrderOrchestrator orderService;
+    final OrderOrchestratorService orderService;
 
     @Operation(summary = "주문 - 동기 처리 (강결합)")
     @PostMapping("/purchase")

@@ -1,6 +1,9 @@
-package com.lshh.hhp.user;
+package com.lshh.hhp.user.controller;
 
 import com.lshh.hhp.common.ResultDto;
+import com.lshh.hhp.user.User;
+import com.lshh.hhp.user.service.UserService;
+import com.lshh.hhp.user.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +17,10 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    final UserBase userService;
+    final UserService userService;
     @Operation(summary = "유저 리스트")
     @GetMapping("/all")
     public ResultDto<List<UserDto>> all(){
-        return new ResultDto<>(userService.findAll());
+        return new ResultDto<>(userService.findAll().stream().map(User::toDto).toList());
     }
 }

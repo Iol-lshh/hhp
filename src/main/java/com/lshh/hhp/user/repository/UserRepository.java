@@ -1,5 +1,6 @@
-package com.lshh.hhp.user;
+package com.lshh.hhp.user.repository;
 
+import com.lshh.hhp.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

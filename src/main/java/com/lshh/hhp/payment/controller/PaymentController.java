@@ -3,7 +3,7 @@ package com.lshh.hhp.payment.controller;
 import com.lshh.hhp.common.ResultDto;
 import com.lshh.hhp.dto.request.RequestExchangeDto;
 import com.lshh.hhp.payment.dto.PaymentDto;
-import com.lshh.hhp.payment.service.PaymentService;
+import com.lshh.hhp.payment.service.Payment1Service;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PaymentController {
 
-    final PaymentService paymentService;
+    final Payment1Service paymentService;
     
     @Operation(summary = "포인트 생성")
     @PostMapping("/exchange")

@@ -6,7 +6,8 @@ public interface Response {
         SUCCESS(1),
         FAIL(2),
         CANCELING(3),
-        CANCELED(4);
+        CANCELED(4),
+        OK(5);
 
         Result(int code) {
         }

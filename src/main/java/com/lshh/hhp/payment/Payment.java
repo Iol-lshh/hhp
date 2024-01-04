@@ -1,14 +1,13 @@
 package com.lshh.hhp.payment;
 
+import com.lshh.hhp.payment.dto.PaymentDto;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Entity
 @Getter
-@Setter
-@Accessors(chain = true, fluent = true)
+@Accessors(fluent = true)
 @Table(name = "tb_payment")
 public class Payment {
     @Id
@@ -17,4 +16,25 @@ public class Payment {
     @Column(name = "exchanged")
     Integer into;
     Long userId;
+
+    public static Payment createNewPayment(long userId, int into){
+        Payment newOne = new Payment();
+        newOne.userId = userId;
+        newOne.into = into;
+        return newOne;
+    }
+
+    public PaymentDto toDto(){
+        return new PaymentDto()
+                .id(this.id())
+                .into(this.into())
+                .userId(this.userId());
+    }
+    public static Payment toEntity(PaymentDto dto){
+        Payment entity = new Payment();
+        entity.id = dto.id();
+        entity.into = dto.into();
+        entity.userId = dto.userId();
+        return entity;
+    }
 }

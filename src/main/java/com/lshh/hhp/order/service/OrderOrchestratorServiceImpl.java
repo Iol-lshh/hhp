@@ -4,13 +4,13 @@ import com.lshh.hhp.common.Response;
 import com.lshh.hhp.dto.event.CancelOrderEvent;
 import com.lshh.hhp.order.Order;
 import com.lshh.hhp.order.dto.OrderDto;
-import com.lshh.hhp.point.service.PointBase;
-import com.lshh.hhp.product.service.ProductBase;
-import com.lshh.hhp.common.Biz;
+import com.lshh.hhp.point.service.PointService;
+import com.lshh.hhp.product.service.ProductService;
+import com.lshh.hhp.common.Service;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
-import com.lshh.hhp.orderItem.service.OrderItemService;
-import com.lshh.hhp.user.UserBase;
+import com.lshh.hhp.orderItem.service.OrderItem1Service;
+import com.lshh.hhp.user.service.UserService;
 import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,16 +23,16 @@ import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
-@Biz(level = 2)
-public class OrderOrchestratorImpl implements OrderOrchestrator {
+@Service(level = 2)
+public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
 
     // 규칙. 작은 숫자의 biz1 만을 확장 가능하다.
-    final OrderItemService purchaseComponent;
+    final OrderItem1Service purchaseComponent;
 
-    final OrderComponent orderComponent;
-    final UserBase userComponent;
-    final PointBase pointComponent;
-    final ProductBase productComponent;
+    final OrderService orderComponent;
+    final UserService userComponent;
+    final PointService pointComponent;
+    final ProductService productComponent;
 
     final ApplicationEventPublisher publisher;
 
@@ -62,7 +62,7 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
         // # 0. user 확인
         userComponent.find(userId).orElseThrow(Exception::new);
         // # 1. 주문 생성: 시작
-        Order order = Order.createNewOrder(userId);
+        Order order = orderComponent.start(userId);
         try {
             // ## 0. 상품 확인
             if(!productComponent.validate(purchaseRequestList)){
@@ -75,12 +75,12 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
             // ## 2. 상품 재고 처리
             productComponent.deduct(purchaseRequestList);
             // # 3. 주문 완료: 종료
-            orderComponent.setState(order.id(), Response.Result.SUCCESS);
+            order.setState(Response.Result.SUCCESS);
             return order.toDto();
 
         }catch (Exception exception){
             log.error(exception.getMessage());
-            orderComponent.setState(order.id(), Response.Result.FAIL);
+            order.setState(Response.Result.FAIL);
 
             log.info("invoke_cancel_order_event");
             publisher.publishEvent(new CancelOrderEvent().orderId(order.id()));
@@ -97,7 +97,7 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
         Order target = orderComponent.find(orderId).orElseThrow(()->new Exception("잘못된 주문"));
 
         // 2. 주문 취소 시작
-        orderComponent.setState(target.id(), Response.Result.CANCELING);
+        target.setState(Response.Result.CANCELING);
 
         try {
             // 3. 구매 취소
@@ -108,12 +108,12 @@ public class OrderOrchestratorImpl implements OrderOrchestrator {
             productComponent.conduct(canceledList);
 
             // 6. 취소 완료 - 취소 실패시, 이전 상태로
-            orderComponent.setState(target.id(), Response.Result.CANCELED);
+            target.setState(Response.Result.CANCELED);
             return target.toDto();
 
         }catch (Exception exception){
             log.error(exception.getMessage());
-            orderComponent.setState(target.id(), Response.Result.FAIL);
+            target.setState(Response.Result.FAIL);
             throw exception;
         }
     }

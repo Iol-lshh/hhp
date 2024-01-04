@@ -1,7 +1,12 @@
 package com.lshh.hhp.payment.service;
 
-import com.lshh.hhp.payment.dto.PaymentDto;
+import com.lshh.hhp.payment.Payment;
 
+/**
+ * level 0
+ * Represents a service for creating a payment.
+ */
 public interface PaymentService {
-    PaymentDto exchange(long userId, int toNeed) throws Exception;
+
+    Payment create(long userId, int toNeed);
 }

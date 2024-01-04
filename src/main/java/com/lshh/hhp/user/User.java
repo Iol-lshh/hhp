@@ -1,5 +1,6 @@
 package com.lshh.hhp.user;
 
+import com.lshh.hhp.user.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,4 +16,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
+
+    public UserDto toDto(){
+        return new UserDto()
+                .id(this.id())
+                .name(this.name());
+    }
 }

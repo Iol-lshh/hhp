@@ -1,12 +1,13 @@
 package com.lshh.hhp.payment;
 
 import com.lshh.hhp.payment.dto.PaymentDto;
-import com.lshh.hhp.payment.service.PaymentBase;
-import com.lshh.hhp.payment.service.PaymentServiceImpl;
-import com.lshh.hhp.point.service.PointBase;
-import com.lshh.hhp.user.UserBase;
+import com.lshh.hhp.payment.service.PaymentService;
+import com.lshh.hhp.payment.service.Payment1ServiceImpl;
+import com.lshh.hhp.point.service.PointService;
+import com.lshh.hhp.user.User;
+import com.lshh.hhp.user.service.UserService;
 import com.lshh.hhp.point.dto.PointDto;
-import com.lshh.hhp.user.UserDto;
+import com.lshh.hhp.user.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,16 +25,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PaymentBiz1ImplTest {
 
     @InjectMocks
-    PaymentServiceImpl paymentService;
+    Payment1ServiceImpl paymentService;
 
     @Mock
-    UserBase userComponent;
+    UserService userComponent;
     
     @Mock
-    PaymentBase paymentComponent;
+    PaymentService paymentComponent;
     
     @Mock
-    PointBase pointComponent;
+    PointService pointComponent;
 
     long userId;
     int toNeed;
@@ -46,10 +47,11 @@ public class PaymentBiz1ImplTest {
     }
     @Test
     void testExchange_successCase() throws Exception {
+        Payment mockedPayment = Payment.toEntity(mockedPaymentDto);
         // Arrange
-        when(userComponent.find(userId)).thenReturn(Optional.of(new UserDto()));
-        when(paymentComponent.create(userId, toNeed)).thenReturn(mockedPaymentDto);
-        doReturn(new PointDto()).when(pointComponent).add(mockedPaymentDto);
+        when(userComponent.find(userId)).thenReturn(Optional.of(new User()));
+        when(paymentComponent.create(userId, toNeed)).thenReturn(mockedPayment);
+        doReturn(new PointDto()).when(pointComponent).add(mockedPayment);
         
         // Act
         PaymentDto paymentDtoResult = paymentService.exchange(userId, toNeed);
@@ -60,11 +62,12 @@ public class PaymentBiz1ImplTest {
         assertEquals(mockedPaymentDto.userId(), paymentDtoResult.userId());
         verify(userComponent, times(1)).find(userId);
         verify(paymentComponent, times(1)).create(userId, toNeed);
-        verify(pointComponent, times(1)).add(paymentDtoResult);
+        verify(pointComponent, times(1)).add(mockedPayment);
     }
 
     @Test
     void testExchange_failedCase() {
+        Payment mockedPayment = Payment.toEntity(mockedPaymentDto);
         // Arrange
         when(userComponent.find(userId)).thenReturn(Optional.empty());
         
@@ -72,6 +75,6 @@ public class PaymentBiz1ImplTest {
         assertThrows(Exception.class, () -> paymentService.exchange(userId, toNeed));
         verify(userComponent, times(1)).find(userId);
         verify(paymentComponent, times(0)).create(userId, toNeed);
-        verify(pointComponent, times(0)).add(mockedPaymentDto);
+        verify(pointComponent, times(0)).add(mockedPayment);
     }
 }
