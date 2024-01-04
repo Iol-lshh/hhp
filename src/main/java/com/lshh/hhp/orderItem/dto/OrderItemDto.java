@@ -17,7 +17,7 @@ public class OrderItemDto {
     @JsonProperty
     Long id;
     @JsonProperty
-    Integer paid;
+    Integer toPay;
     @JsonProperty
     Integer count;
     @JsonProperty

@@ -53,11 +53,11 @@ public class OrderBiz2ImplIntegrationTest {
     @DisplayName("주문 성공 확인")
     public void testOrder() throws Exception {
         long userId = 1L;
-        System.out.println("before 남은 잔액: "+pointService.remain(userId));
+        System.out.println("before 남은 잔액: "+pointService.countRemain(userId));
         // 100 - 40
         List<RequestPurchaseDto> purchaseRequestList = prepareRequestPurchaseDtoList();
         OrderDto orderDto = orderOrchestratorService.order(userId, purchaseRequestList);
-        System.out.println("after 남은 잔액: "+pointService.remain(userId));
+        System.out.println("after 남은 잔액: "+pointService.countRemain(userId));
         
         assertEquals(1L, orderDto.id());
         assertEquals(Result.SUCCESS, orderDto.state());
@@ -81,7 +81,7 @@ public class OrderBiz2ImplIntegrationTest {
     @DisplayName("동시성 - 포인트 부족 - 주문 하나만 실패")
     void orderPointlessWithConcurrentTest() throws Exception {
         long userId = 1L;   // 60
-        System.out.println("before 남은 잔액: "+pointService.remain(userId));
+        System.out.println("before 남은 잔액: "+pointService.countRemain(userId));
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         IntStream.range(0, 2)
             .parallel()
@@ -93,12 +93,12 @@ public class OrderBiz2ImplIntegrationTest {
                         System.out.println("주문 실패!");
                         System.out.println(e.getMessage());
                     }
-                    System.out.println(i + " 남은 잔액: "+pointService.remain(userId));
+                    System.out.println(i + " 남은 잔액: "+pointService.countRemain(userId));
                 })
             );
         executorService.awaitTermination(1, TimeUnit.SECONDS);
-        System.out.println("after 남은 잔액: "+pointService.remain(userId));
-        assertTrue(pointService.remain(userId) >= 0);
+        System.out.println("after 남은 잔액: "+pointService.countRemain(userId));
+        assertTrue(pointService.countRemain(userId) >= 0);
     }
 
     // 동시성 테스트 - 재고 처리 실패 케이스 - 재고 부족
@@ -107,7 +107,7 @@ public class OrderBiz2ImplIntegrationTest {
     @DisplayName("동시성 - 재고 부족 - 주문 하나만 실패")
     void orderStocklessWithConcurrentTest() throws Exception {
         long userId = 1L;   // 20
-        System.out.println("before 남은 잔액: "+pointService.remain(userId));
+        System.out.println("before 남은 잔액: "+pointService.countRemain(userId));
         RequestPurchaseDto requestLessStockCase = new RequestPurchaseDto()
                 .setProductId(3L)   // price 1, cnt 1
                 .setCount(1);
@@ -128,7 +128,7 @@ public class OrderBiz2ImplIntegrationTest {
             );
         executorService.awaitTermination(1, TimeUnit.SECONDS);
         System.out.println("재고 수량: "+productService.find(requestLessStockCase.getProductId()).map(Product::stockCnt).orElse(0));
-        System.out.println("after 남은 잔액: "+pointService.remain(userId));
+        System.out.println("after 남은 잔액: "+pointService.countRemain(userId));
         assertTrue(productService.find(requestLessStockCase.getProductId()).map(Product::stockCnt).orElse(0) >= 0);
     }
 }

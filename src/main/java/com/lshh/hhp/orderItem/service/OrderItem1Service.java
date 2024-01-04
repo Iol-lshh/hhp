@@ -16,6 +16,4 @@ public interface OrderItem1Service {
     List<OrderItemDto> orderEachProduct(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception;
 
     List<OrderItemDto> cancel(long orderId) throws Exception;
-
-    boolean isPayable(long userId, List<RequestPurchaseDto> requestList);
 }

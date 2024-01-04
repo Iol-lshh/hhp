@@ -3,6 +3,7 @@ package com.lshh.hhp.payment;
 import com.lshh.hhp.payment.dto.PaymentDto;
 import com.lshh.hhp.payment.service.PaymentService;
 import com.lshh.hhp.payment.service.Payment1ServiceImpl;
+import com.lshh.hhp.point.Point;
 import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.user.User;
 import com.lshh.hhp.user.service.UserService;
@@ -51,7 +52,7 @@ public class PaymentBiz1ImplTest {
         // Arrange
         when(userComponent.find(userId)).thenReturn(Optional.of(new User()));
         when(paymentComponent.create(userId, toNeed)).thenReturn(mockedPayment);
-        doReturn(new PointDto()).when(pointComponent).add(mockedPayment);
+        doReturn(new Point()).when(pointComponent).add(mockedPayment);
         
         // Act
         PaymentDto paymentDtoResult = paymentService.exchange(userId, toNeed);

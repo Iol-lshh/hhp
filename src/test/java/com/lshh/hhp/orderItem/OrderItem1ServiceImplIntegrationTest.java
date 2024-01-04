@@ -51,14 +51,14 @@ public class OrderItem1ServiceImplIntegrationTest {
         long testOrderId = ++orderId;
         List<RequestPurchaseDto> requests = prepareRequestPurchaseDtoList();
         // Act
-        System.out.println("주문 전 남은 잔액: "+pointService.remain(testUserId));
+        System.out.println("주문 전 남은 잔액: "+pointService.countRemain(testUserId));
         List<OrderItemDto> result = orderItem1Service.orderEachProduct(testUserId, testOrderId, requests);
-        System.out.println("주문 후 남은 잔액: "+pointService.remain(testUserId));
+        System.out.println("주문 후 남은 잔액: "+pointService.countRemain(testUserId));
 
         // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertTrue(pointService.remain(testUserId) >= 0);
+        assertTrue(pointService.countRemain(testUserId) >= 0);
         //100 - 40 = 60
     }
 
@@ -71,24 +71,23 @@ public class OrderItem1ServiceImplIntegrationTest {
         //60 - 40(성공) - 40(실패)
 
         orderId++;
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
         IntStream.range(0, 4)
-                .parallel()
                 .forEach(i ->
                         executorService.submit(() -> {
                             long testOrderId = orderId + i;
                             try {
                                 orderItem1Service.orderEachProduct(testUserId, testOrderId, prepareRequestPurchaseDtoList());
                             } catch (Exception e) {
-                                System.out.println("주문 실패!");
+                                System.out.println(i + " 주문 실패!");
                                 System.out.println(e.getMessage());
                             }
-                            System.out.println(i + " 남은 잔액: "+pointService.remain(testUserId));
+                            System.out.println(i + " 남은 잔액: "+pointService.countRemain(testUserId));
                         })
                 );
         executorService.awaitTermination(1, TimeUnit.SECONDS);
-        System.out.println("남은 잔액: "+pointService.remain(testUserId));
-        assertTrue(pointService.remain(testUserId) >= 0);
+        System.out.println("남은 잔액: "+pointService.countRemain(testUserId));
+        assertTrue(pointService.countRemain(testUserId) >= 0);
     }
 
 }

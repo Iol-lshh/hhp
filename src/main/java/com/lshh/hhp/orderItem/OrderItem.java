@@ -17,7 +17,7 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    Integer paid;
+    Integer toPay;
     Integer count;
 
     Long userId;
@@ -27,7 +27,7 @@ public class OrderItem {
     Integer state;
 
     public OrderItem setPriceTag(Integer price){
-        this.paid = price * count;
+        this.toPay = price * count;
         return this;
     }
     public OrderItem setState(Integer state) {
@@ -38,7 +38,7 @@ public class OrderItem {
     public OrderItemDto toDto(){
         return new OrderItemDto()
                 .id(this.id())
-                .paid(this.paid())
+                .toPay(this.toPay())
                 .count(this.count())
                 .productId(this.productId())
                 .userId(this.userId())
@@ -49,7 +49,7 @@ public class OrderItem {
     static public OrderItem toEntity(OrderItemDto dto){
         OrderItem orderItem = new OrderItem();
         orderItem.id = dto.id();
-        orderItem.paid = dto.paid();
+        orderItem.toPay = dto.toPay();
         orderItem.count = dto.count();
         orderItem.productId = dto.productId();
         orderItem.userId = dto.userId();
@@ -69,7 +69,7 @@ public class OrderItem {
         return newOne;
     }
 
-    static public List<OrderItem> createNewOrderItemsWithNoPriceTag(Long userId, Long orderId, List<RequestPurchaseDto> requestList){
+    static public List<OrderItem> createNewOrderItemsYetNoPrice(Long userId, Long orderId, List<RequestPurchaseDto> requestList){
         return requestList.stream()
             .map(request -> createNewOrderItemWithNoPriceTag(userId, orderId, request.getProductId(), request.getCount()))
             .toList();

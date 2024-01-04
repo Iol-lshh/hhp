@@ -28,7 +28,7 @@ public interface ProductService {
 
     Optional<Product> find(Long productId);
 
-    List<OrderItem> setPriceTag(List<OrderItem> dtos);
+    List<OrderItem> putPrice(List<OrderItem> dtos);
 
     int findPrice(long productId);
 }

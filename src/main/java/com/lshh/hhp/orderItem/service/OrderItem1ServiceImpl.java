@@ -19,54 +19,35 @@ import java.util.List;
 @Service(level = 1)
 public class OrderItem1ServiceImpl implements OrderItem1Service {
 
-    final PointService pointComponent;
-    final OrderItemService orderItemComponent;
-    final ProductService productComponent;
+    final PointService pointService;
+    final OrderItemService orderItemService;
+    final ProductService productService;
 
     @Override
     @Cacheable
     public List<ViewPurchasedProductDto> favorite(Integer count) {
-        return orderItemComponent.favorite(count);
+        return orderItemService.favorite(count);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public boolean isPayable(long userId, List<RequestPurchaseDto> requestList){
-        return pointComponent.remain(userId) >= requestList
-                .stream()
-                .mapToInt(request->request.getCount() * productComponent.findPrice(request.getProductId()))
-                .sum();
-    }
-
-    @Override
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public List<OrderItemDto> orderEachProduct(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
-
-        //  ## 아이디 포인트 확인
-        if (!isPayable(userId, purchaseRequestList)) {
-            throw new Exception("포인트 부족");
-        }
-        
         // 주문 리스트 작성
-        List<OrderItem> newOrderItems = OrderItem.createNewOrderItemsWithNoPriceTag(userId, orderId, purchaseRequestList);
-        productComponent.setPriceTag(newOrderItems);
-
-        // 영속성 반영
-        newOrderItems = orderItemComponent.save(newOrderItems);
+        List<OrderItem> newOrderItems = OrderItem.createNewOrderItemsYetNoPrice(userId, orderId, purchaseRequestList);
+        productService.putPrice(newOrderItems);
+        newOrderItems = orderItemService.save(newOrderItems);
 
         // 포인트 차감
-        pointComponent.subtract(newOrderItems);
+        pointService.subtract(newOrderItems);
 
         return newOrderItems.stream().map(OrderItem::toDto).toList();
     }
 
     @Override
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public List<OrderItemDto> cancel(long orderId) throws Exception {
-        List<OrderItem> purchaseList = orderItemComponent.canceldByOrderId(orderId);
-        pointComponent.cancelSubtract(purchaseList);
+        List<OrderItem> purchaseList = orderItemService.canceldByOrderId(orderId);
+        pointService.cancelSubtract(purchaseList);
 
         return purchaseList.stream().map(OrderItem::toDto).toList();
     }

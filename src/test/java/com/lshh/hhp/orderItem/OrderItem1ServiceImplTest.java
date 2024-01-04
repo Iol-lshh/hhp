@@ -45,7 +45,7 @@ class OrderItem1ServiceImplTest {
                 .userId(1L)
                 .orderId(1L)
                 .productId(1L)
-                .paid(100)
+                .toPay(100)
                 .count(1)
                 .state(Response.Result.OK);
 
@@ -54,35 +54,6 @@ class OrderItem1ServiceImplTest {
                 .setCount(orderItemDto.count());
 
         this.requestPurchaseList = Arrays.asList(this.requestPurchaseDto);
-    }
-
-    // # isPayable
-    @Test
-    @DisplayName("지불 가능")
-    void isPayable_withEnoughPoints_shouldReturnTrue() {
-
-        when(pointService.remain(orderItemDto.userId())).thenReturn(100);
-        when(productService.findPrice(requestPurchaseDto.getProductId())).thenReturn(50);
-
-        // Act
-        boolean result = orderItem1ServiceImpl.isPayable(orderItemDto.userId(), requestPurchaseList);
-
-        // Assert
-        assertTrue(result);
-    }
-
-    @Test
-    @DisplayName("지불 불가")
-    void isPayable_withNotEnoughPoints_shouldReturnFalse() {
-
-        when(pointService.remain(orderItemDto.userId())).thenReturn(50);
-        when(productService.findPrice(requestPurchaseDto.getProductId())).thenReturn(100);
-
-        // Act
-        boolean result = orderItem1ServiceImpl.isPayable(orderItemDto.userId(), requestPurchaseList);
-
-        // Assert
-        assertFalse(result);
     }
 
     @Test

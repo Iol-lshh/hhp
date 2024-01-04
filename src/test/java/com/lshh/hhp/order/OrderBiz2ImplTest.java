@@ -67,7 +67,7 @@ public class OrderBiz2ImplTest {
                 .userId(testUserId)
                 .count(mockedPurchaseDto.getCount())
                 .productId(mockedPurchaseDto.getProductId())
-                .paid(11);
+                .toPay(11);
         this.mockedPurchasedList = Arrays.asList(mockedPurchasedDto);
     }
 

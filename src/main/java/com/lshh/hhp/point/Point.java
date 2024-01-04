@@ -45,17 +45,17 @@ public class Point {
     }
     public static Point createNewSubtractPoint(OrderItem orderItem){
         Point newOne = new Point();
-        newOne.count = -1 * orderItem.paid();
+        newOne.count = -1 * orderItem.toPay();
         newOne.userId = orderItem.userId();
         newOne.fromType = PointType.PURCHASE.ordinal();
         newOne.fromId = orderItem.id();
         return newOne;
     }
-    public static Point createNewSquashedPoint(VPoint vPoint){
+    public static Point createNewSquashedPoint(long userId, int sum){
         Point newOne = new Point();
-        newOne.userId = vPoint.userId();
+        newOne.userId = userId;
         newOne.fromType = PointType.SUM.ordinal();
-        newOne.count = vPoint.remain();
+        newOne.count = sum;
         return newOne;
     }
 

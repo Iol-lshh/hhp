@@ -45,7 +45,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Lock(LockModeType.OPTIMISTIC)
     @Transactional
     public List<Product> deduct(List<RequestPurchaseDto> purchaseList) throws Exception {
 
@@ -70,20 +69,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Lock(LockModeType.OPTIMISTIC)
     @Transactional
-    public List<Product> conduct(List<OrderItemDto> purchasedList) throws Exception {
+    public List<Product> conduct(List<OrderItemDto> orderItemDtos) throws Exception {
 
-        List<Product> products = purchasedList.stream()
-                .map(purchased -> productRepository.findById(purchased.productId())
-                        .map(product -> product.conduct(purchased.count()))
+        List<Product> products = orderItemDtos.stream()
+                .map(orderItemDto -> productRepository.findById(orderItemDto.productId())
+                        .map(product -> product.conduct(orderItemDto.count()))
                 )
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
-        if(products.size()!=purchasedList.size()){
+
+        if(products.size()!=orderItemDtos.size()){
             throw new Exception("상품 정보 오류");
         }
+
         return productRepository.saveAll(products);
     }
 
@@ -101,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public List<OrderItem> setPriceTag(List<OrderItem> orderItems) {
+    public List<OrderItem> putPrice(List<OrderItem> orderItems) {
         return orderItems.stream()
             .map(orderItem -> orderItem.setPriceTag(
                     findPrice(orderItem.productId())

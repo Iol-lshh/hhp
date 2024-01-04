@@ -17,15 +17,15 @@ public interface PointService {
 
     List<Point> subtract(List<OrderItem> orderItems) throws Exception;
 
-    @Transactional
-    boolean isSubtractable(long userId, int subtractNumber);
+    boolean isSubtractable(long userId, int subtractPoint);
 
     List<Point> cancelSubtract(List<OrderItem> purchaseDtoList) throws Exception;
 
+    List<Point> findAllByOrderItems(List<OrderItem> orderItems);
+
     List<Point> findAllByUserId(long userId);
 
-    List<Point> squash();
     Point squash(long userId) throws Exception;
 
-    int remain(long userId);
+    int countRemain(long userId);
 }

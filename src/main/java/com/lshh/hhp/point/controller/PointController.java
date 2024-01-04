@@ -22,19 +22,13 @@ public class PointController {
     @Operation(summary = "포인트 잔액 확인")
     @GetMapping("/remain/{userId}")
     public ResultDto<Integer> remain(@PathVariable Long userId){
-        return new ResultDto<>(pointService.remain(userId));
+        return new ResultDto<>(pointService.countRemain(userId));
     }
 
     @Operation(summary = "포인트 사용 내역")
     @GetMapping("/history/{userId}")
     public ResultDto<List<PointDto>> history(@PathVariable Long userId){
         return new ResultDto<>(pointService.findAllByUserId(userId).stream().map(Point::toDto).toList());
-    }
-
-    // 포인트 일괄 압축
-    @GetMapping("/squash")
-    public ResultDto<List<PointDto>> squash(){
-        return new ResultDto<>(pointService.squash().stream().map(Point::toDto).toList());
     }
 
     // 포인트 유저 압축
