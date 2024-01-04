@@ -4,7 +4,6 @@ import com.lshh.hhp.common.Response;
 import com.lshh.hhp.dto.event.CancelOrderEvent;
 import com.lshh.hhp.order.Order;
 import com.lshh.hhp.order.dto.OrderDto;
-import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.product.service.ProductService;
 import com.lshh.hhp.common.Service;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
@@ -27,12 +26,11 @@ import java.util.List;
 public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
 
     // 규칙. 작은 숫자의 biz1 만을 확장 가능하다.
-    final OrderItem1Service purchaseComponent;
+    final OrderItem1Service orderItem1Service;
 
-    final OrderService orderComponent;
-    final UserService userComponent;
-    final PointService pointComponent;
-    final ProductService productComponent;
+    final OrderService orderService;
+    final UserService userService;
+    final ProductService productService;
 
     final ApplicationEventPublisher publisher;
 
@@ -51,7 +49,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderDto> findByUserId(long userId) {
-        return orderComponent
+        return orderService
                 .findByUserId(userId)
                 .stream().map(Order::toDto).toList();
     }
@@ -60,20 +58,20 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
     @Override
     public OrderDto order(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
         // # 0. user 확인
-        userComponent.find(userId).orElseThrow(Exception::new);
+        userService.find(userId).orElseThrow(Exception::new);
         // # 1. 주문 생성: 시작
-        Order order = orderComponent.start(userId);
+        Order order = orderService.start(userId);
         try {
             // ## 0. 상품 확인
-            if(!productComponent.validate(purchaseRequestList)){
+            if(!productService.validate(purchaseRequestList)){
                 throw new Exception("잘못된 상품");
             }
 
             // # 구매 처리
             // ## 1. 구매 처리
-            purchaseComponent.purchase(userId, order.id(), purchaseRequestList);
+            orderItem1Service.orderEachProduct(userId, order.id(), purchaseRequestList);
             // ## 2. 상품 재고 처리
-            productComponent.deduct(purchaseRequestList);
+            productService.deduct(purchaseRequestList);
             // # 3. 주문 완료: 종료
             order.setState(Response.Result.SUCCESS);
             return order.toDto();
@@ -94,7 +92,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
     @Transactional
     public OrderDto cancel(long orderId) throws Exception {
         // 1. 주문 확인
-        Order target = orderComponent.find(orderId).orElseThrow(()->new Exception("잘못된 주문"));
+        Order target = orderService.find(orderId).orElseThrow(()->new Exception("잘못된 주문"));
 
         // 2. 주문 취소 시작
         target.setState(Response.Result.CANCELING);
@@ -102,10 +100,10 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
         try {
             // 3. 구매 취소
             // 4. 포인트 취소
-            List<OrderItemDto> canceledList = purchaseComponent.cancel(target.id());
+            List<OrderItemDto> canceledList = orderItem1Service.cancel(target.id());
 
             // 5. 재고 다시 추가
-            productComponent.conduct(canceledList);
+            productService.conduct(canceledList);
 
             // 6. 취소 완료 - 취소 실패시, 이전 상태로
             target.setState(Response.Result.CANCELED);

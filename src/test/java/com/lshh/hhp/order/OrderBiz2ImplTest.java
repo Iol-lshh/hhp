@@ -34,16 +34,16 @@ import static org.mockito.Mockito.*;
 public class OrderBiz2ImplTest {
 
     @InjectMocks
-    private OrderOrchestratorServiceImpl orderService;
+    private OrderOrchestratorServiceImpl orderOrchestratorService;
     @Mock
-    private OrderService orderComponent;
+    private OrderService orderService;
 
     @Mock
-    private OrderItem1Service purchaseComponent;
+    private OrderItem1Service orderItem1Service;
     @Mock
-    private UserService userComponent;
+    private UserService userService;
     @Mock
-    private ProductService productComponent;
+    private ProductService productService;
 
     @Mock
     private ApplicationEventPublisher publisher;
@@ -80,10 +80,10 @@ public class OrderBiz2ImplTest {
         List<Order> expectedOrderDtos = new ArrayList<>();
         expectedOrderDtos.add(Order.toEntity(mockedOrderDto));
 
-        when(orderComponent.findByUserId(Mockito.anyLong())).thenReturn(List.of(mockedOrder));
+        when(orderService.findByUserId(Mockito.anyLong())).thenReturn(List.of(mockedOrder));
 
         // Act
-        List<OrderDto> result = orderService.findByUserId(testUserId);
+        List<OrderDto> result = orderOrchestratorService.findByUserId(testUserId);
 
         // Assert
         assert expectedOrderDtos.get(0).userId().equals(result.get(0).id());
@@ -96,19 +96,19 @@ public class OrderBiz2ImplTest {
     public void order() throws Exception {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
 
-        when(userComponent.find(testUserId)).thenReturn(Optional.of(new User()));
-        when(orderComponent.start(testUserId)).thenReturn(mockedOrder);
-        when(productComponent.validate(mockedPurchaseList)).thenReturn(true);
-        doReturn(Arrays.asList(mockedPurchasedDto)).when(purchaseComponent).purchase(testUserId, mockedOrderDto.id(), mockedPurchaseList);
-        doReturn(new ArrayList<ProductDto>()).when(productComponent).deduct(mockedPurchaseList);
+        when(userService.find(testUserId)).thenReturn(Optional.of(new User()));
+        when(orderService.start(testUserId)).thenReturn(mockedOrder);
+        when(productService.validate(mockedPurchaseList)).thenReturn(true);
+        doReturn(Arrays.asList(mockedPurchasedDto)).when(orderItem1Service).orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList);
+        doReturn(new ArrayList<ProductDto>()).when(productService).deduct(mockedPurchaseList);
 
-        OrderDto result = orderService.order(testUserId, mockedPurchaseList);
+        OrderDto result = orderOrchestratorService.order(testUserId, mockedPurchaseList);
 
         // Assert
         assertEquals(result.id(), mockedOrderDto.id());
-        verify(productComponent, times(1)).validate(mockedPurchaseList);
-        verify(purchaseComponent, times(1)).purchase(testUserId, mockedOrderDto.id(), mockedPurchaseList);
-        verify(productComponent, times(1)).deduct(mockedPurchaseList);
+        verify(productService, times(1)).validate(mockedPurchaseList);
+        verify(orderItem1Service, times(1)).orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList);
+        verify(productService, times(1)).deduct(mockedPurchaseList);
     }
 
     @Test
@@ -116,17 +116,17 @@ public class OrderBiz2ImplTest {
     public void order_whenProductNotValid_thenThrowsException() throws Exception {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
 
-        when(userComponent.find(testUserId)).thenReturn(Optional.of(new User()));
-        when(orderComponent.start(testUserId)).thenReturn(mockedOrder);
+        when(userService.find(testUserId)).thenReturn(Optional.of(new User()));
+        when(orderService.start(testUserId)).thenReturn(mockedOrder);
         //
-        when(productComponent.validate(mockedPurchaseList)).thenReturn(false);
+        when(productService.validate(mockedPurchaseList)).thenReturn(false);
 
         // Assert
         Exception exception = assertThrows(Exception.class, () ->
-                orderService.order(testUserId, mockedPurchaseList));
+                orderOrchestratorService.order(testUserId, mockedPurchaseList));
         assertEquals("잘못된 상품", exception.getMessage());
 
-        verify(productComponent, times(1)).validate(mockedPurchaseList);
+        verify(productService, times(1)).validate(mockedPurchaseList);
     }
 
     @Test
@@ -134,19 +134,19 @@ public class OrderBiz2ImplTest {
     public void order_whenProductOutOfStock_thenThrowsException() throws Exception {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
 
-        when(userComponent.find(testUserId)).thenReturn(Optional.of(new User()));
-        when(orderComponent.start(testUserId)).thenReturn(mockedOrder);
-        when(productComponent.validate(mockedPurchaseList)).thenReturn(true);
+        when(userService.find(testUserId)).thenReturn(Optional.of(new User()));
+        when(orderService.start(testUserId)).thenReturn(mockedOrder);
+        when(productService.validate(mockedPurchaseList)).thenReturn(true);
         //
-        when(purchaseComponent.purchase(testUserId, mockedOrderDto.id(), mockedPurchaseList)).thenThrow(new Exception("포인트 부족"));
+        when(orderItem1Service.orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList)).thenThrow(new Exception("포인트 부족"));
 
         // Assert
         Exception exception = assertThrows(Exception.class, () ->
-                orderService.order(testUserId, mockedPurchaseList));
+                orderOrchestratorService.order(testUserId, mockedPurchaseList));
         assertEquals("포인트 부족", exception.getMessage());
 
-        verify(productComponent, times(1)).validate(mockedPurchaseList);
-        verify(purchaseComponent, times(1)).purchase(testUserId, mockedOrderDto.id(), mockedPurchaseList);
+        verify(productService, times(1)).validate(mockedPurchaseList);
+        verify(orderItem1Service, times(1)).orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList);
     }
 
     @Test
@@ -154,21 +154,21 @@ public class OrderBiz2ImplTest {
     public void order_whenNotPayable_thenThrowsException() throws Exception {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
 
-        when(userComponent.find(testUserId)).thenReturn(Optional.of(new User()));
-        when(orderComponent.start(testUserId)).thenReturn(mockedOrder);
-        when(productComponent.validate(mockedPurchaseList)).thenReturn(true);
-        doReturn(Arrays.asList(mockedPurchasedDto)).when(purchaseComponent).purchase(testUserId, mockedOrderDto.id(), mockedPurchaseList);
+        when(userService.find(testUserId)).thenReturn(Optional.of(new User()));
+        when(orderService.start(testUserId)).thenReturn(mockedOrder);
+        when(productService.validate(mockedPurchaseList)).thenReturn(true);
+        doReturn(Arrays.asList(mockedPurchasedDto)).when(orderItem1Service).orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList);
         //
-        when(productComponent.deduct(mockedPurchaseList)).thenThrow(new Exception("재고 부족"));
+        when(productService.deduct(mockedPurchaseList)).thenThrow(new Exception("재고 부족"));
 
         // Assert
         Exception exception = assertThrows(Exception.class, () ->
-                orderService.order(testUserId, mockedPurchaseList));
+                orderOrchestratorService.order(testUserId, mockedPurchaseList));
         assertEquals("재고 부족", exception.getMessage());
 
-        verify(productComponent, times(1)).validate(mockedPurchaseList);
-        verify(purchaseComponent, times(1)).purchase(testUserId, mockedOrderDto.id(), mockedPurchaseList);
-        verify(productComponent, times(1)).deduct(mockedPurchaseList);
+        verify(productService, times(1)).validate(mockedPurchaseList);
+        verify(orderItem1Service, times(1)).orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList);
+        verify(productService, times(1)).deduct(mockedPurchaseList);
     }
 
     // # cancel
@@ -177,62 +177,62 @@ public class OrderBiz2ImplTest {
     public void cancel() throws Exception {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
 
-        when(orderComponent.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
-        when(purchaseComponent.cancel(mockedOrderDto.id())).thenReturn(mockedPurchasedList);
-        doReturn(new ArrayList<ProductDto>()).when(productComponent).conduct(mockedPurchasedList);
+        when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
+        when(orderItem1Service.cancel(mockedOrderDto.id())).thenReturn(mockedPurchasedList);
+        doReturn(new ArrayList<ProductDto>()).when(productService).conduct(mockedPurchasedList);
 
-        OrderDto result = orderService.cancel(mockedOrderDto.id());
+        OrderDto result = orderOrchestratorService.cancel(mockedOrderDto.id());
 
         //todo fix err
         assertEquals(result.id(), mockedOrderDto.id());
         assertEquals(result.state(), Result.CANCELED);
-        verify(orderComponent, times(1)).find(mockedOrderDto.id());
-        verify(purchaseComponent, times(1)).cancel(mockedOrderDto.id());
-        verify(productComponent, times(1)).conduct(mockedPurchasedList);
+        verify(orderService, times(1)).find(mockedOrderDto.id());
+        verify(orderItem1Service, times(1)).cancel(mockedOrderDto.id());
+        verify(productService, times(1)).conduct(mockedPurchasedList);
     }
     @Test
     @DisplayName("cancel: 주문 취소 - 주문 정보가 없는 경우")
     public void cancel_whenOrderNotFound_thenThrowsException() throws Exception {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
-        when(orderComponent.find(mockedOrderDto.id())).thenReturn(Optional.empty());
+        when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(Exception.class, () ->
-                orderService.cancel(mockedOrderDto.id()));
+                orderOrchestratorService.cancel(mockedOrderDto.id()));
         assertEquals("잘못된 주문", exception.getMessage());
 
-        verify(orderComponent, times(1)).find(mockedOrderDto.id());
+        verify(orderService, times(1)).find(mockedOrderDto.id());
     }
     @Test
     @DisplayName("cancel: 주문 취소 - 구매 취소 실패한 경우")
     public void cancel_whenPurchaseCancelFailed_thenThrowsException() throws Exception {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
 
-        when(orderComponent.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
-        when(purchaseComponent.cancel(mockedOrderDto.id())).thenThrow(new Exception("구매 취소 실패"));
+        when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
+        when(orderItem1Service.cancel(mockedOrderDto.id())).thenThrow(new Exception("구매 취소 실패"));
 
         Exception exception = assertThrows(Exception.class, () ->
-                orderService.cancel(mockedOrderDto.id()));
+                orderOrchestratorService.cancel(mockedOrderDto.id()));
         assertEquals("구매 취소 실패", exception.getMessage());
 
-        verify(orderComponent, times(1)).find(mockedOrderDto.id());
-        verify(purchaseComponent, times(1)).cancel(mockedOrderDto.id());
+        verify(orderService, times(1)).find(mockedOrderDto.id());
+        verify(orderItem1Service, times(1)).cancel(mockedOrderDto.id());
     }
     @Test
     @DisplayName("cancel: 주문 취소 - 재고 취소 실패한 경우")
     public void cancel_whenUnstoreFailed_thenThrowsException() throws Exception {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
 
-        when(orderComponent.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
-        when(purchaseComponent.cancel(mockedOrderDto.id())).thenReturn(mockedPurchasedList);
-        when(productComponent.conduct(mockedPurchasedList)).thenThrow(new Exception("재고 취소 실패"));
+        when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
+        when(orderItem1Service.cancel(mockedOrderDto.id())).thenReturn(mockedPurchasedList);
+        when(productService.conduct(mockedPurchasedList)).thenThrow(new Exception("재고 취소 실패"));
 
         Exception exception = assertThrows(Exception.class, () ->
-                orderService.cancel(mockedOrderDto.id()));
+                orderOrchestratorService.cancel(mockedOrderDto.id()));
         assertEquals("재고 취소 실패", exception.getMessage());
 
-        verify(orderComponent, times(1)).find(mockedOrderDto.id());
-        verify(purchaseComponent, times(1)).cancel(mockedOrderDto.id());
-        verify(productComponent, times(1)).conduct(mockedPurchasedList);
+        verify(orderService, times(1)).find(mockedOrderDto.id());
+        verify(orderItem1Service, times(1)).cancel(mockedOrderDto.id());
+        verify(productService, times(1)).conduct(mockedPurchasedList);
     }
 
 }

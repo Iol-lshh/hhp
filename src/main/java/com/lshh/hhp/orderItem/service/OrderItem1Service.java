@@ -13,7 +13,7 @@ import java.util.List;
 public interface OrderItem1Service {
     List<ViewPurchasedProductDto> favorite(Integer count);
 
-    List<OrderItemDto> purchase(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception;
+    List<OrderItemDto> orderEachProduct(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception;
 
     List<OrderItemDto> cancel(long orderId) throws Exception;
 

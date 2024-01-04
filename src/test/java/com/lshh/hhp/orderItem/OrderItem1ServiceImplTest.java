@@ -5,7 +5,6 @@ import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import com.lshh.hhp.orderItem.service.OrderItemService;
 import com.lshh.hhp.orderItem.service.OrderItem1ServiceImpl;
 import com.lshh.hhp.point.service.PointService;
-import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.service.ProductService;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,11 +85,6 @@ class OrderItem1ServiceImplTest {
         assertFalse(result);
     }
 
-    class TestPorduct extends Product{
-        public TestPorduct(int price){
-            super.price(price);
-        }
-    }
     @Test
     @DisplayName("구매 성공")
     void purchase() throws Exception {
@@ -98,7 +92,7 @@ class OrderItem1ServiceImplTest {
         when(orderItemServiceImpl.save(any())).thenReturn(Arrays.asList(orderItem));
 
         // Act
-        List<OrderItemDto> result = orderItem1ServiceImpl.purchase(orderItemDto.userId(), orderItemDto.orderId(), Collections.singletonList(requestPurchaseDto));
+        List<OrderItemDto> result = orderItem1ServiceImpl.orderEachProduct(orderItemDto.userId(), orderItemDto.orderId(), Collections.singletonList(requestPurchaseDto));
 
         // Assert
         assertNotNull(result);

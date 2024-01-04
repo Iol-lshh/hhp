@@ -41,7 +41,7 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
     @Override
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
-    public List<OrderItemDto> purchase(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
+    public List<OrderItemDto> orderEachProduct(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
 
         //  ## 아이디 포인트 확인
         if (!isPayable(userId, purchaseRequestList)) {

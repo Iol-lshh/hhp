@@ -32,7 +32,7 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public List<Point> subtract(List<OrderItem> orderItems) throws Exception {
         List<Point> pointList = Point.createNewSubtractPoints(orderItems);
@@ -52,7 +52,7 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public List<Point> cancelSubtract(List<OrderItem> purchaseDtoList) throws Exception {
         List<Point> targetList = purchaseDtoList.stream()
@@ -73,6 +73,7 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public List<Point> squash() {
         // 1. 각 user 마다, 이전 포인트들의 count를 0처리하고
@@ -95,7 +96,7 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public Point squash(long userId) throws Exception {
         Point sumed = vPointRepository
@@ -113,7 +114,6 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    @Lock(LockModeType.PESSIMISTIC_READ)
     @Transactional(readOnly = true)
     public int remain(long userId) {
         return vPointRepository

@@ -52,7 +52,7 @@ public class OrderItem1ServiceImplIntegrationTest {
         List<RequestPurchaseDto> requests = prepareRequestPurchaseDtoList();
         // Act
         System.out.println("주문 전 남은 잔액: "+pointService.remain(testUserId));
-        List<OrderItemDto> result = orderItem1Service.purchase(testUserId, testOrderId, requests);
+        List<OrderItemDto> result = orderItem1Service.orderEachProduct(testUserId, testOrderId, requests);
         System.out.println("주문 후 남은 잔액: "+pointService.remain(testUserId));
 
         // Assert
@@ -72,13 +72,13 @@ public class OrderItem1ServiceImplIntegrationTest {
 
         orderId++;
         ExecutorService executorService = Executors.newFixedThreadPool(2);
-        IntStream.range(0, 2)
+        IntStream.range(0, 4)
                 .parallel()
                 .forEach(i ->
                         executorService.submit(() -> {
                             long testOrderId = orderId + i;
                             try {
-                                orderItem1Service.purchase(testUserId, testOrderId, prepareRequestPurchaseDtoList());
+                                orderItem1Service.orderEachProduct(testUserId, testOrderId, prepareRequestPurchaseDtoList());
                             } catch (Exception e) {
                                 System.out.println("주문 실패!");
                                 System.out.println(e.getMessage());

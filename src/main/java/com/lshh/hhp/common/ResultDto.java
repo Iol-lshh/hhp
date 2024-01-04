@@ -21,4 +21,17 @@ public class ResultDto<T> implements Response{
         this.result = result;
         this.value = value;
     }
+
+    public static <T> ResultDto<T> ok(){
+        return new ResultDto<>(Result.OK, null);
+    }
+    public static <T> ResultDto<T> ok(T data){
+        return new ResultDto<>(Result.OK, data);
+    }
+    public static <T> ResultDto<T> success(){
+        return new ResultDto<>(Result.SUCCESS, null);
+    }
+    public static <T> ResultDto<T> success(T data){
+        return new ResultDto<>(Result.SUCCESS, data);
+    }
 }
