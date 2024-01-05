@@ -43,11 +43,11 @@ public class PointServiceImplIntegrationTest {
                 .forEach(i ->
                         executorService.submit(() -> {
                             try {
-                                System.out.println(i + " a남은 잔액: "+pointService.countRemain(testUserId));
+//                                System.out.println(i + " a남은 잔액: "+pointService.countRemain(testUserId));
                                 pointService.subtract(orderItems);
-                                System.out.println(i + " 차감 성공! b남은 잔액: "+pointService.countRemain(testUserId));
+//                                System.out.println(i + " 차감 성공! b남은 잔액: "+pointService.countRemain(testUserId));
                             } catch (Exception e) {
-                                System.out.println(i + " 차감 실패! c남은 잔액: "+pointService.countRemain(testUserId));
+//                                System.out.println(i + " 차감 실패! c남은 잔액: "+pointService.countRemain(testUserId));
                                 System.out.println(e.getMessage());
                             }
                             System.out.println(i + " d남은 잔액: "+pointService.countRemain(testUserId));

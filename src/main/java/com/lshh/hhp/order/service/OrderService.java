@@ -1,6 +1,5 @@
 package com.lshh.hhp.order.service;
 
-import com.lshh.hhp.common.Response.Result;
 import com.lshh.hhp.order.Order;
 
 import java.util.List;

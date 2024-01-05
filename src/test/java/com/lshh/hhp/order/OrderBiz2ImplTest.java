@@ -10,7 +10,6 @@ import com.lshh.hhp.orderItem.service.OrderItem1Service;
 import com.lshh.hhp.common.Response.Result;
 import com.lshh.hhp.product.dto.ProductDto;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
-import com.lshh.hhp.user.dto.UserDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

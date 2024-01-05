@@ -32,7 +32,8 @@ public class PointServiceImpl implements PointService {
         long userId = orderItems.get(0).userId();
         // 잔액 확인
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();
-        int remain = pointRepository.findAllByUserIdWithLock(userId).stream().mapToInt(Point::count).sum();
+        List<Point> targetList = pointRepository.findAllByUserIdWithLock(userId);
+        int remain = targetList.stream().mapToInt(Point::count).sum();
         if(remain - sumToPay < 0){
             throw new Exception("포인트 부족 " + remain +", "+ sumToPay);
         }

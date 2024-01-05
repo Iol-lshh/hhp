@@ -7,8 +7,6 @@ import com.lshh.hhp.point.Point;
 import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.user.User;
 import com.lshh.hhp.user.service.UserService;
-import com.lshh.hhp.point.dto.PointDto;
-import com.lshh.hhp.user.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
