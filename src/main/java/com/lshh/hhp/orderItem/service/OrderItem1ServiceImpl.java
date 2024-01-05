@@ -4,13 +4,12 @@ import com.lshh.hhp.common.Service;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
-import com.lshh.hhp.dto.view.ViewPurchasedProductDto;
 import com.lshh.hhp.point.service.PointService;
+import com.lshh.hhp.product.Product;
+import com.lshh.hhp.product.dto.ProductDto;
 import com.lshh.hhp.product.service.ProductService;
-import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -24,10 +23,14 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
     final ProductService productService;
 
     @Override
-    @Cacheable
-    public List<ViewPurchasedProductDto> favorite(Integer count) {
-        return orderItemService.favorite(count);
+    @Cacheable(cacheNames = "favorite", key = "'Top' + #count")
+    public List<ProductDto> favorite(Integer count) {
+        List<Product> favoriteList = productService.favorite(count);
+        return favoriteList.stream().map(Product::toDto).toList();
     }
+//    public List<ViewPurchasedProductDto> favorite(Integer count) {
+//        return orderItemService.favorite(count);
+//    }
 
     @Override
     @Transactional

@@ -44,7 +44,7 @@ CREATE TABLE tb_product(
 --
 CREATE TABLE tb_order_item(
     id SERIAL PRIMARY KEY,
-    paid INTEGER,
+    to_pay INTEGER,
     count INTEGER,
     user_id INTEGER,
     product_id INTEGER,
@@ -63,22 +63,24 @@ CREATE INDEX purchase_user_id ON tb_order_item(user_id);
 -- group by user_id;
 
 --
--- CREATE VIEW v_top_purchased_product AS
--- with sum_paid_cnt AS (
---     select
---         tpc.product_id,
---         sum(tpc.count) as paid_cnt
---     from tb_order_item tpc
---     group by tpc.product_id
--- )
--- select
---     tp.*,
---     spc.paid_cnt,
---     row_number() over(order by spc.paid_cnt desc) as order_by_paid_cnt
--- from sum_paid_cnt spc
--- inner join tb_product tp
---     on tp.id = spc.product_id
--- order by paid_cnt desc;
+CREATE VIEW v_top_purchased_product AS
+with sum_paid_cnt AS (
+    select
+        tpc.product_id,
+        sum(tpc.count) as paid_cnt
+    from tb_order_item tpc
+    group by tpc.product_id
+)
+select
+    tp.*,
+    spc.paid_cnt,
+    row_number() over(order by spc.paid_cnt desc) as order_by_paid_cnt
+from sum_paid_cnt spc
+inner join tb_product tp
+    on tp.id = spc.product_id
+order by paid_cnt desc;
+
+--
 -- CREATE TEMPORARY TABLE sum_paid_cnt AS
 -- SELECT
 --     tpc.product_id,

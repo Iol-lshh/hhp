@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -35,11 +34,12 @@ public class PointServiceImplIntegrationTest {
         List<OrderItem> orderItems = Arrays.asList(orderItem2);
         productService.putPrice(orderItems);
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();
-
+        System.out.println("구매금액 "+ sumToPay);
         // Performing the test
         // H2는 PESSIMISTIC_WRITE 못한다고 한다...
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         IntStream.range(0, 4)
+                .parallel()
                 .forEach(i ->
                         executorService.submit(() -> {
                             try {

@@ -6,11 +6,7 @@ import com.lshh.hhp.payment.Payment;
 import com.lshh.hhp.point.Point;
 import com.lshh.hhp.point.Point.PointType;
 import com.lshh.hhp.point.repository.PointRepository;
-import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -36,19 +32,14 @@ public class PointServiceImpl implements PointService {
         long userId = orderItems.get(0).userId();
         // 잔액 확인
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();
-        if(!isSubtractable(userId, sumToPay)){
-            throw new Exception("포인트 부족");
+        int remain = pointRepository.findAllByUserIdWithLock(userId).stream().mapToInt(Point::count).sum();
+        if(remain - sumToPay < 0){
+            throw new Exception("포인트 부족 " + remain +", "+ sumToPay);
         }
 
         // 차감 포인트 저장
         List<Point> pointList = Point.createNewSubtractPoints(orderItems);
         return pointRepository.saveAll(pointList);
-    }
-
-    @Override
-    @Transactional
-    public boolean isSubtractable(long userId, int subtractPoint){
-        return countRemain(userId) - subtractPoint >= 0;
     }
 
     @Override
@@ -81,13 +72,13 @@ public class PointServiceImpl implements PointService {
     @Transactional
     public Point squash(long userId) throws Exception {
         // # 잔액 확인
-        int remainPoint = countRemain(userId);
-        if(remainPoint == 0){
+        int remain = pointRepository.findAllByUserIdWithLock(userId).stream().mapToInt(Point::count).sum();
+        if(remain == 0){
             throw new Exception("압축할 포인트가 없습니다.");
         }
 
         // # 압축
-        Point sumed = Point.createNewSquashedPoint(userId, remainPoint);
+        Point sumed = Point.createNewSquashedPoint(userId, remain);
 
         // # 이전 포인트 비활성화
         List<Point> userPointList = pointRepository.findAllByUserIdWithLock(userId);
@@ -99,7 +90,7 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public int countRemain(long userId) {
         List<Point> userPointList = pointRepository.findAllByUserIdWithLock(userId);
         return userPointList.stream().mapToInt(Point::count).sum();

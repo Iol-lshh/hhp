@@ -43,7 +43,7 @@ CREATE TABLE tb_product(
 --
 CREATE TABLE tb_order_item(
     id SERIAL PRIMARY KEY,
-    paid INTEGER,
+    to_pay INTEGER,
     count INTEGER,
     user_id INTEGER,
     product_id INTEGER,

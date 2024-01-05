@@ -4,6 +4,7 @@ import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import com.lshh.hhp.orderItem.service.OrderItem1Service;
 import com.lshh.hhp.point.service.PointService;
+import com.lshh.hhp.product.dto.ProductDto;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -90,4 +91,12 @@ public class OrderItem1ServiceImplIntegrationTest {
         assertTrue(pointService.countRemain(testUserId) >= 0);
     }
 
+
+    @Test
+    public void testFavorite() {
+        List<ProductDto> favoriteResult = orderItem1Service.favorite(5);
+
+        favoriteResult
+                .forEach(productDto -> System.out.println(productDto.id()));
+    }
 }

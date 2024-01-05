@@ -3,8 +3,6 @@ package com.lshh.hhp.point.service;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.payment.Payment;
 import com.lshh.hhp.point.Point;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 /**
@@ -16,8 +14,6 @@ public interface PointService {
     Point add(Payment payment);
 
     List<Point> subtract(List<OrderItem> orderItems) throws Exception;
-
-    boolean isSubtractable(long userId, int subtractPoint);
 
     List<Point> cancelSubtract(List<OrderItem> purchaseDtoList) throws Exception;
 

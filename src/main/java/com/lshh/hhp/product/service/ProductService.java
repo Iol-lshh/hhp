@@ -4,7 +4,6 @@ import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import com.lshh.hhp.product.Product;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,4 +30,7 @@ public interface ProductService {
     List<OrderItem> putPrice(List<OrderItem> dtos);
 
     int findPrice(long productId);
+
+    //    @Transactional(readOnly = true)
+    List<Product> favorite(Integer count);
 }

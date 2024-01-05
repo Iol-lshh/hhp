@@ -6,9 +6,7 @@ import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.repository.ProductRepository;
-import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -113,5 +111,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public int findPrice(long productId){
         return productRepository.findById(productId).map(Product::price).orElse(0);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Product> favorite(Integer count) {
+        return productRepository.findTopPurchased(count, 0);
     }
 }
