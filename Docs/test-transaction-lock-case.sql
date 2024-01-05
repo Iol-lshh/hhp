@@ -68,8 +68,8 @@ commit
 동시성 문제 해결 (해결 방안: 2번 시도)
 1. 비관적 락은 락을 얻는데만 사용하고,
 2. 실제 데이터 가져오는건 그 다음에 비관적 락 없이 조회하자!
- # todo - 확인 내용을 캡쳐하고 문서화 및 정리할 것! - 트랜잭션 레벨( 1. serializable  2. repeatable read  3. read committed   4. read uncommitted ) * 락( 1. 비관적 락  2. update  3. insert ) * 디비 엔진( 1. H2  2. PostgreSQL  3. MySQL ) = 4 * 3 * 3 종 테스트 결과 작성
-
+# todo - 확인 내용을 캡쳐하고 문서화 및 정리할 것! - 트랜잭션 레벨( 1. serializable  2. repeatable read  3. read committed   4. read uncommitted ) * 락( 1. 비관적 락  2. update  3. insert ) * 디비 엔진( 1. H2  2. PostgreSQL  3. MySQL ) = 4 * 3 * 3 종 테스트 결과 작성
+# todo - 현상을 알았으니,, 적확한 공식 문서 찾아볼 것!
 
 
  * ## 리드 언커밋
