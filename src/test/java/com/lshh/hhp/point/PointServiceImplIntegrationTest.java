@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ActiveProfiles("test")
 @SpringBootTest
 public class PointServiceImplIntegrationTest {
     
@@ -50,7 +52,7 @@ public class PointServiceImplIntegrationTest {
 //                                System.out.println(i + " 차감 실패! c남은 잔액: "+pointService.countRemain(testUserId));
                                 System.out.println(e.getMessage());
                             }
-                            System.out.println(i + " d남은 잔액: "+pointService.countRemain(testUserId));
+//                            System.out.println(i + " d남은 잔액: "+pointService.countRemain(testUserId));
                         })
                 );
         executorService.awaitTermination(3, TimeUnit.SECONDS);
@@ -58,3 +60,5 @@ public class PointServiceImplIntegrationTest {
         assertTrue(pointService.countRemain(testUserId) >= 0);
     }
 }
+
+

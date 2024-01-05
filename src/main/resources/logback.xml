@@ -8,13 +8,13 @@
               value="[%d{yyyyMMdd'T'HHmmss}] %-5level [%thread] %-40.40logger{36} : %msg%n" />
 
     <!--appender: 로깅 이벤트 처리 - 0개 이상-->
-    <!--console standard out-->
+<!--    console standard out-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
         </layout>
     </appender>
-    <!--aws appender-->
+    aws appender
     <appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
@@ -48,10 +48,15 @@
         <retentionTimeDays>0</retentionTimeDays>
     </appender>
 
-    <springProfile name="local">
-        <logger name="org.springframework" level="INFO">
+<!--    <springProfile name="local">-->
+<!--        <logger name="org.springframework" level="INFO">-->
+<!--            <appender-ref ref="STDOUT" />-->
+<!--        </logger>-->
+<!--    </springProfile>-->
+    <springProfile name="test">
+        <root level="DEBUG">
             <appender-ref ref="STDOUT" />
-        </logger>
+        </root>
     </springProfile>
     <springProfile name="dev">
         <!--logger: 로깅을 남기는 곳 - 0개 이상-->

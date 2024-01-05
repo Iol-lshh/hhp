@@ -7,6 +7,7 @@ import com.lshh.hhp.point.Point;
 import com.lshh.hhp.point.Point.PointType;
 import com.lshh.hhp.point.repository.PointRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class PointServiceImpl implements PointService {
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();
         List<Point> targetList = pointRepository.findAllByUserIdWithLock(userId);
         int remain = targetList.stream().mapToInt(Point::count).sum();
-        if(remain - sumToPay < 0){
+        if(countRemain(userId) - sumToPay < 0){
             throw new Exception("포인트 부족 " + remain +", "+ sumToPay);
         }
 
@@ -91,9 +92,10 @@ public class PointServiceImpl implements PointService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
+    @Transactional
     public int countRemain(long userId) {
-        List<Point> userPointList = pointRepository.findAllByUserIdWithLock(userId);
+        List<Point> userPointList = pointRepository.findAllByUserId(userId);
         return userPointList.stream().mapToInt(Point::count).sum();
     }
 }
