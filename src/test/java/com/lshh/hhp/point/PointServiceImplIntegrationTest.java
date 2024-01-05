@@ -32,15 +32,15 @@ public class PointServiceImplIntegrationTest {
     public void testSubtract() throws Exception {
         // Initialization
         long testUserId = 1L;
-        OrderItem orderItem2 = OrderItem.createNewOrderItemWithNoPriceTag(testUserId, 1L, 1L, 2);
+        OrderItem orderItem2 = OrderItem.createNewOrderItemWithNoPriceTag(testUserId, 1L, 1L, 1);
         List<OrderItem> orderItems = Arrays.asList(orderItem2);
         productService.putPrice(orderItems);
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();
         System.out.println("구매금액 "+ sumToPay);
         // Performing the test
         // H2는 PESSIMISTIC_WRITE 못한다고 한다...
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
-        IntStream.range(0, 4)
+        ExecutorService executorService = Executors.newFixedThreadPool(6);
+        IntStream.range(0, 6)
                 .parallel()
                 .forEach(i ->
                         executorService.submit(() -> {

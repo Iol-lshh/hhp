@@ -31,15 +31,17 @@ public class PointServiceImpl implements PointService {
     @Transactional
     public List<Point> subtractByOrderItems(List<OrderItem> orderItems) throws Exception {
         long userId = orderItems.get(0).userId();
-        // 잔액 확인
+        // # 총 차감액
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();
-        List<Point> targetList = pointRepository.findAllByUserIdWithLock(userId);
-        int remain = targetList.stream().mapToInt(Point::count).sum();
-        if(countRemain(userId) - sumToPay < 0){
+        // # 락 획득
+        pointRepository.findAllByUserIdWithLock(userId);
+        // # 잔고 확인
+        int remain = countRemain(userId);
+        // # 차감 가능 여부 확인
+        if(remain - sumToPay < 0){
             throw new Exception("포인트 부족 " + remain +", "+ sumToPay);
         }
-
-        // 차감 포인트 저장
+        // # 차감 포인트 저장
         List<Point> pointList = Point.createNewSubtractPoints(orderItems);
         return pointRepository.saveAll(pointList);
     }
