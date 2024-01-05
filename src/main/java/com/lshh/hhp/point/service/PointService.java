@@ -13,7 +13,7 @@ public interface PointService {
 
     Point add(Payment payment);
 
-    List<Point> subtract(List<OrderItem> orderItems) throws Exception;
+    List<Point> subtractByOrderItems(List<OrderItem> orderItems) throws Exception;
 
     List<Point> cancelSubtract(List<OrderItem> purchaseDtoList) throws Exception;
 

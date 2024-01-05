@@ -44,7 +44,7 @@ public class PointServiceImplIntegrationTest {
                         executorService.submit(() -> {
                             try {
 //                                System.out.println(i + " a남은 잔액: "+pointService.countRemain(testUserId));
-                                pointService.subtract(orderItems);
+                                pointService.subtractByOrderItems(orderItems);
 //                                System.out.println(i + " 차감 성공! b남은 잔액: "+pointService.countRemain(testUserId));
                             } catch (Exception e) {
 //                                System.out.println(i + " 차감 실패! c남은 잔액: "+pointService.countRemain(testUserId));

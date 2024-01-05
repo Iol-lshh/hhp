@@ -77,7 +77,7 @@ class OrderItem1ServiceImplTest {
         assertEquals(1, result.size());
 
         verify(orderItemServiceImpl, times(1)).save(any());
-        verify(pointService, times(1)).subtract(any());
+        verify(pointService, times(1)).subtractByOrderItems(any());
       }
 
     @Test

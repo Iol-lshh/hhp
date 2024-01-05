@@ -28,7 +28,7 @@ public class PointServiceImpl implements PointService {
 
     @Override
     @Transactional
-    public List<Point> subtract(List<OrderItem> orderItems) throws Exception {
+    public List<Point> subtractByOrderItems(List<OrderItem> orderItems) throws Exception {
         long userId = orderItems.get(0).userId();
         // 잔액 확인
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();

@@ -41,7 +41,7 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
         newOrderItems = orderItemService.save(newOrderItems);
 
         // 포인트 차감
-        pointService.subtract(newOrderItems);
+        pointService.subtractByOrderItems(newOrderItems);
 
         return newOrderItems.stream().map(OrderItem::toDto).toList();
     }
