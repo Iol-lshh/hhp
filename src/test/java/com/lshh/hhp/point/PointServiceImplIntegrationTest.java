@@ -38,7 +38,6 @@ public class PointServiceImplIntegrationTest {
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();
         System.out.println("구매금액 "+ sumToPay);
         // Performing the test
-        // H2는 PESSIMISTIC_WRITE 못한다고 한다...
         ExecutorService executorService = Executors.newFixedThreadPool(6);
         IntStream.range(0, 6)
                 .parallel()
