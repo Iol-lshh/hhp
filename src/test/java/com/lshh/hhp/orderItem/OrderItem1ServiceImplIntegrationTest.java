@@ -3,6 +3,7 @@ package com.lshh.hhp.orderItem;
 import com.lshh.hhp.dto.request.RequestPurchaseDto;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import com.lshh.hhp.orderItem.service.OrderItem1Service;
+import com.lshh.hhp.payment.service.Payment1Service;
 import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.product.dto.ProductDto;
 import org.junit.jupiter.api.*;
@@ -26,6 +27,8 @@ public class OrderItem1ServiceImplIntegrationTest {
     OrderItem1Service orderItem1Service;
     @Autowired
     PointService pointService;
+    @Autowired
+    Payment1Service payment1Service;
 
     static long orderId = 0L;
 
@@ -51,6 +54,7 @@ public class OrderItem1ServiceImplIntegrationTest {
         long testUserId = 1L;
         long testOrderId = ++orderId;
         List<RequestPurchaseDto> requests = prepareRequestPurchaseDtoList();
+        payment1Service.exchange(testUserId, 40);
         // Act
         System.out.println("주문 전 남은 잔액: "+pointService.countRemain(testUserId));
         List<OrderItemDto> result = orderItem1Service.orderEachProduct(testUserId, testOrderId, requests);

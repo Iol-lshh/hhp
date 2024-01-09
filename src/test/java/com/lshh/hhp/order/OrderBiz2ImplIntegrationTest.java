@@ -2,6 +2,7 @@ package com.lshh.hhp.order;
 
 import com.lshh.hhp.order.dto.OrderDto;
 import com.lshh.hhp.order.service.OrderOrchestratorService;
+import com.lshh.hhp.payment.service.Payment1Service;
 import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.service.ProductService;
@@ -32,6 +33,8 @@ public class OrderBiz2ImplIntegrationTest {
     private PointService pointService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private Payment1Service payment1Service;
 
     private List<RequestPurchaseDto> prepareRequestPurchaseDtoList() {
         // 30
@@ -53,6 +56,7 @@ public class OrderBiz2ImplIntegrationTest {
     @DisplayName("주문 성공 확인")
     public void testOrder() throws Exception {
         long userId = 1L;
+        payment1Service.exchange(userId, 40);
         System.out.println("before 남은 잔액: "+pointService.countRemain(userId));
         // 100 - 40
         List<RequestPurchaseDto> purchaseRequestList = prepareRequestPurchaseDtoList();
