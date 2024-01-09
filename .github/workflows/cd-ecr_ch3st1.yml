@@ -58,7 +58,7 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ./.aws/ecr/task/task_ch3st1.json
-        container-name: container-hhp-prod
+        container-name: container-hhp-dev
         image: ${{ steps.login-ecr.outputs.registry }}/hhp-ecr
 
     # ecs 띄우기 - 배포
@@ -66,6 +66,6 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.render-task-definition.outputs.task-definition }}
-        cluster: cluster-hhp-prod
-        service: service-hhp-prod
+        cluster: cluster-hhp-dev
+        service: service-hhp-dev
         wait-for-service-stability: false
