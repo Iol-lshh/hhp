@@ -12,9 +12,9 @@ spring:
     profiles:
         active:
 #            - local2
-#            - local
+            - local
 #            - compose
-            - aws
+#            - aws
     mvc:
         pathmatch:
             matching-strategy: ant-path-matcher
