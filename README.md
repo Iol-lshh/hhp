@@ -1,3 +1,10 @@
+> - [phase](#phase)
+> - [비즈니스](#비즈니스)
+> - [데이터 구조](#데이터-구조)
+> - [파일 구조](#파일-구조)
+> - [API](#api)
+> - [테스트 케이스](#테스트-케이스)
+
 # phase
 - 프로파일 버저닝
     - 로컬: `local`
@@ -8,12 +15,10 @@
 - 스웨거: `/swagger-ui/index.html`
 - 헬스체크: `/actuator/health`
 
-
-
 # 비즈니스
 - 이커머스
 
-## 데이터 구조
+# 데이터 구조
 ![data_architecture](./Docs/da.png)
 
 ### 사용자 User
@@ -43,8 +48,30 @@
 - 구매와 일대일 매핑 가능
 - 객체 데이터
 
+# 파일 구조
+- 레이어드 아키텍처
+
+![file_structure](./Docs/file_structure.png)
+- controller
+- biz
+  - base
+    - 리소스와 연결되는 베이스 비즈니스
+  - biz1
+    - 순환 참조를 방지하기 위해, biz는 반드시 더 작은 숫자의 biz만을 DI 받는다.
+  - biz2
+- dto
+  - orgin
+    - 순수 dto로써, entity와 일대일 매핑된다.
+  - request
+    - 요청 dto로써, 컨트롤러에서 들어오거나, 요청에 쓰인다.
+  - view
+    - 조합을 위한 dto
+- orm
+  - entity
+  - repository
+
 # API
-### 주문 내역
+## 유저 주문 내역
 ```shell
 curl -X 'GET' \
   'http://localhost:8078/order/all/1' \
@@ -64,7 +91,7 @@ curl -X 'GET' \
   }
 }
 ```
-### 주문
+## 주문
 ```shell
 curl -X 'POST' \
   'http://localhost:8078/order/purchase' \
@@ -97,7 +124,7 @@ curl -X 'POST' \
 }
 ```
 
-### 포인트 생성
+## 포인트 생성
 ```shell
 curl -X 'POST' \
   'http://localhost:8078/pay/exchange' \
@@ -120,7 +147,7 @@ curl -X 'POST' \
   }
 }
 ```
-### 포인트 압축
+## 포인트 압축
 ```shell
 curl -X 'GET' \
   'http://localhost:8078/point/squash' \
@@ -143,7 +170,7 @@ curl -X 'GET' \
 }
 ```
 
-### 유저 포인트 압축
+## 유저 포인트 압축
 ```shell
 curl -X 'GET' \
   'http://localhost:8078/point/squash/{userId}' \
@@ -164,7 +191,7 @@ curl -X 'GET' \
 }
 ```
 
-### 포인트 잔액 확인
+## 포인트 잔액 확인
 ```shell
 curl -X 'GET' \
   'http://localhost:8078/point/remain/{userId}' \
@@ -179,7 +206,7 @@ curl -X 'GET' \
 }
 ```
 
-### 포인트 사용 내역
+## 포인트 사용 내역
 ```shell
 curl -X 'GET' \
   'http://localhost:8078/point/history/{userId}' \
@@ -202,7 +229,7 @@ curl -X 'GET' \
 }
 ```
 
-### 상품 전체
+## 상품 전체
 ```shell
 curl -X 'GET' \
   'http://localhost:8078/product/all' \
@@ -223,7 +250,7 @@ curl -X 'GET' \
 }
 ```
 
-### 상품 생성, 갱신
+## 상품 생성, 갱신
 ```shell
 curl -X 'POST' \
 'http://localhost:8078/product/' \
@@ -248,7 +275,7 @@ curl -X 'POST' \
 }
 ```
 
-### 전체 기간 인기 판매 상품
+## 전체 기간 인기 판매 상품
 ```shell
 curl -X 'GET' \
   'http://localhost:8078/purchase/favorite/11' \
@@ -256,61 +283,22 @@ curl -X 'GET' \
 ```
 ```json
 {
-  "timestamp": "2023-12-13T06:19:42.376+00:00",
-  "status": 500,
-  "error": "Internal Server Error",
-  "path": "/purchase/favorite/11"
-}
-```
-
-### 재고 확인
-```shell
-curl -X 'GET' \
-  'http://localhost:8078/stock/all' \
-  -H 'accept: application/json'
-```
-```json
-{
   "result": {
     "result": "Start",
     "value": [
       {
         "id": 0,
-        "productId": 0,
-        "purchaseId": 0
+        "name": "string",
+        "price": 0,
+        "paidCnt": 0,
+        "orderByPaidCnt": 0
       }
     ]
   }
 }
 ```
 
-### 재고 추가
-```shell
-curl -X 'POST' \
-  'http://localhost:8078/stock/input' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "productId": 2,
-  "cnt": 100
-}'
-```
-```json
-{
-  "result": {
-    "result": "Start",
-    "value": [
-      {
-        "id": 0,
-        "productId": 0,
-        "purchaseId": 0
-      }
-    ]
-  }
-}
-```
-
-### user 리스트
+## user 리스트
 ```shell
 curl -X 'GET' \
   'http://localhost:8078/user/all' \
@@ -330,25 +318,14 @@ curl -X 'GET' \
 }
 ```
 
-### user 생성, 갱신
-```shell
-curl -X 'POST' \
-  'http://localhost:8078/stock/input' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "id": 0,
-  "name": "string"
-}'
-```
-```json
-{
-  "result": {
-    "result": "Start",
-    "value": {
-      "id": 0,
-      "name": "string"
-    }
-  }
-}
-```
+
+# 테스트 케이스
+
+
+
+
+
+
+
+
+

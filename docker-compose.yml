@@ -1,18 +1,18 @@
 version: "3"
 
 services:
-  hhp:
-    build:
-      context: "./"
-    container_name: "hhp"
-    ports:
-      - 8078:80
-    networks:
-      - hhp-net
-    depends_on:
-     - db
-    env_file:
-      - ".compose/local/hhp.env"
+#  hhp:
+#    build:
+#      context: "./"
+#    container_name: "hhp"
+#    ports:
+#      - 8078:80
+#    networks:
+#      - hhp-net
+#    depends_on:
+#     - db
+#    env_file:
+#      - ".compose/local/hhp.env"
 
   db:
    build:
@@ -24,8 +24,85 @@ services:
      - "5432:5432"  # 호스트 포트와 컨테이너 포트 매핑
    env_file:
      - "./.compose/local/hhp-db.env"
+   environment:
+     - PGDATA=/var/lib/postgresql/data/pgdata
    volumes:
      - ../hhp_db/pgdata:/var/lib/postgresql/data
 
+  db2:
+    build:
+      context: "./.db/mysql"
+    container_name: "hhp-db-mysql"
+    networks:
+      - hhp-net
+    ports:
+      - "3306:3306"
+    env_file:
+      - "./.compose/local/hhp-db-mysql.env"
+    volumes:
+      - ../hhp_db/mysql:/var/lib/mysql
+#
+#  redis:
+#    build:
+#      context: "./redis"
+#    container_name: "hhp-redis"
+#    networks:
+#      - hhp-net
+#    ports:
+#      - "6379:6379"
+#
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+#    container_name: elasticsearch
+#    user: 'lshh' # 컨테이너 내부 계정이 아닌, 외부 계정이다. 단, docker group 계정이어야 함.
+#    environment:
+#      - discovery.type=single-node
+##      - cluster.name=es-docker-cluster
+##      - node.name=c1.erica.moara.org
+##      - node.master=true
+##      - node.data=true
+##      - discovery.seed_hosts=192.168.0.82,192.168.0.83
+##      - cluster.initial_master_nodes=192.168.0.82
+#      - bootstrap.memory_lock=true
+##      - network.publish_host=192.168.0.82
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    ports:
+#      - 9200:9200
+#      - 9300:9300
+#    networks:
+#      - elk
+#    volumes:
+#      - /opt/elk/elasticsearch/data:/usr/share/elasticsearch/data
+#
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash-oss:7.10.2
+#    container_name: logstash
+#    ports:
+#      - 5044:5044
+#    networks:
+#      - elk
+#    volumes:
+#      - ./elk/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+#    depends_on:
+#      elasticsearch:
+#        condition: service_healthy
+#
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana-oss:7.10.2
+#    environment:
+#      ELASTICSEARCH_URL: elasticsearch:9200
+#      ELASTICSEARCH_HOSTS: '["elasticsearch:9200"]'
+#    ports:
+#      - 5601:5601
+#    depends_on:
+#      elasticsearch:
+#        condition: service_healthy
+
+
 networks:
   hhp-net:
+  elk:

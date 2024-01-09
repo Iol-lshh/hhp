@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 로그 패턴에 색상 적용 %clr(pattern){color} -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <property name="CONSOLE_LOG_PATTERN"
+              value="[%d{yyyyMMdd'T'HHmmss}] %clr(%-5level) %clr(---){faint} %clr([%thread]){faint} %clr(%-40.40logger{36}){cyan} %clr(:){faint} %msg%n" />
+    <property name="FILE_LOG_PATTERN"
+              value="[%d{yyyyMMdd'T'HHmmss}] %-5level [%thread] %-40.40logger{36} : %msg%n" />
+
+    <!--appender: 로깅 이벤트 처리 - 0개 이상-->
+<!--    console standard out-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </layout>
+    </appender>
+    aws appender
+    <appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <layout>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </layout>
+        <if condition='property("spring.profiles.active").contains("local")'>
+            <then>
+                <!-- local 용 로그 그룹명 -->
+                <logGroupName>${Log_Group_Name:local}</logGroupName>
+            </then>
+        </if>
+        <if condition='property("spring.profiles.active").contains("dev")'>
+            <then>
+                <!-- dev 용 로그 그룹명 -->
+                <logGroupName>${Log_Group_Name:dev}</logGroupName>
+            </then>
+        </if>
+        <if condition='property("spring.profiles.active").contains("prod")'>
+            <then>
+                <!-- prod 용 로그 그룹명 -->
+                <logGroupName>${Log_Group_Name:prod}</logGroupName>
+            </then>
+        </if>
+        <logStreamUuidPrefix>error-</logStreamUuidPrefix>
+        <logRegion>ap-northeast-2</logRegion>
+        <maxBatchLogEvents>50</maxBatchLogEvents>
+        <maxFlushTimeMillis>30000</maxFlushTimeMillis>
+        <maxBlockTimeMillis>5000</maxBlockTimeMillis>
+        <retentionTimeDays>0</retentionTimeDays>
+    </appender>
+
+<!--    <springProfile name="local">-->
+<!--        <logger name="org.springframework" level="INFO">-->
+<!--            <appender-ref ref="STDOUT" />-->
+<!--        </logger>-->
+<!--    </springProfile>-->
+    <springProfile name="test">
+        <root level="DEBUG">
+            <appender-ref ref="STDOUT" />
+        </root>
+    </springProfile>
+    <springProfile name="dev">
+        <!--logger: 로깅을 남기는 곳 - 0개 이상-->
+        <logger name="org.springframework" level="INFO" />
+        <logger name="inc.bfactory.kpop" level="INFO"/>
+        <!--root: 최상단 logger - 최대 1개-->
+        <root level="INFO">
+            <appender-ref ref="ASYNC_AWS_LOGS" />
+        </root>
+    </springProfile>
+</configuration>

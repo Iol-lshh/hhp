@@ -2,7 +2,7 @@ package com.lshh.hhp.dto.view;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lshh.hhp.dto.origin.OrderDto;
+import com.lshh.hhp.order.dto.OrderDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
