@@ -17,6 +17,14 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v3
 
+      # aws 접속
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
       # 스탬프
       - id: set_timestamp
         run: echo "timestamp=$(date +%s)" >> $GITHUB_OUTPUT
