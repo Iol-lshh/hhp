@@ -59,7 +59,7 @@ jobs:
       with:
         task-definition: ./.aws/ecr/task/task_ch3st1.json
         container-name: container-hhp
-        image: ${{ steps.login-ecr.outputs.registry }}/hhp-ecr
+        image: ${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}
 
     # ecs 띄우기 - 배포
     - name: Deploy Amazon ECS task-definition
