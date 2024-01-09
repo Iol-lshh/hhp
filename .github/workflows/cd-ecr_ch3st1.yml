@@ -58,7 +58,7 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ./.aws/ecr/task/task_ch3st1.json
-        container-name: container-hhp-dev
+        container-name: container-hhp
         image: ${{ steps.login-ecr.outputs.registry }}/hhp-ecr
 
     # ecs 띄우기 - 배포
