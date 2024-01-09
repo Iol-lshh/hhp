@@ -17,7 +17,7 @@ jobs:
     - name: checkout repository
       uses: actions/checkout@v3
 
-    # aws 접속
+      # aws 접속
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -25,12 +25,34 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    # ecr 접근
+      # ecr 접근
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    # ecs 띄우기 - task 정의
+      # 스탬프
+    - id: set_timestamp
+      run: echo "timestamp=$(date +%s)" >> $GITHUB_OUTPUT
+
+      # 이미지 빌드
+    - name: Build the Docker image
+      id: image_build
+      run: docker build . --file Dockerfile --tag ${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}
+
+      # 실패 처리
+    - name: Check build logs if the build fails
+      if: steps.image_build.outcome != 'success'
+      run: echo "빌드 실패!" && docker buildx inspect ${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}
+
+      # 성공 처리
+    - name: Push the Docker image to ECR
+      id: ci_image
+      if: steps.image_build.outcome == 'success'
+      run: |
+        echo "image=${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}"
+        docker push ${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}
+
+      # ecs 띄우기 - task 정의
     - name: Render ECS task-definition
       id: render-task-definition
       uses: aws-actions/amazon-ecs-render-task-definition@v1
