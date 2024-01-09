@@ -48,7 +48,4 @@ jobs:
     - name: Push the Docker image to ECR
       id: ci_image
       if: steps.image_build.outcome == 'success'
-      run: |
-        echo "image=${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}"
-        docker push ${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}
-
+      run: echo "빌드 성공!" && docker buildx inspect ${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}
