@@ -1,0 +1,54 @@
+server:
+  port: 3000
+  servlet:
+    application-display-name: hhp
+
+spring:
+ # Database
+ datasource:
+   driver-class-name: com.mysql.cj.jdbc.Driver
+   url: jdbc:mysql://database-hhp.chcaacam804n.ap-northeast-2.rds.amazonaws.com:3306/hhp-db?serverTimezone=UTC&characterEncoding=UTF-8
+   username: lshh
+   password: lshh.com
+ sql:
+   init:
+     platform: postgres
+ jpa:
+   database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+   generate-ddl: false
+   hibernate:
+     ddl-auto: none
+   show-sql: false
+   properties:
+     hibernate:
+       format_sql: true
+
+# 액추에이터 설정
+management:
+  endpoint:
+    health:
+      show-details: always
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+  info:
+    build:
+      enabled: true
+    git:
+      enabled: true
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+
+# 스웨거 설정
+springdoc:
+  api-docs:
+    enabled: true

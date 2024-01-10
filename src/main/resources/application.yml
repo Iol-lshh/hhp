@@ -11,10 +11,11 @@ spring:
     #profiles
     profiles:
         active:
-            - local3
+#            - local3
 #            - local2
 #            - local
 #            - compose
+            - aws2
 #            - aws
     aop:
         auto: true
