@@ -1,7 +1,7 @@
 package com.lshh.hhp.payment.controller;
 
 import com.lshh.hhp.common.ResultDto;
-import com.lshh.hhp.dto.request.RequestExchangeDto;
+import com.lshh.hhp.payment.dto.RequestExchangeDto;
 import com.lshh.hhp.payment.dto.PaymentDto;
 import com.lshh.hhp.payment.service.Payment1Service;
 import io.swagger.v3.oas.annotations.Operation;

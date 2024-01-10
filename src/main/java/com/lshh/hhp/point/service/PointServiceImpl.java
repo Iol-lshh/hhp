@@ -7,7 +7,6 @@ import com.lshh.hhp.point.Point;
 import com.lshh.hhp.point.Point.PointType;
 import com.lshh.hhp.point.repository.PointRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class PointServiceImpl implements PointService {
 
     @Override
     @Transactional
-    public List<Point> cancelSubtract(List<OrderItem> orderItems) throws Exception {
+    public List<Point> cancelSubtract(List<OrderItem> orderItems) {
         // orderItem들에 대한 포인트들을 전부 찾기
         List<Point> targetList = findAllByOrderItems(orderItems);
         Point.setDisable(targetList);

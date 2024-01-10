@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentServiceImpl implements PaymentService {
     final PaymentRepository paymentRepository;
 
-
     @Override
     @Transactional
     public Payment create(long userId, int toNeed) {
@@ -19,5 +18,4 @@ public class PaymentServiceImpl implements PaymentService {
 
         return paymentRepository.save(newOne);
     }
-
 }

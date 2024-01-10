@@ -16,18 +16,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(
            value = "with sum_paid_cnt AS (" +
-                   "    select" +
-                   "        tpc.product_id," +
-                   "        sum(tpc.count) as paid_cnt" +
-                   "    from tb_order_item tpc" +
-                   "    group by tpc.product_id" +
+                    " select" +
+                     " toi.product_id," +
+                     " sum(toi.count) as paid_cnt" +
+                    " from tb_order_item toi" +
+                    " group by toi.product_id" +
                    ")" +
                    " select tp.*" +
-//                   "    , spc.paid_cnt" +
-//                   "    , row_number() over(order by spc.paid_cnt desc) as order_by_paid_cnt" +
+//                    ", spc.paid_cnt" +
+//                    ", row_number() over(order by spc.paid_cnt desc) as order_by_paid_cnt" +
                    " from sum_paid_cnt spc" +
                    " inner join tb_product tp" +
-                   "    on tp.id = spc.product_id" +
+                    " on tp.id = spc.product_id" +
                    " order by paid_cnt desc" +
                    " limit :pageSize" +
                    " offset :pageNo"

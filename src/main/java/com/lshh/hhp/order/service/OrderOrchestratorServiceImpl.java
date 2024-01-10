@@ -1,13 +1,13 @@
 package com.lshh.hhp.order.service;
 
 import com.lshh.hhp.common.Response;
-import com.lshh.hhp.dto.event.CancelOrderEvent;
+import com.lshh.hhp.order.dto.EventCancelOrderDto;
 import com.lshh.hhp.order.Order;
 import com.lshh.hhp.order.dto.OrderDto;
+import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.product.service.ProductService;
 import com.lshh.hhp.common.Service;
-import com.lshh.hhp.orderItem.dto.OrderItemDto;
-import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import com.lshh.hhp.order.dto.RequestPurchaseDto;
 import com.lshh.hhp.orderItem.service.OrderItem1Service;
 import com.lshh.hhp.user.service.UserService;
 import jakarta.persistence.LockModeType;
@@ -25,7 +25,7 @@ import java.util.List;
 @Service(level = 2)
 public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
 
-    // 규칙. 작은 숫자의 biz1 만을 확장 가능하다.
+    // 규칙. 작은 레벨의 service 만을 확장한다.
     final OrderItem1Service orderItem1Service;
 
     final OrderService orderService;
@@ -36,7 +36,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
 
     @Override
     @EventListener
-    public void onCancelOrderEvent(CancelOrderEvent event) {
+    public void onCancelOrderEvent(EventCancelOrderDto event) {
         log.info("handle_cancel_order_event");
         try{
             cancel(event.orderId());
@@ -69,9 +69,11 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
 
             // # 구매 처리
             // ## 1. 구매 처리
-            orderItem1Service.orderEachProduct(userId, order.id(), purchaseRequestList);
+            List<OrderItem> orderItems = orderItem1Service.orderEachProduct(userId, order.id(), purchaseRequestList);
+
             // ## 2. 상품 재고 처리
-            productService.deduct(purchaseRequestList);
+            productService.deduct(orderItems);
+
             // # 3. 주문 완료: 종료
             order.setState(Response.Result.SUCCESS);
             return order.toDto();
@@ -81,7 +83,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
             order.setState(Response.Result.FAIL);
 
             log.info("invoke_cancel_order_event");
-            publisher.publishEvent(new CancelOrderEvent().orderId(order.id()));
+            publisher.publishEvent(new EventCancelOrderDto().orderId(order.id()));
             throw exception;
         }
     }
@@ -100,7 +102,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
         try {
             // 3. 구매 취소
             // 4. 포인트 취소
-            List<OrderItemDto> canceledList = orderItem1Service.cancel(target.id());
+            List<OrderItem> canceledList = orderItem1Service.cancelOrderItem(target.id());
 
             // 5. 재고 다시 추가
             productService.conduct(canceledList);

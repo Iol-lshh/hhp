@@ -1,7 +1,7 @@
 package com.lshh.hhp.order.controller;
 
 import com.lshh.hhp.common.ResultDto;
-import com.lshh.hhp.dto.request.RequestPurchaseOrderDto;
+import com.lshh.hhp.order.dto.RequestPurchaseOrderDto;
 import com.lshh.hhp.order.dto.OrderDto;
 import com.lshh.hhp.order.service.OrderOrchestratorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,8 +22,6 @@ public class OrderController {
     public ResultDto<OrderDto> order(@RequestBody RequestPurchaseOrderDto dto) throws Exception {
         return new ResultDto<>(orderService.order(dto.getUserId(), dto.getRequestPurchaseList()));
     }
-
-
 
     @Operation(summary = "주문 내역")
     @GetMapping("/all/{userId}")

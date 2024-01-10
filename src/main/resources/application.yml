@@ -11,10 +11,13 @@ spring:
     #profiles
     profiles:
         active:
+            - local3
 #            - local2
 #            - local
 #            - compose
-            - aws
+#            - aws
+    aop:
+        auto: true
     mvc:
         pathmatch:
             matching-strategy: ant-path-matcher

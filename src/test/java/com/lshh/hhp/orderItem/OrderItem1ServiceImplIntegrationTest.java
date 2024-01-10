@@ -1,6 +1,6 @@
 package com.lshh.hhp.orderItem;
 
-import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import com.lshh.hhp.order.dto.RequestPurchaseDto;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import com.lshh.hhp.orderItem.service.OrderItem1Service;
 import com.lshh.hhp.payment.service.Payment1Service;
@@ -57,7 +57,7 @@ public class OrderItem1ServiceImplIntegrationTest {
         payment1Service.exchange(testUserId, 40);
         // Act
         System.out.println("주문 전 남은 잔액: "+pointService.countRemain(testUserId));
-        List<OrderItemDto> result = orderItem1Service.orderEachProduct(testUserId, testOrderId, requests);
+        List<OrderItem> result = orderItem1Service.orderEachProduct(testUserId, testOrderId, requests);
         System.out.println("주문 후 남은 잔액: "+pointService.countRemain(testUserId));
 
         // Assert

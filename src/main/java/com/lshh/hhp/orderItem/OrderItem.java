@@ -1,7 +1,7 @@
 package com.lshh.hhp.orderItem;
 
 import com.lshh.hhp.common.Response;
-import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import com.lshh.hhp.order.dto.RequestPurchaseDto;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;

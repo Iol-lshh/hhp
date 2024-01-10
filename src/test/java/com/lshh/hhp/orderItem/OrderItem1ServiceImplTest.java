@@ -8,7 +8,7 @@ import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.dto.ProductDto;
 import com.lshh.hhp.product.service.ProductService;
-import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import com.lshh.hhp.order.dto.RequestPurchaseDto;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,7 +70,7 @@ class OrderItem1ServiceImplTest {
         when(orderItemServiceImpl.save(any())).thenReturn(Arrays.asList(orderItem));
 
         // Act
-        List<OrderItemDto> result = orderItem1ServiceImpl.orderEachProduct(orderItemDto.userId(), orderItemDto.orderId(), Collections.singletonList(requestPurchaseDto));
+        List<OrderItem> result = orderItem1ServiceImpl.orderEachProduct(orderItemDto.userId(), orderItemDto.orderId(), Collections.singletonList(requestPurchaseDto));
 
         // Assert
         assertNotNull(result);

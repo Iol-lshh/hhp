@@ -1,7 +1,7 @@
 package com.lshh.hhp.order.service;
 
-import com.lshh.hhp.dto.event.CancelOrderEvent;
-import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import com.lshh.hhp.order.dto.EventCancelOrderDto;
+import com.lshh.hhp.order.dto.RequestPurchaseDto;
 import com.lshh.hhp.order.dto.OrderDto;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface OrderOrchestratorService {
      * @param event the CancelOrderEvent object containing the order ID to be canceled
      * @throws Exception if an error occurs during the cancellation process
      */
-    void onCancelOrderEvent(CancelOrderEvent event) throws Exception;
+    void onCancelOrderEvent(EventCancelOrderDto event) throws Exception;
 
     /**
      * Retrieves a list of OrderDto objects for a given user ID

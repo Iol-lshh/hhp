@@ -50,27 +50,48 @@
         <retentionTimeDays>0</retentionTimeDays>
     </appender>
 
-    <springProfile name="local,local2,aws">
+    <springProfile name="local,local2,local3">
+        <!--logger: 로깅을 기록하는 녀석 - 0개 이상-->
         <logger name="org.springframework" level="INFO">
             <appender-ref ref="STDOUT" />
         </logger>
-        <logger name="org.hibernate.SQL" level="DEBUG" />
-        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" />
-        <!--root: 최상단 logger - 최대 1개-->
+        <logger name="com.lshh.hhp.common.aop.LoggerHttpRequestAop" level="INFO">
+            <appender-ref ref="STDOUT" />
+        </logger>
+        <logger name="org.hibernate.SQL" level="DEBUG" >
+            <appender-ref ref="STDOUT" />
+        </logger>
+        <logger name="org.hibernate.internal.util.EntityPrinter" level="TRACE">
+            <appender-ref ref="STDOUT" />
+        </logger>
+        <logger name="com.lshh.hhp.common.filter.LoggerHttpRequestFilter" level="TRACE">
+            <appender-ref ref="STDOUT" />
+        </logger>
 <!--        <root level="INFO">-->
-<!--            <appender-ref ref="STDOUT"/>-->
+<!--            <appender-ref ref="STDOUT" />-->
 <!--        </root>-->
     </springProfile>
     <springProfile name="test">
+        <!--root: 최상단 logger - 최대 1개만 돌아야 한다-->
         <root level="DEBUG">
             <appender-ref ref="STDOUT" />
         </root>
     </springProfile>
     <springProfile name="aws">
-        <!--logger: 로깅을 남기는 곳 - 0개 이상-->
-        <logger name="org.springframework" level="INFO" >
+        <logger name="org.springframework" level="INFO">
             <appender-ref ref="ASYNC_AWS_LOGS" />
         </logger>
-
+        <logger name="com.lshh.hhp.common.aop.LoggerHttpRequestAop" level="INFO">
+            <appender-ref ref="ASYNC_AWS_LOGS" />
+        </logger>
+        <logger name="org.hibernate.SQL" level="DEBUG" >
+            <appender-ref ref="ASYNC_AWS_LOGS" />
+        </logger>
+        <logger name="org.hibernate.internal.util.EntityPrinter" level="TRACE">
+            <appender-ref ref="ASYNC_AWS_LOGS" />
+        </logger>
+        <logger name="com.lshh.hhp.common.filter.LoggerHttpRequestFilter" level="TRACE">
+            <appender-ref ref="ASYNC_AWS_LOGS" />
+        </logger>
     </springProfile>
 </configuration>

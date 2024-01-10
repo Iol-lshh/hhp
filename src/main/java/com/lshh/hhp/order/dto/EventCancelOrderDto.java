@@ -1,4 +1,4 @@
-package com.lshh.hhp.dto.event;
+package com.lshh.hhp.order.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 @Getter
 @Setter
-public class CancelOrderEvent {
+public class EventCancelOrderDto {
     long orderId;
 }

@@ -1,0 +1,56 @@
+## like aws - in memory
+# server
+server:
+  port: 8078
+  servlet:
+    application-display-name: hhp-local
+
+# Spring
+spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test # h2 support in-memory-db
+    username: lshh
+    password: lshh.com
+  jpa:
+    #    database-platform: org.hibernate.dialect.HSQLDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+#    show-sql: true
+
+# 액추에이터
+management:
+  endpoint:
+    health:
+      show-details: always
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: 
+          - "*"
+          # - health
+          # - info
+  info:    
+    build:
+      enabled: true
+    git:
+      enabled: true
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+
+# 스웨거
+springdoc:
+  api-docs:
+    enabled: true

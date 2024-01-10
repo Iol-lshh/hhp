@@ -1,9 +1,10 @@
 package com.lshh.hhp.orderItem.service;
 
+import com.lshh.hhp.common.Response;
 import com.lshh.hhp.common.Service;
 import com.lshh.hhp.orderItem.OrderItem;
-import com.lshh.hhp.orderItem.dto.OrderItemDto;
-import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.orderItem.repository.OrderItemRepository;
 import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.dto.ProductDto;
@@ -19,7 +20,7 @@ import java.util.List;
 public class OrderItem1ServiceImpl implements OrderItem1Service {
 
     final PointService pointService;
-    final OrderItemService orderItemService;
+    final OrderItemRepository orderItemRepository;
     final ProductService productService;
 
     @Override
@@ -34,24 +35,35 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
 
     @Override
     @Transactional
-    public List<OrderItemDto> orderEachProduct(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
+    public List<OrderItem> orderEachProduct(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
         // 주문 리스트 작성
         List<OrderItem> newOrderItems = OrderItem.createNewOrderItemsYetNoPrice(userId, orderId, purchaseRequestList);
         productService.putPrice(newOrderItems);
-        newOrderItems = orderItemService.save(newOrderItems);
 
+        newOrderItems = orderItemRepository.saveAll(newOrderItems);
         // 포인트 차감
         pointService.subtractByOrderItems(newOrderItems);
 
-        return newOrderItems.stream().map(OrderItem::toDto).toList();
+        return newOrderItems;
     }
 
     @Override
     @Transactional
-    public List<OrderItemDto> cancel(long orderId) throws Exception {
-        List<OrderItem> purchaseList = orderItemService.canceldByOrderId(orderId);
-        pointService.cancelSubtract(purchaseList);
+    public List<OrderItem> cancelOrderItem(long orderId) throws Exception {
+        List<OrderItem> targetList = orderItemRepository.findByOrderId(orderId);
+        targetList.stream().forEach(target -> target.setState(Response.Result.CANCELING.ordinal()));
 
-        return purchaseList.stream().map(OrderItem::toDto).toList();
+        try{
+            // 포인트 캔슬
+            pointService.cancelSubtract(targetList);
+            targetList.stream().forEach(target -> target.setState(Response.Result.CANCELED.ordinal()));
+
+        }catch (Exception exception){
+            targetList.stream().forEach(target -> target.setState(Response.Result.FAIL.ordinal()));
+            throw exception;
+        }
+
+        orderItemRepository.saveAll(targetList);
+        return targetList;
     }
 }
