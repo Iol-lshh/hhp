@@ -45,8 +45,7 @@ jobs:
       run: echo "빌드 실패!" && docker buildx inspect ${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}
 
     # 성공 처리
-    - name: Push the Docker image to ECR
-      id: ci_image
+    - name: Success build Docker image
       if: steps.image_build.outcome == 'success'
       run: echo "빌드 성공!" && docker buildx inspect ${{ steps.login-ecr.outputs.registry }}/hhp-ecr:ch1st3_${{ steps.set_timestamp.outputs.timestamp }}
 
