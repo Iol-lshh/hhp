@@ -1,5 +1,6 @@
 package com.lshh.hhp.order;
 
+import com.lshh.hhp.common.exception.BusinessException;
 import com.lshh.hhp.order.dto.OrderDto;
 import com.lshh.hhp.order.service.OrderService;
 import com.lshh.hhp.order.service.OrderOrchestratorServiceImpl;
@@ -58,7 +59,7 @@ public class OrderBiz2ImplTest {
 
     @BeforeEach
     public void setup() {
-        this.mockedPurchaseDto = new RequestPurchaseDto().setCount(1);
+        this.mockedPurchaseDto = new RequestPurchaseDto().setCount(1).setProductId(1L);
         this.mockedOrderDto = new OrderDto(1L, this.testUserId, Result.START);
         this.mockedPurchaseList = Arrays.asList(this.mockedPurchaseDto);
         this.mockedOrderItemDto = new OrderItemDto()
@@ -123,9 +124,9 @@ public class OrderBiz2ImplTest {
         when(productService.validate(mockedPurchaseList)).thenReturn(false);
 
         // Assert
-        Exception exception = assertThrows(Exception.class, () ->
+        Exception exception = assertThrows(BusinessException.class, () ->
                 orderOrchestratorService.order(testUserId, mockedPurchaseList));
-        assertEquals("잘못된 상품", exception.getMessage());
+        assertEquals(BusinessException.class, exception.getClass());
 
         verify(productService, times(1)).validate(mockedPurchaseList);
     }
@@ -139,12 +140,12 @@ public class OrderBiz2ImplTest {
         when(orderService.start(testUserId)).thenReturn(mockedOrder);
         when(productService.validate(mockedPurchaseList)).thenReturn(true);
         //
-        when(orderItem1Service.orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList)).thenThrow(new Exception("포인트 부족"));
+        when(orderItem1Service.orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList)).thenThrow(new BusinessException("포인트 부족"));
 
         // Assert
-        Exception exception = assertThrows(Exception.class, () ->
+        Exception exception = assertThrows(BusinessException.class, () ->
                 orderOrchestratorService.order(testUserId, mockedPurchaseList));
-        assertEquals("포인트 부족", exception.getMessage());
+        assertEquals(BusinessException.class, exception.getClass());
 
         verify(productService, times(1)).validate(mockedPurchaseList);
         verify(orderItem1Service, times(1)).orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList);
@@ -161,12 +162,12 @@ public class OrderBiz2ImplTest {
         when(productService.validate(mockedPurchaseList)).thenReturn(true);
         doReturn(orderItems).when(orderItem1Service).orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList);
         //
-        when(productService.deduct(orderItems)).thenThrow(new Exception("재고 부족"));
+        when(productService.deduct(orderItems)).thenThrow(new BusinessException("재고 부족"));
 
         // Assert
-        Exception exception = assertThrows(Exception.class, () ->
+        Exception exception = assertThrows(BusinessException.class, () ->
                 orderOrchestratorService.order(testUserId, mockedPurchaseList));
-        assertEquals("재고 부족", exception.getMessage());
+        assertEquals(BusinessException.class, exception.getClass());
 
         verify(productService, times(1)).validate(mockedPurchaseList);
         verify(orderItem1Service, times(1)).orderEachProduct(testUserId, mockedOrderDto.id(), mockedPurchaseList);
@@ -199,9 +200,9 @@ public class OrderBiz2ImplTest {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
         when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(Exception.class, () ->
+        Exception exception = assertThrows(BusinessException.class, () ->
                 orderOrchestratorService.cancel(mockedOrderDto.id()));
-        assertEquals("잘못된 주문", exception.getMessage());
+        assertEquals(BusinessException.class, exception.getClass());
 
         verify(orderService, times(1)).find(mockedOrderDto.id());
     }
@@ -211,11 +212,11 @@ public class OrderBiz2ImplTest {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
 
         when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
-        when(orderItem1Service.cancelOrderItem(mockedOrderDto.id())).thenThrow(new Exception("구매 취소 실패"));
+        when(orderItem1Service.cancelOrderItem(mockedOrderDto.id())).thenThrow(new BusinessException("구매 취소 실패"));
 
-        Exception exception = assertThrows(Exception.class, () ->
+        Exception exception = assertThrows(BusinessException.class, () ->
                 orderOrchestratorService.cancel(mockedOrderDto.id()));
-        assertEquals("구매 취소 실패", exception.getMessage());
+        assertEquals(BusinessException.class, exception.getClass());
 
         verify(orderService, times(1)).find(mockedOrderDto.id());
         verify(orderItem1Service, times(1)).cancelOrderItem(mockedOrderDto.id());
@@ -228,11 +229,11 @@ public class OrderBiz2ImplTest {
 
         when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
         when(orderItem1Service.cancelOrderItem(mockedOrderDto.id())).thenReturn(orderItems);
-        when(productService.conduct(orderItems)).thenThrow(new Exception("재고 취소 실패"));
+        when(productService.conduct(orderItems)).thenThrow(new BusinessException("재고 취소 실패"));
 
-        Exception exception = assertThrows(Exception.class, () ->
+        Exception exception = assertThrows(BusinessException.class, () ->
                 orderOrchestratorService.cancel(mockedOrderDto.id()));
-        assertEquals("재고 취소 실패", exception.getMessage());
+        assertEquals(BusinessException.class, exception.getClass());
 
         verify(orderService, times(1)).find(mockedOrderDto.id());
         verify(orderItem1Service, times(1)).cancelOrderItem(mockedOrderDto.id());
