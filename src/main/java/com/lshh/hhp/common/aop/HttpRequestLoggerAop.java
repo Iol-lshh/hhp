@@ -10,13 +10,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.Arrays;
 
 @Slf4j
 @Aspect
 @Component    // 필터로 처리하자
-public class LoggerHttpRequestAop {
+public class HttpRequestLoggerAop {
 
     // @Aspect vs MethodInterceptor(Advice)
     // 1. @Aspect
@@ -57,6 +56,7 @@ public class LoggerHttpRequestAop {
     @Around("controller()")
     public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result;
+
         log.info(String.format("""
         { "traceId": "%s", "payload": %s }"""
                 , ThreadTraceHelper.getTraceId()
@@ -67,6 +67,7 @@ public class LoggerHttpRequestAop {
                         return "";
                     }
                 }).toList())));
+
         result = joinPoint.proceed();
         return result;
     }

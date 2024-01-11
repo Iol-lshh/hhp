@@ -14,9 +14,9 @@ spring:
     # hhp-sub
   sql:
     init:
-      platform: postgres
+      platform: mysql
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: false
     hibernate:
       ddl-auto: none

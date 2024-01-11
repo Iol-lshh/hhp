@@ -15,6 +15,7 @@
             <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
         </encoder>
     </appender>
+
     <!-- aws appender -->
     <appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
         <!-- logback 클래식의 필터-->
@@ -45,7 +46,7 @@
 <!--        <logger name="org.springframework" level="INFO">-->
 <!--            <appender-ref ref="STDOUT" />-->
 <!--        </logger>-->
-        <logger name="com.lshh.hhp.common.aop.LoggerHttpRequestAop" level="INFO">
+        <logger name="com.lshh.hhp.common.aop.HttpRequestLoggerAop" level="INFO">
             <appender-ref ref="STDOUT" />
         </logger>
 <!--        <logger name="org.hibernate.SQL" level="DEBUG" >-->
@@ -54,31 +55,40 @@
 <!--        <logger name="org.hibernate.internal.util.EntityPrinter" level="TRACE">-->
 <!--            <appender-ref ref="STDOUT" />-->
 <!--        </logger>-->
-        <logger name="com.lshh.hhp.common.filter.LoggerHttpRequestFilter" level="INFO">
+        <logger name="com.lshh.hhp.common.filter.HttpRequestLoggerFilter" level="INFO">
             <appender-ref ref="STDOUT" />
         </logger>
         <logger name="com.lshh.hhp.common.aop.ControllerAdvice" level="INFO">
             <appender-ref ref="STDOUT" />
         </logger>
-<!--        <root level="INFO">-->
-<!--            <appender-ref ref="STDOUT" />-->
-<!--        </root>-->
+        <root level="ERROR">
+            <appender-ref ref="STDOUT" />
+        </root>
     </springProfile>
+
     <springProfile name="test">
         <!--root: 최상단 logger - 최대 1개만 돌아야 한다-->
         <root level="DEBUG">
             <appender-ref ref="STDOUT" />
         </root>
     </springProfile>
+
     <springProfile name="aws,aws2">
-        <logger name="com.lshh.hhp.common.aop.LoggerHttpRequestAop" level="INFO">
+        <logger name="com.lshh.hhp.common.aop.HttpRequestLoggerAop" level="INFO">
             <appender-ref ref="ASYNC_AWS_LOGS" />
+<!--            <appender-ref ref="STDOUT" />-->
         </logger>
-        <logger name="com.lshh.hhp.common.filter.LoggerHttpRequestFilter" level="INFO">
+        <logger name="com.lshh.hhp.common.filter.HttpRequestLoggerFilter" level="INFO">
             <appender-ref ref="ASYNC_AWS_LOGS" />
+<!--            <appender-ref ref="STDOUT" />-->
         </logger>
         <logger name="com.lshh.hhp.common.aop.ControllerAdvice" level="INFO">
             <appender-ref ref="ASYNC_AWS_LOGS" />
+<!--            <appender-ref ref="STDOUT" />-->
         </logger>
+<!--        <root level="ERROR">-->
+<!--            <appender-ref ref="ASYNC_AWS_LOGS" />-->
+<!--            <appender-ref ref="STDOUT" />-->
+<!--        </root>-->
     </springProfile>
 </configuration>

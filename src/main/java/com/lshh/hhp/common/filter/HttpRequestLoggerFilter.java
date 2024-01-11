@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.time.Instant;
 
 @Slf4j
-public class LoggerHttpRequestFilter implements Filter {
+public class HttpRequestLoggerFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

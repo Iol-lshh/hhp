@@ -15,8 +15,8 @@ spring:
 #            - local2
 #            - local
 #            - compose
-#            - aws2
-            - aws
+            - aws2
+#            - aws
     aop:
         auto: true
     mvc:
