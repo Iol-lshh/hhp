@@ -1,4 +1,4 @@
-package com.lshh.hhp.dto.view;
+package com.lshh.hhp.orderItem.dto;
 
 import com.lshh.hhp.common.Response;
 import lombok.Getter;

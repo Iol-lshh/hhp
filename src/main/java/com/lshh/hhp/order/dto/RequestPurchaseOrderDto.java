@@ -1,4 +1,4 @@
-package com.lshh.hhp.dto.request;
+package com.lshh.hhp.order.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

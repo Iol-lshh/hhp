@@ -7,7 +7,7 @@ import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.service.ProductService;
 import com.lshh.hhp.common.Response.Result;
-import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import com.lshh.hhp.order.dto.RequestPurchaseDto;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;

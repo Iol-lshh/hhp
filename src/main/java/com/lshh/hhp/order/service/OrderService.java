@@ -11,7 +11,6 @@ import java.util.Optional;
  */
 public interface OrderService {
     List<Order> findByUserId(long userId);
-
     Optional<Order> find(long orderId);
     Order start(long userId);
 }

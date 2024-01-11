@@ -21,6 +21,6 @@ public class OrderItemController {
     @Operation(summary = "전체 기간 인기 판매 상품")
     @GetMapping("/favorite/{count}")
     public ResultDto<List<ProductDto>> favorite(@PathVariable Integer count){
-        return new ResultDto<>(purchaseService.favorite(count));
+        return ResultDto.ok(purchaseService.favorite(count));
     }
 }

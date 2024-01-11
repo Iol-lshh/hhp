@@ -19,6 +19,6 @@ public class ProductController{
     @Operation(summary = "상품 전체", description = "상품 전체 리스트 확인")
     @GetMapping("/all")
     public ResultDto<List<ProductDto>> all(){
-        return new ResultDto<>(productService.findAll().stream().map(Product::toDto).toList());
+        return ResultDto.ok(productService.findAll().stream().map(Product::toDto).toList());
     }
 }

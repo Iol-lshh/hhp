@@ -1,9 +1,9 @@
 package com.lshh.hhp.product.service;
 
 import com.lshh.hhp.common.Service;
+import com.lshh.hhp.common.exception.BusinessException;
 import com.lshh.hhp.orderItem.OrderItem;
-import com.lshh.hhp.orderItem.dto.OrderItemDto;
-import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import com.lshh.hhp.order.dto.RequestPurchaseDto;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -27,10 +27,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isInStock(List<RequestPurchaseDto> purchaseRequestList) {
-        return purchaseRequestList
+    public boolean isInStock(List<OrderItem> orderItems) {
+        return orderItems
                 .stream()
-                .allMatch(request -> productRepository.findFirstByIdAndStockCntGreaterThanEqual(request.getProductId(), request.getCount())
+                .allMatch(request -> productRepository.findFirstByIdAndStockCntGreaterThanEqual(request.productId(), request.count())
                         .isPresent());
     }
 
@@ -44,23 +44,28 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public List<Product> deduct(List<RequestPurchaseDto> purchaseList) throws Exception {
+    public List<Product> deduct(List<OrderItem> orderItems) throws Exception {
 
         // ## 재고 확인
-        if (!isInStock(purchaseList)) {
-            throw new Exception("재고 부족");
+        if (!isInStock(orderItems)) {
+            throw new BusinessException(String.format("""
+                    ProductServiceImpl::deduct - 재고 없음 {%s}"""
+                    , String.join(",", orderItems.stream().map(e->e.id().toString()).toList()) ));
         }
 
         // ## 처리
-        List<Product> products = purchaseList.stream()
-                .map(request->productRepository.findById(request.getProductId())
-                        .map(product->product.deduct(request.getCount()))
+        List<Product> products = orderItems.stream()
+                .map(request->productRepository.findById(request.productId())
+                        .map(product->product.deduct(request.count()))
                 )
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
-        if(products.size()!=purchaseList.size()){
-            throw new Exception("상품 정보 오류");
+
+        if(products.size()!=orderItems.size()){
+            throw new BusinessException(String.format("""
+                    ProductServiceImpl::deduct - 상품 정보 오류 {%s}"""
+                    , String.join(",", orderItems.stream().map(e->e.id().toString()).toList()) ));
         }
 
         return productRepository.saveAll(products);
@@ -68,18 +73,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public List<Product> conduct(List<OrderItemDto> orderItemDtos) throws Exception {
+    public List<Product> conduct(List<OrderItem> orderItems) throws Exception {
 
-        List<Product> products = orderItemDtos.stream()
-                .map(orderItemDto -> productRepository.findById(orderItemDto.productId())
-                        .map(product -> product.conduct(orderItemDto.count()))
+        List<Product> products = orderItems.stream()
+                .map(oi -> productRepository.findById(oi.productId())
+                        .map(product -> product.conduct(oi.count()))
                 )
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
 
-        if(products.size()!=orderItemDtos.size()){
-            throw new Exception("상품 정보 오류");
+        if(products.size()!=orderItems.size()){
+            throw new BusinessException(String.format("""
+                    ProductServiceImpl::conduct - 상품 정보 오류 {%s}"""
+                    , String.join(",", orderItems.stream().map(e->e.id().toString()).toList()) ));
         }
 
         return productRepository.saveAll(products);

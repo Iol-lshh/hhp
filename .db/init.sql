@@ -54,30 +54,30 @@ CREATE INDEX purchase_product_id ON tb_order_item(product_id, count);
 CREATE INDEX purchase_user_id ON tb_order_item(user_id);
 
 --
-CREATE VIEW v_point AS
-select
-    user_id,
-    sum(p.count) as remain
-from tb_point p
-group by user_id;
-
+-- CREATE VIEW v_point AS
+-- select
+--     user_id,
+--     sum(p.count) as remain
+-- from tb_point p
+-- group by user_id;
 --
-CREATE VIEW v_top_purchased_product AS
-with sum_paid_cnt AS (
-    select
-        tpc.product_id,
-        sum(tpc.count) as paid_cnt
-    from tb_order_item tpc
-    group by tpc.product_id
-)
-select
-    tp.*,
-    spc.paid_cnt,
-    row_number() over(order by spc.paid_cnt desc) as order_by_paid_cnt
-from sum_paid_cnt spc
-inner join tb_product tp
-    on tp.id = spc.product_id
-order by paid_cnt desc;
+-- --
+-- CREATE VIEW v_top_purchased_product AS
+-- with sum_paid_cnt AS (
+--     select
+--         tpc.product_id,
+--         sum(tpc.count) as paid_cnt
+--     from tb_order_item tpc
+--     group by tpc.product_id
+-- )
+-- select
+--     tp.*,
+--     spc.paid_cnt,
+--     row_number() over(order by spc.paid_cnt desc) as order_by_paid_cnt
+-- from sum_paid_cnt spc
+-- inner join tb_product tp
+--     on tp.id = spc.product_id
+-- order by paid_cnt desc;
 
 /*----------------------------------------*/
 INSERT INTO tb_user(name)

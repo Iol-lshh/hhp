@@ -1,8 +1,7 @@
 package com.lshh.hhp.product.service;
 
 import com.lshh.hhp.orderItem.OrderItem;
-import com.lshh.hhp.orderItem.dto.OrderItemDto;
-import com.lshh.hhp.dto.request.RequestPurchaseDto;
+import com.lshh.hhp.order.dto.RequestPurchaseDto;
 import com.lshh.hhp.product.Product;
 
 import java.util.List;
@@ -15,13 +14,13 @@ import java.util.Optional;
 public interface ProductService {
     boolean validate(List<RequestPurchaseDto> purchaseRequestList);
 
-    boolean isInStock(List<RequestPurchaseDto> purchaseRequestList);
+    boolean isInStock(List<OrderItem> orderItems);
 
     int findPrice(Long productId);
 
-    List<Product> deduct(List<RequestPurchaseDto> purchaseList) throws Exception;
+    List<Product> deduct(List<OrderItem> orderItems) throws Exception;
 
-    List<Product> conduct(List<OrderItemDto> purchaseList) throws Exception;
+    List<Product> conduct(List<OrderItem> purchaseList) throws Exception;
 
     List<Product> findAll();
 
