@@ -17,6 +17,14 @@ jobs:
     - name: checkout repository
       uses: actions/checkout@v3
 
+    - name: checkout private repository
+      uses: actions/checkout@v3
+      with:
+        repository: Iol-lshh/hhp-sub
+        token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        path: src/main/resources/properties
+        submodules: true
+
       # aws 접속
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
