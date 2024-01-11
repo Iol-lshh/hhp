@@ -1,6 +1,7 @@
 package com.lshh.hhp.product.service;
 
 import com.lshh.hhp.common.Service;
+import com.lshh.hhp.common.exception.BusinessException;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.order.dto.RequestPurchaseDto;
 import com.lshh.hhp.product.Product;
@@ -47,7 +48,9 @@ public class ProductServiceImpl implements ProductService {
 
         // ## 재고 확인
         if (!isInStock(orderItems)) {
-            throw new Exception("재고 부족");
+            throw new BusinessException(String.format("""
+                    ProductServiceImpl::deduct - 재고 없음 {%s}"""
+                    , String.join(",", orderItems.stream().map(e->e.id().toString()).toList()) ));
         }
 
         // ## 처리
@@ -60,7 +63,9 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
 
         if(products.size()!=orderItems.size()){
-            throw new Exception("상품 정보 오류");
+            throw new BusinessException(String.format("""
+                    ProductServiceImpl::deduct - 상품 정보 오류 {%s}"""
+                    , String.join(",", orderItems.stream().map(e->e.id().toString()).toList()) ));
         }
 
         return productRepository.saveAll(products);
@@ -68,9 +73,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public List<Product> conduct(List<OrderItem> orderItem) throws Exception {
+    public List<Product> conduct(List<OrderItem> orderItems) throws Exception {
 
-        List<Product> products = orderItem.stream()
+        List<Product> products = orderItems.stream()
                 .map(oi -> productRepository.findById(oi.productId())
                         .map(product -> product.conduct(oi.count()))
                 )
@@ -78,8 +83,10 @@ public class ProductServiceImpl implements ProductService {
                 .map(Optional::get)
                 .toList();
 
-        if(products.size()!=orderItem.size()){
-            throw new Exception("상품 정보 오류");
+        if(products.size()!=orderItems.size()){
+            throw new BusinessException(String.format("""
+                    ProductServiceImpl::conduct - 상품 정보 오류 {%s}"""
+                    , String.join(",", orderItems.stream().map(e->e.id().toString()).toList()) ));
         }
 
         return productRepository.saveAll(products);

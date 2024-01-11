@@ -54,7 +54,7 @@ public class OrderItem {
         orderItem.productId = dto.productId();
         orderItem.userId = dto.userId();
         orderItem.orderId = dto.orderId();
-        orderItem.state = dto.state().ordinal();
+        orderItem.state = dto.state()!= null ? dto.state().ordinal() : null;
 
         return orderItem;
     }

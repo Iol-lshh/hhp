@@ -1,6 +1,7 @@
 package com.lshh.hhp.order.service;
 
 import com.lshh.hhp.common.Response;
+import com.lshh.hhp.common.exception.BusinessException;
 import com.lshh.hhp.order.dto.EventCancelOrderDto;
 import com.lshh.hhp.order.Order;
 import com.lshh.hhp.order.dto.OrderDto;
@@ -36,14 +37,8 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
 
     @Override
     @EventListener
-    public void onCancelOrderEvent(EventCancelOrderDto event) {
-        log.info("handle_cancel_order_event");
-        try{
-            cancel(event.orderId());
-        }catch (Exception exception){
-            log.error("cancel_order_event_failed");
-            log.error(exception.getMessage());
-        }
+    public void onCancelOrderEvent(EventCancelOrderDto event) throws Exception {
+        cancel(event.orderId());
     }
 
     @Override
@@ -58,13 +53,17 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
     @Override
     public OrderDto order(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
         // # 0. user 확인
-        userService.find(userId).orElseThrow(Exception::new);
+        userService.find(userId).orElseThrow(()->new BusinessException(String.format("""
+                    OrderOrchestratorServiceImpl::order - 잘못된 유저 {%s}""", userId)));
+
         // # 1. 주문 생성: 시작
         Order order = orderService.start(userId);
         try {
             // ## 0. 상품 확인
             if(!productService.validate(purchaseRequestList)){
-                throw new Exception("잘못된 상품");
+                throw new BusinessException(String.format("""
+                    OrderOrchestratorServiceImpl::order - 잘못된 상품 {%s}""", String.join(","
+                        ,purchaseRequestList.stream().map(e->e.getProductId().toString()).toList())));
             }
 
             // # 구매 처리
@@ -79,10 +78,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
             return order.toDto();
 
         }catch (Exception exception){
-            log.error(exception.getMessage());
             order.setState(Response.Result.FAIL);
-
-            log.info("invoke_cancel_order_event");
             publisher.publishEvent(new EventCancelOrderDto().orderId(order.id()));
             throw exception;
         }
@@ -94,7 +90,8 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
     @Transactional
     public OrderDto cancel(long orderId) throws Exception {
         // 1. 주문 확인
-        Order target = orderService.find(orderId).orElseThrow(()->new Exception("잘못된 주문"));
+        Order target = orderService.find(orderId).orElseThrow(()->new BusinessException(String.format("""
+        PaymentDto::exchange {"orderId": "%s"}""", orderId)));
 
         // 2. 주문 취소 시작
         target.setState(Response.Result.CANCELING);
@@ -112,7 +109,6 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
             return target.toDto();
 
         }catch (Exception exception){
-            log.error(exception.getMessage());
             target.setState(Response.Result.FAIL);
             throw exception;
         }

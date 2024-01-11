@@ -1,30 +1,26 @@
-## like aws - in memory
-# server
 server:
-  port: 8078
+  port: 3000
   servlet:
-    application-display-name: hhp-local
-
-# Spring
+    application-display-name: hhp
 spring:
-  devtools:
-    livereload:
-      enabled: true
-    restart:
-      enabled: true
   datasource:
-    driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:test # h2 support in-memory-db
+    #    url: jdbc:hsqldb:mem:yourdbname;sql.syntax_mys=true
     username: lshh
     password: lshh.com
+    driver-class-name: org.h2.Driver
+
   jpa:
     #    database-platform: org.hibernate.dialect.HSQLDialect
     generate-ddl: false
     hibernate:
       ddl-auto: none
 #    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
 
-# 액추에이터
+# 액추에이터 설정
 management:
   endpoint:
     health:
@@ -34,11 +30,10 @@ management:
   endpoints:
     web:
       exposure:
-        include: 
-          - "*"
-          # - health
-          # - info
-  info:    
+        include:
+          - health
+          - info
+  info:
     build:
       enabled: true
     git:
@@ -50,7 +45,7 @@ management:
     os:
       enabled: true
 
-# 스웨거
+# 스웨거 설정
 springdoc:
   api-docs:
     enabled: true

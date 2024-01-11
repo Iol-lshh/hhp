@@ -21,6 +21,6 @@ public class PaymentController {
     @Operation(summary = "포인트 생성")
     @PostMapping("/exchange")
     public ResultDto<PaymentDto> exchange(@RequestBody RequestExchangeDto request) throws Exception {
-        return new ResultDto<>(paymentService.exchange(request.getUserId(), request.getToNeed()));
+        return ResultDto.ok(paymentService.exchange(request.getUserId(), request.getToNeed()));
     }
 }

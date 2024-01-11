@@ -21,6 +21,6 @@ public class UserController {
     @Operation(summary = "유저 리스트")
     @GetMapping("/all")
     public ResultDto<List<UserDto>> all(){
-        return new ResultDto<>(userService.findAll().stream().map(User::toDto).toList());
+        return ResultDto.ok(userService.findAll().stream().map(User::toDto).toList());
     }
 }

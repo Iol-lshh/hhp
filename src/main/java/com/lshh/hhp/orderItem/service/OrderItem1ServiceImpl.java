@@ -19,8 +19,8 @@ import java.util.List;
 @Service(level = 1)
 public class OrderItem1ServiceImpl implements OrderItem1Service {
 
-    final PointService pointService;
     final OrderItemRepository orderItemRepository;
+    final PointService pointService;
     final ProductService productService;
 
     @Override

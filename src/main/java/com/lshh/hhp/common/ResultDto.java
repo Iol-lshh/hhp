@@ -34,4 +34,8 @@ public class ResultDto<T> implements Response{
     public static <T> ResultDto<T> success(T data){
         return new ResultDto<>(Result.SUCCESS, data);
     }
+
+    public static <T> ResultDto<T> fail(){
+        return new ResultDto<>(Result.FAIL, null);
+    }
 }

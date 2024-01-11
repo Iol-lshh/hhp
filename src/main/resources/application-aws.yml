@@ -20,26 +20,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
 
-# spring:
-#   # Database
-#   datasource:
-#     driver-class-name: org.postgresql.Driver
-#     url: ${SPRING_DATASOURCE_URL}
-#     username: ${SPRING_DATASOURCE_USERNAME}
-#     password: ${SPRING_DATASOURCE_PASSWORD}
-#   sql:
-#     init:
-#       platform: postgres
-#   jpa:
-#     database-platform: org.hibernate.dialect.PostgreSQLDialect
-#     generate-ddl: false
-#     hibernate:
-#       ddl-auto: none
-#     show-sql: false
-#     properties:
-#       hibernate:
-#         format_sql: true
-
 # 액추에이터 설정
 management:
   endpoint:

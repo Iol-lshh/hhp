@@ -7,9 +7,7 @@ spring:
  # Database
  datasource:
    driver-class-name: com.mysql.cj.jdbc.Driver
-   url: jdbc:mysql://database-hhp.chcaacam804n.ap-northeast-2.rds.amazonaws.com:3306/hhp-db?serverTimezone=UTC&characterEncoding=UTF-8
-   username: lshh
-   password: lshh.com
+    # hhp-sub
  sql:
    init:
      platform: postgres

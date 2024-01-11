@@ -20,12 +20,12 @@ public class OrderController {
     @Operation(summary = "주문 - 동기 처리 (강결합)")
     @PostMapping("/purchase")
     public ResultDto<OrderDto> order(@RequestBody RequestPurchaseOrderDto dto) throws Exception {
-        return new ResultDto<>(orderService.order(dto.getUserId(), dto.getRequestPurchaseList()));
+        return ResultDto.ok(orderService.order(dto.getUserId(), dto.getRequestPurchaseList()));
     }
 
     @Operation(summary = "주문 내역")
     @GetMapping("/all/{userId}")
     public ResultDto<List<OrderDto>> all(@PathVariable Long userId){
-        return new ResultDto<>(orderService.findByUserId(userId));
+        return ResultDto.ok(orderService.findByUserId(userId));
     }
 }

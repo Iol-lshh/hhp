@@ -1,0 +1,6 @@
+[submodule "lib"]
+	path = lib
+	url = https://github.com/Iol-lshh/hhp-sub.git
+[submodule "hhp-sub"]
+	path = hhp-sub
+	url = https://github.com/Iol-lshh/hhp-sub.git

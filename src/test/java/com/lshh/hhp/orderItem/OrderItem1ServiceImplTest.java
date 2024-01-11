@@ -2,6 +2,7 @@ package com.lshh.hhp.orderItem;
 
 import com.lshh.hhp.common.Response;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
+import com.lshh.hhp.orderItem.repository.OrderItemRepository;
 import com.lshh.hhp.orderItem.service.OrderItemService;
 import com.lshh.hhp.orderItem.service.OrderItem1ServiceImpl;
 import com.lshh.hhp.point.service.PointService;
@@ -35,7 +36,7 @@ class OrderItem1ServiceImplTest {
     @Mock
     PointService pointService;
     @Mock
-    OrderItemService orderItemServiceImpl;
+    OrderItemRepository orderItemRepository;
     @Mock
     ProductService productService;
 
@@ -67,7 +68,7 @@ class OrderItem1ServiceImplTest {
     @DisplayName("구매 성공")
     void purchase() throws Exception {
         OrderItem orderItem = OrderItem.toEntity(orderItemDto);
-        when(orderItemServiceImpl.save(any())).thenReturn(Arrays.asList(orderItem));
+        when(orderItemRepository.saveAll(any())).thenReturn(Arrays.asList(orderItem));
 
         // Act
         List<OrderItem> result = orderItem1ServiceImpl.orderEachProduct(orderItemDto.userId(), orderItemDto.orderId(), Collections.singletonList(requestPurchaseDto));
@@ -76,7 +77,7 @@ class OrderItem1ServiceImplTest {
         assertNotNull(result);
         assertEquals(1, result.size());
 
-        verify(orderItemServiceImpl, times(1)).save(any());
+        verify(orderItemRepository, times(1)).saveAll(any());
         verify(pointService, times(1)).subtractByOrderItems(any());
       }
 

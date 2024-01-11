@@ -22,19 +22,19 @@ public class PointController {
     @Operation(summary = "포인트 잔액 확인")
     @GetMapping("/remain/{userId}")
     public ResultDto<Integer> remain(@PathVariable Long userId){
-        return new ResultDto<>(pointService.countRemain(userId));
+        return ResultDto.ok(pointService.countRemain(userId));
     }
 
     @Operation(summary = "포인트 사용 내역")
     @GetMapping("/history/{userId}")
     public ResultDto<List<PointDto>> history(@PathVariable Long userId){
-        return new ResultDto<>(pointService.findAllByUserId(userId).stream().map(Point::toDto).toList());
+        return ResultDto.ok(pointService.findAllByUserId(userId).stream().map(Point::toDto).toList());
     }
 
     // 포인트 유저 압축
     @GetMapping("/squash/{userId}")
     public ResultDto<PointDto> squash(@PathVariable Long userId) throws Exception {
-        return new ResultDto<>(pointService.squash(userId).toDto());
+        return ResultDto.ok(pointService.squash(userId).toDto());
     }
 
 }

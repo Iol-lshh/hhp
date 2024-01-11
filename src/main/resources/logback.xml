@@ -24,24 +24,14 @@
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
-        <if condition='property("spring.profiles.active").contains("local")'>
-            <then>
-                <!-- local 용 로그 그룹명 -->
-                <logGroupName>${Log_Group_Name:aws}</logGroupName>
-            </then>
-        </if>
-        <if condition='property("spring.profiles.active").contains("dev")'>
-            <then>
-                <!-- dev 용 로그 그룹명 -->
-                <logGroupName>${Log_Group_Name:dev}</logGroupName>
-            </then>
-        </if>
-        <if condition='property("spring.profiles.active").contains("prod")'>
-            <then>
-                <!-- prod 용 로그 그룹명 -->
-                <logGroupName>${Log_Group_Name:prod}</logGroupName>
-            </then>
-        </if>
+        <!-- prod 용 로그 그룹명 -->
+        <logGroupName>${Log_Group_Name:error}</logGroupName>
+<!--        <if condition='property("spring.profiles.active").contains("prod")'>-->
+<!--            <then>-->
+<!--                &lt;!&ndash; prod 용 로그 그룹명 &ndash;&gt;-->
+<!--                <logGroupName>${Log_Group_Name:error}</logGroupName>-->
+<!--            </then>-->
+<!--        </if>-->
         <logStreamUuidPrefix>error-</logStreamUuidPrefix>
         <logRegion>ap-northeast-2</logRegion>
         <maxBatchLogEvents>50</maxBatchLogEvents>
@@ -52,19 +42,22 @@
 
     <springProfile name="local,local2,local3">
         <!--logger: 로깅을 기록하는 녀석 - 0개 이상-->
-        <logger name="org.springframework" level="INFO">
-            <appender-ref ref="STDOUT" />
-        </logger>
+<!--        <logger name="org.springframework" level="INFO">-->
+<!--            <appender-ref ref="STDOUT" />-->
+<!--        </logger>-->
         <logger name="com.lshh.hhp.common.aop.LoggerHttpRequestAop" level="INFO">
             <appender-ref ref="STDOUT" />
         </logger>
-        <logger name="org.hibernate.SQL" level="DEBUG" >
+<!--        <logger name="org.hibernate.SQL" level="DEBUG" >-->
+<!--            <appender-ref ref="STDOUT" />-->
+<!--        </logger>-->
+<!--        <logger name="org.hibernate.internal.util.EntityPrinter" level="TRACE">-->
+<!--            <appender-ref ref="STDOUT" />-->
+<!--        </logger>-->
+        <logger name="com.lshh.hhp.common.filter.LoggerHttpRequestFilter" level="INFO">
             <appender-ref ref="STDOUT" />
         </logger>
-        <logger name="org.hibernate.internal.util.EntityPrinter" level="TRACE">
-            <appender-ref ref="STDOUT" />
-        </logger>
-        <logger name="com.lshh.hhp.common.filter.LoggerHttpRequestFilter" level="TRACE">
+        <logger name="com.lshh.hhp.common.aop.ControllerAdvice" level="INFO">
             <appender-ref ref="STDOUT" />
         </logger>
 <!--        <root level="INFO">-->
@@ -78,19 +71,13 @@
         </root>
     </springProfile>
     <springProfile name="aws">
-        <logger name="org.springframework" level="INFO">
-            <appender-ref ref="ASYNC_AWS_LOGS" />
-        </logger>
         <logger name="com.lshh.hhp.common.aop.LoggerHttpRequestAop" level="INFO">
             <appender-ref ref="ASYNC_AWS_LOGS" />
         </logger>
-        <logger name="org.hibernate.SQL" level="DEBUG" >
+        <logger name="com.lshh.hhp.common.filter.LoggerHttpRequestFilter" level="INFO">
             <appender-ref ref="ASYNC_AWS_LOGS" />
         </logger>
-        <logger name="org.hibernate.internal.util.EntityPrinter" level="TRACE">
-            <appender-ref ref="ASYNC_AWS_LOGS" />
-        </logger>
-        <logger name="com.lshh.hhp.common.filter.LoggerHttpRequestFilter" level="TRACE">
+        <logger name="com.lshh.hhp.common.aop.ControllerAdvice" level="INFO">
             <appender-ref ref="ASYNC_AWS_LOGS" />
         </logger>
     </springProfile>

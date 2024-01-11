@@ -1,6 +1,7 @@
 package com.lshh.hhp.point.service;
 
 import com.lshh.hhp.common.Service;
+import com.lshh.hhp.common.exception.BusinessException;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.payment.Payment;
 import com.lshh.hhp.point.Point;
@@ -38,7 +39,8 @@ public class PointServiceImpl implements PointService {
         int remain = countRemain(userId);
         // # 차감 가능 여부 확인
         if(remain - sumToPay < 0){
-            throw new Exception("포인트 부족 " + remain +", "+ sumToPay);
+            throw new BusinessException(String.format("""
+                    PointServiceImpl::subtractByOrderItems  - 차감 불가 remain: %s, sumToPay: %s, {%s}""", remain, sumToPay, String.join(",", orderItems.stream().map(e->e.id().toString()).toList())));
         }
         // # 차감 포인트 저장
         List<Point> pointList = Point.createNewSubtractPoints(orderItems);
@@ -77,7 +79,8 @@ public class PointServiceImpl implements PointService {
         // # 잔액 확인
         int remain = pointRepository.findAllByUserIdWithLock(userId).stream().mapToInt(Point::count).sum();
         if(remain == 0){
-            throw new Exception("압축할 포인트가 없습니다.");
+            throw new BusinessException(String.format("""
+                    PointServiceImpl::squash  - 잔액 0원 remain: %s, {%s}""", remain, userId));
         }
 
         // # 압축
