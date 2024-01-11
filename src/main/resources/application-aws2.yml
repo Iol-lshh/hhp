@@ -4,22 +4,23 @@ server:
     application-display-name: hhp
 
 spring:
- # Database
- datasource:
-   driver-class-name: com.mysql.cj.jdbc.Driver
+  config:
+    import:
+      - classpath:properties/config.yml
+
+  # Database
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     # hhp-sub
- sql:
-   init:
-     platform: postgres
- jpa:
-   database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-   generate-ddl: false
-   hibernate:
-     ddl-auto: none
-   show-sql: false
-   properties:
-     hibernate:
-       format_sql: true
+  sql:
+    init:
+      platform: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: false
 
 # 액추에이터 설정
 management:

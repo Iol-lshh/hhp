@@ -4,3 +4,6 @@
 [submodule "hhp-sub"]
 	path = hhp-sub
 	url = https://github.com/Iol-lshh/hhp-sub.git
+[submodule "src/main/resources/properties"]
+	path = src/main/resources/properties
+	url = https://github.com/Iol-lshh/hhp-sub.git
