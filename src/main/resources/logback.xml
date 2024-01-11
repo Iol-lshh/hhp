@@ -25,7 +25,7 @@
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <!-- prod 용 로그 그룹명 -->
-        <logGroupName>${Log_Group_Name:error}</logGroupName>
+        <logGroupName>log-hhp-error</logGroupName>
 <!--        <if condition='property("spring.profiles.active").contains("prod")'>-->
 <!--            <then>-->
 <!--                &lt;!&ndash; prod 용 로그 그룹명 &ndash;&gt;-->
