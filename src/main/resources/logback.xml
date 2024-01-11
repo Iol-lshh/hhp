@@ -70,7 +70,7 @@
             <appender-ref ref="STDOUT" />
         </root>
     </springProfile>
-    <springProfile name="aws">
+    <springProfile name="aws,aws2">
         <logger name="com.lshh.hhp.common.aop.LoggerHttpRequestAop" level="INFO">
             <appender-ref ref="ASYNC_AWS_LOGS" />
         </logger>
