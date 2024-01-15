@@ -7,7 +7,7 @@ import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.service.ProductService;
 import com.lshh.hhp.common.Response.Result;
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +36,13 @@ public class OrderBiz2ImplIntegrationTest {
     @Autowired
     private Payment1Service payment1Service;
 
-    private List<RequestPurchaseDto> prepareRequestPurchaseDtoList() {
+    private List<RequestProductDto> prepareRequestPurchaseDtoList() {
         // 30
-        RequestPurchaseDto request1 = new RequestPurchaseDto()
+        RequestProductDto request1 = new RequestProductDto()
                 .setProductId(1L)
                 .setCount(1);
         // 5
-        RequestPurchaseDto request2 = new RequestPurchaseDto()
+        RequestProductDto request2 = new RequestProductDto()
                 .setProductId(2L)
                 .setCount(2);
 
@@ -59,7 +59,7 @@ public class OrderBiz2ImplIntegrationTest {
         payment1Service.exchange(userId, 40);
         System.out.println("before 남은 잔액: "+pointService.countRemain(userId));
         // 100 - 40
-        List<RequestPurchaseDto> purchaseRequestList = prepareRequestPurchaseDtoList();
+        List<RequestProductDto> purchaseRequestList = prepareRequestPurchaseDtoList();
         OrderDto orderDto = orderOrchestratorService.order(userId, purchaseRequestList);
         System.out.println("after 남은 잔액: "+pointService.countRemain(userId));
         
@@ -112,7 +112,7 @@ public class OrderBiz2ImplIntegrationTest {
     void orderStocklessWithConcurrentTest() throws Exception {
         long userId = 1L;   // 20
         System.out.println("before 남은 잔액: "+pointService.countRemain(userId));
-        RequestPurchaseDto requestLessStockCase = new RequestPurchaseDto()
+        RequestProductDto requestLessStockCase = new RequestProductDto()
                 .setProductId(3L)   // price 1, cnt 1
                 .setCount(1);
 

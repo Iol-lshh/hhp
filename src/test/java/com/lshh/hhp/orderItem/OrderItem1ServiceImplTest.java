@@ -3,13 +3,12 @@ package com.lshh.hhp.orderItem;
 import com.lshh.hhp.common.Response;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import com.lshh.hhp.orderItem.repository.OrderItemRepository;
-import com.lshh.hhp.orderItem.service.OrderItemService;
 import com.lshh.hhp.orderItem.service.OrderItem1ServiceImpl;
 import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.dto.ProductDto;
 import com.lshh.hhp.product.service.ProductService;
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,8 +43,8 @@ class OrderItem1ServiceImplTest {
     OrderItem1ServiceImpl orderItem1ServiceImpl;
 
     OrderItemDto orderItemDto;
-    RequestPurchaseDto requestPurchaseDto;
-    List<RequestPurchaseDto> requestPurchaseList;
+    RequestProductDto requestPurchaseDto;
+    List<RequestProductDto> requestPurchaseList;
 
     @BeforeEach
     public void setup() {
@@ -57,7 +56,7 @@ class OrderItem1ServiceImplTest {
                 .count(1)
                 .state(Response.Result.OK);
 
-        requestPurchaseDto = new RequestPurchaseDto()
+        requestPurchaseDto = new RequestProductDto()
                 .setProductId(orderItemDto.productId())
                 .setCount(orderItemDto.count());
 

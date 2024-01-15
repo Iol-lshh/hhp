@@ -8,7 +8,7 @@ import com.lshh.hhp.order.dto.OrderDto;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.product.service.ProductService;
 import com.lshh.hhp.common.Service;
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.orderItem.service.OrderItem1Service;
 import com.lshh.hhp.user.service.UserService;
 import jakarta.persistence.LockModeType;
@@ -51,7 +51,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
 
     // order - 동기 주문 처리
     @Override
-    public OrderDto order(long userId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
+    public OrderDto order(long userId, List<RequestProductDto> purchaseRequestList) throws Exception {
         // # 0. user 확인
         userService.find(userId).orElseThrow(()->new BusinessException(String.format("""
                     OrderOrchestratorServiceImpl::order - 잘못된 유저 {%s}""", userId)));

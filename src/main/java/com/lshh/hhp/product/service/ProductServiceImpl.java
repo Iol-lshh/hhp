@@ -3,7 +3,7 @@ package com.lshh.hhp.product.service;
 import com.lshh.hhp.common.Service;
 import com.lshh.hhp.common.exception.BusinessException;
 import com.lshh.hhp.orderItem.OrderItem;
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class ProductServiceImpl implements ProductService {
     final ProductRepository productRepository;
     @Override
     @Transactional(readOnly = true)
-    public boolean validate(List<RequestPurchaseDto> purchaseRequestList) {
+    public boolean validate(List<RequestProductDto> purchaseRequestList) {
         return purchaseRequestList.size() == purchaseRequestList.stream()
                 .filter(request -> productRepository.findById(request.getProductId())
                         .isPresent())
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public List<Product> deduct(List<OrderItem> orderItems) throws Exception {
+    public List<Product> deduct(List<OrderItem> orderItems) {
 
         // ## 재고 확인
         if (!isInStock(orderItems)) {
@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public List<Product> conduct(List<OrderItem> orderItems) throws Exception {
+    public List<Product> conduct(List<OrderItem> orderItems) {
 
         List<Product> products = orderItems.stream()
                 .map(oi -> productRepository.findById(oi.productId())
@@ -87,6 +87,26 @@ public class ProductServiceImpl implements ProductService {
             throw new BusinessException(String.format("""
                     ProductServiceImpl::conduct - 상품 정보 오류 {%s}"""
                     , String.join(",", orderItems.stream().map(e->e.id().toString()).toList()) ));
+        }
+
+        return productRepository.saveAll(products);
+    }
+
+    @Override
+    @Transactional
+    public List<Product> conductRequest(List<RequestProductDto> purchaseDtoList) {
+        List<Product> products = purchaseDtoList.stream()
+                .map(requestDto -> productRepository.findById(requestDto.getProductId())
+                        .map(product -> product.conduct(requestDto.getCount()))
+                )
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+
+        if(products.size()!=purchaseDtoList.size()){
+            throw new BusinessException(String.format("""
+                    ProductServiceImpl::conduct - 상품 정보 오류 {%s}"""
+                    , String.join(",", purchaseDtoList.stream().map(e->e.getProductId().toString()).toList()) ));
         }
 
         return productRepository.saveAll(products);

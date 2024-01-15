@@ -1,6 +1,6 @@
 package com.lshh.hhp.orderItem.service;
 
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.product.dto.ProductDto;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public interface OrderItem1Service {
     List<ProductDto> favorite(Integer count);
 
-    List<OrderItem> orderEachProduct(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception;
+    List<OrderItem> orderEachProduct(long userId, long orderId, List<RequestProductDto> purchaseRequestList) throws Exception;
 
     List<OrderItem> cancelOrderItem(long orderId) throws Exception;
 }

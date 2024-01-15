@@ -3,6 +3,7 @@ package com.lshh.hhp.product.contoroller;
 import com.lshh.hhp.common.ResultDto;
 import com.lshh.hhp.product.Product;
 import com.lshh.hhp.product.dto.ProductDto;
+import com.lshh.hhp.product.dto.RequestProductSetDto;
 import com.lshh.hhp.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
@@ -20,5 +21,12 @@ public class ProductController{
     @GetMapping("/all")
     public ResultDto<List<ProductDto>> all(){
         return ResultDto.ok(productService.findAll().stream().map(Product::toDto).toList());
+    }
+
+    @Operation(summary = "상품 재고 추가", description = "상품 재고 추가")
+    @PostMapping("/conduct")
+    public ResultDto<Integer> conduct(@RequestBody RequestProductSetDto productSetDto){
+        productService.conductRequest(productSetDto.getProductDtoList());
+        return ResultDto.ok();
     }
 }

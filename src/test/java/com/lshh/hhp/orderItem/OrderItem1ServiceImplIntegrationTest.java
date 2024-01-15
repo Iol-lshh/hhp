@@ -1,7 +1,6 @@
 package com.lshh.hhp.orderItem;
 
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
-import com.lshh.hhp.orderItem.dto.OrderItemDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.orderItem.service.OrderItem1Service;
 import com.lshh.hhp.payment.service.Payment1Service;
 import com.lshh.hhp.point.service.PointService;
@@ -32,13 +31,13 @@ public class OrderItem1ServiceImplIntegrationTest {
 
     static long orderId = 0L;
 
-    private List<RequestPurchaseDto> prepareRequestPurchaseDtoList() {
+    private List<RequestProductDto> prepareRequestPurchaseDtoList() {
         // 30
-        RequestPurchaseDto request1 = new RequestPurchaseDto()
+        RequestProductDto request1 = new RequestProductDto()
                 .setProductId(1L)
                 .setCount(1);
         // 5
-        RequestPurchaseDto request2 = new RequestPurchaseDto()
+        RequestProductDto request2 = new RequestProductDto()
                 .setProductId(2L)
                 .setCount(2);
 
@@ -53,7 +52,7 @@ public class OrderItem1ServiceImplIntegrationTest {
     void purchase() throws Exception {
         long testUserId = 1L;
         long testOrderId = ++orderId;
-        List<RequestPurchaseDto> requests = prepareRequestPurchaseDtoList();
+        List<RequestProductDto> requests = prepareRequestPurchaseDtoList();
         payment1Service.exchange(testUserId, 40);
         // Act
         System.out.println("주문 전 남은 잔액: "+pointService.countRemain(testUserId));

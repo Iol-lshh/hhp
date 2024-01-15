@@ -12,9 +12,9 @@ spring:
     profiles:
         active:
 #            - local3
-#            - local2
+            - local2
 #            - local
-            - compose
+#            - compose
 #            - aws2
 #            - aws
     aop:

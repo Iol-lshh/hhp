@@ -1,4 +1,4 @@
-package com.lshh.hhp.order.dto;
+package com.lshh.hhp.product.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RequestPurchaseDto {
+public class RequestProductDto {
     Long productId;
     Integer count;
 }

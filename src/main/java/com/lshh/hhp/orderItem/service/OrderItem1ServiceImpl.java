@@ -3,7 +3,7 @@ package com.lshh.hhp.orderItem.service;
 import com.lshh.hhp.common.Response;
 import com.lshh.hhp.common.Service;
 import com.lshh.hhp.orderItem.OrderItem;
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.orderItem.repository.OrderItemRepository;
 import com.lshh.hhp.point.service.PointService;
 import com.lshh.hhp.product.Product;
@@ -35,7 +35,7 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
 
     @Override
     @Transactional
-    public List<OrderItem> orderEachProduct(long userId, long orderId, List<RequestPurchaseDto> purchaseRequestList) throws Exception {
+    public List<OrderItem> orderEachProduct(long userId, long orderId, List<RequestProductDto> purchaseRequestList) throws Exception {
         // 주문 리스트 작성
         List<OrderItem> newOrderItems = OrderItem.createNewOrderItemsYetNoPrice(userId, orderId, purchaseRequestList);
         productService.putPrice(newOrderItems);

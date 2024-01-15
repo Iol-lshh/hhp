@@ -12,7 +12,7 @@ import com.lshh.hhp.orderItem.service.OrderItem1Service;
 import com.lshh.hhp.common.Response.Result;
 import com.lshh.hhp.product.dto.ProductDto;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,15 +51,15 @@ public class OrderBiz2ImplTest {
 
 
     long testUserId = 1L;
-    RequestPurchaseDto mockedPurchaseDto;
+    RequestProductDto mockedPurchaseDto;
     OrderDto mockedOrderDto;
-    List<RequestPurchaseDto> mockedPurchaseList;
+    List<RequestProductDto> mockedPurchaseList;
     OrderItemDto mockedOrderItemDto;
     List<OrderItemDto> mockedOrderItemDtos;
 
     @BeforeEach
     public void setup() {
-        this.mockedPurchaseDto = new RequestPurchaseDto().setCount(1).setProductId(1L);
+        this.mockedPurchaseDto = new RequestProductDto().setCount(1).setProductId(1L);
         this.mockedOrderDto = new OrderDto(1L, this.testUserId, Result.START);
         this.mockedPurchaseList = Arrays.asList(this.mockedPurchaseDto);
         this.mockedOrderItemDto = new OrderItemDto()

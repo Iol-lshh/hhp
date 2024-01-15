@@ -1,7 +1,7 @@
 package com.lshh.hhp.orderItem;
 
 import com.lshh.hhp.common.Response;
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -69,7 +69,7 @@ public class OrderItem {
         return newOne;
     }
 
-    static public List<OrderItem> createNewOrderItemsYetNoPrice(Long userId, Long orderId, List<RequestPurchaseDto> requestList){
+    static public List<OrderItem> createNewOrderItemsYetNoPrice(Long userId, Long orderId, List<RequestProductDto> requestList){
         return requestList.stream()
             .map(request -> createNewOrderItemWithNoPriceTag(userId, orderId, request.getProductId(), request.getCount()))
             .toList();

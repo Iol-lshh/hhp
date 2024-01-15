@@ -1,7 +1,7 @@
 package com.lshh.hhp.order.service;
 
 import com.lshh.hhp.order.dto.EventCancelOrderDto;
-import com.lshh.hhp.order.dto.RequestPurchaseDto;
+import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.order.dto.OrderDto;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public interface OrderOrchestratorService {
      * @return the ordered products as an OrderDto object
      * @throws Exception if an error occurs during the ordering process
      */
-    OrderDto order(long userId, List<RequestPurchaseDto> productId) throws Exception;
+    OrderDto order(long userId, List<RequestProductDto> productId) throws Exception;
     // 1. 주문 생성: 시작
 
     // 2. 상품 확인
