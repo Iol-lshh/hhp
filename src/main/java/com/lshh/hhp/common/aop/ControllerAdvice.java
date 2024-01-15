@@ -13,7 +13,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public <T> ResponseEntity<T> onException(BusinessException exception){
+    public <T> ResponseEntity<T> onBusinessException(BusinessException exception){
+        String traceId = ThreadTraceHelper.getTraceId();
+        log.info(String.format("""
+                { "traceid": "%s", "msg": "비즈니스 예외 - %s" }""", traceId, exception.getMessage()));
+        log.debug("", exception);
+        return ResponseEntity.internalServerError().header("msg", exception.getMessage()).build();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public <T> ResponseEntity<T> onException(Exception exception){
         String traceId = ThreadTraceHelper.getTraceId();
         log.error(String.format("""
                 { "traceid": "%s", "msg": "%s" }""", traceId, exception.getMessage()));

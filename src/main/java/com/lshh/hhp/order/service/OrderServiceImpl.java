@@ -23,6 +23,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order save(Order order) {
+        return orderRepository.save(order);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Order> findByUserId(long userId) {
         return orderRepository

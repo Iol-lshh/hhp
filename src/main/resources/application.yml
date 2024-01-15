@@ -14,9 +14,9 @@ spring:
 #            - local3
 #            - local2
 #            - local
-#            - compose
+            - compose
 #            - aws2
-            - aws
+#            - aws
     aop:
         auto: true
     mvc:
@@ -47,6 +47,5 @@ springdoc:
         operationsSorter: method
         display-request-duration: true
     default-consumes-media-type: application/json
-    default-produces-media-type: application/json
 
 

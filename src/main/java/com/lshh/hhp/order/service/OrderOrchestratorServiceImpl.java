@@ -81,6 +81,8 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
             order.setState(Response.Result.FAIL);
             publisher.publishEvent(new EventCancelOrderDto().orderId(order.id()));
             throw exception;
+        }finally {
+            orderService.save(order);
         }
     }
 
@@ -111,6 +113,8 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
         }catch (Exception exception){
             target.setState(Response.Result.FAIL);
             throw exception;
+        }finally {
+            orderService.save(target);
         }
     }
 }

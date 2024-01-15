@@ -10,13 +10,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
+    @GetMapping("/business")
+    public Object invokeBusinessException(){
+        throw new BusinessException("test invokeBusinessException");
+    }
+
+    @GetMapping("/business/{msg}")
+    public Object invokeBusinessException2(@PathVariable String msg){
+        throw new BusinessException(msg);
+    }
+
     @GetMapping("/error")
-    public Object invokeError(){
-        throw new BusinessException("test invokeError");
+    public Object invokeError() throws Exception {
+        throw new Exception("test invokeError");
     }
 
     @GetMapping("/error/{msg}")
-    public Object invokeError2(@PathVariable String msg){
-        throw new BusinessException(msg);
+    public Object invokeError2(@PathVariable String msg) throws Exception {
+        throw new Exception(msg);
     }
 }

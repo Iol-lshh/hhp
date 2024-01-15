@@ -47,12 +47,6 @@
         </encoder>
         <!-- prod 용 로그 그룹명 -->
         <logGroupName>log-hhp</logGroupName>
-        <!--        <if condition='property("spring.profiles.active").contains("prod")'>-->
-        <!--            <then>-->
-        <!--                &lt;!&ndash; prod 용 로그 그룹명 &ndash;&gt;-->
-        <!--                <logGroupName>${Log_Group_Name:error}</logGroupName>-->
-        <!--            </then>-->
-        <!--        </if>-->
         <logRegion>ap-northeast-2</logRegion>
         <maxBatchLogEvents>50</maxBatchLogEvents>
         <maxFlushTimeMillis>30000</maxFlushTimeMillis>
@@ -60,7 +54,7 @@
         <retentionTimeDays>0</retentionTimeDays>
     </appender>
 
-    <springProfile name="local,local2,local3">
+    <springProfile name="local,local2,local3,compose">
         <!--logger: 로깅을 기록하는 녀석 - 0개 이상-->
 <!--        <logger name="org.springframework" level="INFO">-->
 <!--            <appender-ref ref="STDOUT" />-->
@@ -80,9 +74,9 @@
         <logger name="com.lshh.hhp.common.aop.ControllerAdvice" level="INFO">
             <appender-ref ref="STDOUT" />
         </logger>
-        <root level="ERROR">
-            <appender-ref ref="STDOUT" />
-        </root>
+<!--        <root level="ERROR">-->
+<!--            <appender-ref ref="STDOUT" />-->
+<!--        </root>-->
     </springProfile>
 
     <springProfile name="test">

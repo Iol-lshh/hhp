@@ -18,7 +18,6 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-//@ActiveProfiles("test")
 @SpringBootTest
 public class PointServiceImplIntegrationTest {
     
