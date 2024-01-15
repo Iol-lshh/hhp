@@ -6,7 +6,7 @@ server:
 spring:
   config:
     import:
-      - classpath:properties/config.yml
+      - classpath:properties/config.properties
 
   # Database
   datasource:

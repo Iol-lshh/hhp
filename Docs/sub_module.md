@@ -3,7 +3,9 @@
         - git submodule add <repository-url>
     - 서브모듈의 이름을 바꾸려면
       - git submodule add <repository-url> <directory-name>
-      - git submodule add https://github.com/Iol-lshh/hhp-sub.git properties
+    - 예
+      1. `cd src/main/resources`
+      2. `git submodule add https://github.com/Iol-lshh/hhp-sub.git properties`
 
 
 git submodule init
