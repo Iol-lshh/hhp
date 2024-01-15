@@ -51,19 +51,20 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
     @Transactional
     public List<OrderItem> cancelOrderItem(long orderId) throws Exception {
         List<OrderItem> targetList = orderItemRepository.findByOrderId(orderId);
-        targetList.stream().forEach(target -> target.setState(Response.Result.CANCELING.ordinal()));
+        targetList.forEach(target -> target.setState(Response.Result.CANCELING.ordinal()));
 
         try{
             // 포인트 캔슬
             pointService.cancelSubtract(targetList);
-            targetList.stream().forEach(target -> target.setState(Response.Result.CANCELED.ordinal()));
+            targetList.forEach(target -> target.setState(Response.Result.CANCELED.ordinal()));
 
         }catch (Exception exception){
-            targetList.stream().forEach(target -> target.setState(Response.Result.FAIL.ordinal()));
+            targetList.forEach(target -> target.setState(Response.Result.FAIL.ordinal()));
             throw exception;
-        }
 
-        orderItemRepository.saveAll(targetList);
+        }finally {
+            orderItemRepository.saveAll(targetList);
+        }
         return targetList;
     }
 }

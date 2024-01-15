@@ -54,7 +54,7 @@
         <retentionTimeDays>0</retentionTimeDays>
     </appender>
 
-    <springProfile name="local,local2,local3,compose">
+    <springProfile name="local,local2,local3">
         <!--logger: 로깅을 기록하는 녀석 - 0개 이상-->
 <!--        <logger name="org.springframework" level="INFO">-->
 <!--            <appender-ref ref="STDOUT" />-->
@@ -77,6 +77,18 @@
         <root level="DEBUG">
             <appender-ref ref="STDOUT" />
         </root>
+    </springProfile>
+
+    <springProfile name="compose">
+        <logger name="com.lshh.hhp.common.aop.HttpRequestLoggerAop" level="INFO">
+            <appender-ref ref="STDOUT" />
+        </logger>
+        <logger name="com.lshh.hhp.common.filter.HttpRequestLoggerFilter" level="INFO">
+            <appender-ref ref="STDOUT" />
+        </logger>
+        <logger name="com.lshh.hhp.common.aop.ControllerAdvice" level="INFO">
+            <appender-ref ref="STDOUT" />
+        </logger>
     </springProfile>
 
     <springProfile name="test">

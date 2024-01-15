@@ -62,6 +62,7 @@ public interface OrderOrchestratorService {
      * @throws Exception if an error occurs during the cancellation process
      */
     OrderDto cancel(long orderId) throws Exception;
+
     // 1. 주문 확인 - fail 제외
     // 2. 주문 취소 시작
     
@@ -70,4 +71,9 @@ public interface OrderOrchestratorService {
     // 5. 재고 취소
 
     // 6. 취소 완료 - 취소 실패시, 이전 상태로
+
+
+    List<OrderDto> findFailedByUserId(Long userId);
+
+    List<OrderDto> findFailedDetailByUserId(Long userId);
 }

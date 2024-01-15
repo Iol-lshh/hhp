@@ -36,12 +36,6 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
     final ApplicationEventPublisher publisher;
 
     @Override
-    @EventListener
-    public void onCancelOrderEvent(EventCancelOrderDto event) throws Exception {
-        cancel(event.orderId());
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public List<OrderDto> findByUserId(long userId) {
         return orderService
@@ -51,7 +45,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
 
     // order - 동기 주문 처리
     @Override
-    public OrderDto order(long userId, List<RequestProductDto> purchaseRequestList) throws Exception {
+    public OrderDto order(long userId, List<RequestProductDto> requestProductDtos) throws Exception {
         // # 0. user 확인
         userService.find(userId).orElseThrow(()->new BusinessException(String.format("""
                     OrderOrchestratorServiceImpl::order - 잘못된 유저 {%s}""", userId)));
@@ -60,15 +54,15 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
         Order order = orderService.start(userId);
         try {
             // ## 0. 상품 확인
-            if(!productService.validate(purchaseRequestList)){
+            if(!productService.validate(requestProductDtos)){
                 throw new BusinessException(String.format("""
                     OrderOrchestratorServiceImpl::order - 잘못된 상품 {%s}""", String.join(","
-                        ,purchaseRequestList.stream().map(e->e.getProductId().toString()).toList())));
+                        ,requestProductDtos.stream().map(e->e.getProductId().toString()).toList())));
             }
 
             // # 구매 처리
             // ## 1. 구매 처리
-            List<OrderItem> orderItems = orderItem1Service.orderEachProduct(userId, order.id(), purchaseRequestList);
+            List<OrderItem> orderItems = orderItem1Service.orderEachProduct(userId, order.id(), requestProductDtos);
 
             // ## 2. 상품 재고 처리
             productService.deduct(orderItems);
@@ -81,14 +75,21 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
             order.setState(Response.Result.FAIL);
             publisher.publishEvent(new EventCancelOrderDto().orderId(order.id()));
             throw exception;
+
         }finally {
             orderService.save(order);
         }
     }
 
+
+    @Override
+    @EventListener
+    public void onCancelOrderEvent(EventCancelOrderDto event) throws Exception {
+        cancel(event.orderId());
+    }
+
     // order - 동기 주문 취소 처리
     @Override
-    @Lock(LockModeType.OPTIMISTIC)
     @Transactional
     public OrderDto cancel(long orderId) throws Exception {
         // 1. 주문 확인
@@ -96,7 +97,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
         PaymentDto::exchange {"orderId": "%s"}""", orderId)));
 
         // 2. 주문 취소 시작
-        target.setState(Response.Result.CANCELING);
+//        target.setState(Response.Result.CANCELING);
 
         try {
             // 3. 구매 취소
@@ -113,8 +114,19 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
         }catch (Exception exception){
             target.setState(Response.Result.FAIL);
             throw exception;
+
         }finally {
             orderService.save(target);
         }
+    }
+
+    @Override
+    public List<OrderDto> findFailedByUserId(Long userId) {
+        return orderService.findFailedByUserId(userId).stream().map(Order::toDto).toList();
+    }
+
+    @Override
+    public List<OrderDto> findFailedDetailByUserId(Long userId) {
+        return null;
     }
 }

@@ -7,7 +7,10 @@ import com.lshh.hhp.payment.Payment;
 import com.lshh.hhp.point.Point;
 import com.lshh.hhp.point.Point.PointType;
 import com.lshh.hhp.point.repository.PointRepository;
+import com.lshh.hhp.product.dto.EventSquashPointDto;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,10 +22,12 @@ public class PointServiceImpl implements PointService {
 
     final PointRepository pointRepository;
 
+    final ApplicationEventPublisher eventPublisher;
+
     @Override
     @Transactional
     public Point add(Payment payment) {
-
+//        pointRepository.findAllByUserIdWithLock(payment.userId());
         Point point = Point.createNewAddPoint(payment);
         return pointRepository.save(point);
     }
@@ -34,16 +39,25 @@ public class PointServiceImpl implements PointService {
         // # 총 차감액
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();
         // # 락 획득
-        pointRepository.findAllByUserIdWithLock(userId);
+        List<Point> pointsForLock = pointRepository.findAllByUserIdWithLock(userId);
+
         // # 잔고 확인
         int remain = countRemain(userId);
         // # 차감 가능 여부 확인
         if(remain - sumToPay < 0){
             throw new BusinessException(String.format("""
-                    PointServiceImpl::subtractByOrderItems  - 차감 불가 remain: %s, sumToPay: %s, {%s}""", remain, sumToPay, String.join(",", orderItems.stream().map(e->e.id().toString()).toList())));
+                    PointServiceImpl::subtractByOrderItems  - 차감 불가 remain: %s, sumToPay: %s, {%s}"""
+                    , remain, sumToPay, String.join(",", orderItems.stream().map(e->e.id().toString()).toList())));
         }
         // # 차감 포인트 저장
         List<Point> pointList = Point.createNewSubtractPoints(orderItems);
+
+        // 새로운 주문을 먼저 받을 수 있도록, 락 범위 너머의 리스트로 새로 제공
+        if(pointsForLock.size() > 10){
+            eventPublisher.publishEvent(EventSquashPointDto.of(userId));
+
+        }
+        
         return pointRepository.saveAll(pointList);
     }
 
@@ -73,6 +87,12 @@ public class PointServiceImpl implements PointService {
         return pointRepository.findAllByUserId(userId);
     }
 
+
+    @EventListener
+    public void onSquashPointEvent(EventSquashPointDto event) throws Exception {
+        squash(event.userId());
+    }
+
     @Override
     @Transactional
     public Point squash(long userId) throws Exception {
@@ -90,6 +110,9 @@ public class PointServiceImpl implements PointService {
         List<Point> userPointList = pointRepository.findAllByUserIdWithLock(userId);
         userPointList.forEach(Point::setDisable);
         pointRepository.saveAll(userPointList);
+        if(userPointList.size()>20){
+            clearZeroPoints(userId);
+        }
 
         // # 압축본 저장
         return pointRepository.save(sumed);
@@ -101,5 +124,12 @@ public class PointServiceImpl implements PointService {
     public int countRemain(long userId) {
         List<Point> userPointList = pointRepository.findAllByUserId(userId);
         return userPointList.stream().mapToInt(Point::count).sum();
+    }
+
+    @Override
+    @Transactional
+    public int clearZeroPoints(long userId) {
+        pointRepository.deleteByUserId(userId);
+        return 1;
     }
 }

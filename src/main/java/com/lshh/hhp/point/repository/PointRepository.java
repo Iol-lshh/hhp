@@ -20,4 +20,6 @@ public interface PointRepository  extends JpaRepository<Point, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query(value = "select p from Point p where p.fromType = :fromType and p.fromId = :fromId")
     Optional<Point> findByFromTypeAndFromIdWithLock(Integer fromType, Long fromId);
+
+    void deleteByUserId(Long userId);
 }

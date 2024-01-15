@@ -24,4 +24,6 @@ public interface PointService {
     Point squash(long userId) throws Exception;
 
     int countRemain(long userId);
+
+    int clearZeroPoints(long userId);
 }

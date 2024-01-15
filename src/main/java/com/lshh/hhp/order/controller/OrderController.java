@@ -28,4 +28,16 @@ public class OrderController {
     public ResultDto<List<OrderDto>> all(@PathVariable Long userId){
         return ResultDto.ok(orderService.findByUserId(userId));
     }
+
+    @Operation(summary = "주문 실패 내역")
+    @GetMapping("/failed/{userId}")
+    public ResultDto<List<OrderDto>> failed(@PathVariable Long userId){
+        return ResultDto.ok(orderService.findFailedByUserId(userId));
+    }
+
+    @Operation(summary = "주문 실패 내역")
+    @GetMapping("/failed-detail/{userId}")
+    public ResultDto<List<OrderDto>> failedDetail(@PathVariable Long userId){
+        return ResultDto.ok(orderService.findFailedDetailByUserId(userId));
+    }
 }

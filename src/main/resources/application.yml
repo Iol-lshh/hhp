@@ -12,8 +12,8 @@ spring:
     profiles:
         active:
 #            - local3
-            - local2
-#            - local
+#            - local2
+            - local
 #            - compose
 #            - aws2
 #            - aws
