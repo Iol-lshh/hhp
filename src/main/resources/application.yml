@@ -13,8 +13,8 @@ spring:
         active:
 #            - local3
 #            - local2
-            - local
-#            - compose
+#            - local
+            - compose
 #            - aws2
 #            - aws
     aop:
@@ -47,5 +47,4 @@ springdoc:
         operationsSorter: method
         display-request-duration: true
     default-consumes-media-type: application/json
-
 

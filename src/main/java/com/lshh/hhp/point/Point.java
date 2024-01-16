@@ -63,15 +63,6 @@ public class Point {
         return orderItems.stream().map(Point::createNewSubtractPoint).toList();
     }
 
-    public Point setDisable(){
-        this.count = 0;
-        return this;
-    }
-    public static List<Point> setDisable(List<Point> points){
-        points.forEach(Point::setDisable);
-        return points;
-    }
-
     public PointDto toDto(){
         return new PointDto()
             .id(this.id)

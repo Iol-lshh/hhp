@@ -3,6 +3,10 @@ package com.lshh.hhp.point.service;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.payment.Payment;
 import com.lshh.hhp.point.Point;
+import com.lshh.hhp.product.dto.EventSquashPointDto;
+import org.springframework.context.event.EventListener;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -13,17 +17,23 @@ public interface PointService {
 
     Point add(Payment payment);
 
-    List<Point> subtractByOrderItems(List<OrderItem> orderItems) throws Exception;
+    List<Point> subtractByOrderItems(long userId, List<OrderItem> orderItems);
 
-    List<Point> cancelSubtract(List<OrderItem> purchaseDtoList) throws Exception;
+    List<Point> save(long userId, List<Point> pointList);
 
-    List<Point> findAllByOrderItems(List<OrderItem> orderItems);
+    @Transactional
+    Point save(Point point);
 
     List<Point> findAllByUserId(long userId);
 
-    Point squash(long userId) throws Exception;
+    @EventListener
+    void onSquashPointEvent(EventSquashPointDto event);
+
+    Point squash(long userId);
 
     int countRemain(long userId);
 
-    int clearZeroPoints(long userId);
+    int lockUserPoint(long userId);
+
+    int clear(long userId);
 }

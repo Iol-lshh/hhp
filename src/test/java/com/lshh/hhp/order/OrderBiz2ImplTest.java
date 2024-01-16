@@ -182,7 +182,7 @@ public class OrderBiz2ImplTest {
         List<OrderItem> orderItems = mockedOrderItemDtos.stream().map(OrderItem::toEntity).toList();
 
         when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
-        when(orderItem1Service.cancelOrderItem(mockedOrderDto.id())).thenReturn(orderItems);
+        when(orderItem1Service.cancelOrderItem(testUserId, mockedOrderDto.id())).thenReturn(orderItems);
         doReturn(new ArrayList<ProductDto>()).when(productService).conduct(orderItems);
 
         OrderDto result = orderOrchestratorService.cancel(mockedOrderDto.id());
@@ -191,7 +191,7 @@ public class OrderBiz2ImplTest {
         assertEquals(result.id(), mockedOrderDto.id());
         assertEquals(result.state(), Result.CANCELED);
         verify(orderService, times(1)).find(mockedOrderDto.id());
-        verify(orderItem1Service, times(1)).cancelOrderItem(mockedOrderDto.id());
+        verify(orderItem1Service, times(1)).cancelOrderItem(testUserId, mockedOrderDto.id());
         verify(productService, times(1)).conduct(orderItems);
     }
     @Test
@@ -212,14 +212,14 @@ public class OrderBiz2ImplTest {
         Order mockedOrder = Order.toEntity(mockedOrderDto);
 
         when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
-        when(orderItem1Service.cancelOrderItem(mockedOrderDto.id())).thenThrow(new BusinessException("구매 취소 실패"));
+        when(orderItem1Service.cancelOrderItem(testUserId, mockedOrderDto.id())).thenThrow(new BusinessException("구매 취소 실패"));
 
         Exception exception = assertThrows(BusinessException.class, () ->
                 orderOrchestratorService.cancel(mockedOrderDto.id()));
         assertEquals(BusinessException.class, exception.getClass());
 
         verify(orderService, times(1)).find(mockedOrderDto.id());
-        verify(orderItem1Service, times(1)).cancelOrderItem(mockedOrderDto.id());
+        verify(orderItem1Service, times(1)).cancelOrderItem(testUserId, mockedOrderDto.id());
     }
     @Test
     @DisplayName("cancel: 주문 취소 - 재고 취소 실패한 경우")
@@ -228,7 +228,7 @@ public class OrderBiz2ImplTest {
         List<OrderItem> orderItems = mockedOrderItemDtos.stream().map(OrderItem::toEntity).toList();
 
         when(orderService.find(mockedOrderDto.id())).thenReturn(Optional.of(mockedOrder));
-        when(orderItem1Service.cancelOrderItem(mockedOrderDto.id())).thenReturn(orderItems);
+        when(orderItem1Service.cancelOrderItem(testUserId, mockedOrderDto.id())).thenReturn(orderItems);
         when(productService.conduct(orderItems)).thenThrow(new BusinessException("재고 취소 실패"));
 
         Exception exception = assertThrows(BusinessException.class, () ->
@@ -236,7 +236,7 @@ public class OrderBiz2ImplTest {
         assertEquals(BusinessException.class, exception.getClass());
 
         verify(orderService, times(1)).find(mockedOrderDto.id());
-        verify(orderItem1Service, times(1)).cancelOrderItem(mockedOrderDto.id());
+        verify(orderItem1Service, times(1)).cancelOrderItem(testUserId, mockedOrderDto.id());
         verify(productService, times(1)).conduct(orderItems);
     }
 }

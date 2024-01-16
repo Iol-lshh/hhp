@@ -4,22 +4,22 @@ import com.lshh.hhp.common.Response;
 import com.lshh.hhp.common.exception.BusinessException;
 import com.lshh.hhp.order.dto.EventCancelOrderDto;
 import com.lshh.hhp.order.Order;
+import com.lshh.hhp.order.dto.OrderDetailDto;
 import com.lshh.hhp.order.dto.OrderDto;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.product.service.ProductService;
-import com.lshh.hhp.common.Service;
+import com.lshh.hhp.common.annotation.Service;
 import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.orderItem.service.OrderItem1Service;
 import com.lshh.hhp.user.service.UserService;
-import jakarta.persistence.LockModeType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
@@ -69,15 +69,15 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
 
             // # 3. 주문 완료: 종료
             order.setState(Response.Result.SUCCESS);
+            orderService.save(order);
             return order.toDto();
 
         }catch (Exception exception){
             order.setState(Response.Result.FAIL);
+            orderService.save(order);
             publisher.publishEvent(new EventCancelOrderDto().orderId(order.id()));
             throw exception;
 
-        }finally {
-            orderService.save(order);
         }
     }
 
@@ -102,7 +102,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
         try {
             // 3. 구매 취소
             // 4. 포인트 취소
-            List<OrderItem> canceledList = orderItem1Service.cancelOrderItem(target.id());
+            List<OrderItem> canceledList = orderItem1Service.cancelOrderItem(target.userId(), target.id());
 
             // 5. 재고 다시 추가
             productService.conduct(canceledList);
@@ -126,7 +126,11 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
     }
 
     @Override
-    public List<OrderDto> findFailedDetailByUserId(Long userId) {
-        return null;
+    public OrderDetailDto findDetail(Long orderId) {
+        Optional<Order> order = orderService.find(orderId);
+        List<OrderItem> orderItems = orderItem1Service.findByOrderId(orderId);
+        return new OrderDetailDto()
+                .setOrder(order.map(Order::toDto).orElse(null))
+                .setOrderItems(orderItems.stream().map(OrderItem::toDto).toList());
     }
 }

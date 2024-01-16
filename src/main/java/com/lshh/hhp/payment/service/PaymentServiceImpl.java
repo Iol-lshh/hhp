@@ -1,6 +1,6 @@
 package com.lshh.hhp.payment.service;
 
-import com.lshh.hhp.common.Service;
+import com.lshh.hhp.common.annotation.Service;
 import com.lshh.hhp.payment.Payment;
 import com.lshh.hhp.payment.repository.PaymentRepository;
 import lombok.AllArgsConstructor;

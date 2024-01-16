@@ -1,6 +1,9 @@
 package com.lshh.hhp.payment.service;
 
+import com.lshh.hhp.payment.Payment;
 import com.lshh.hhp.payment.dto.PaymentDto;
+
+import java.util.List;
 
 /**
  * level 0
@@ -8,4 +11,6 @@ import com.lshh.hhp.payment.dto.PaymentDto;
  */
 public interface Payment1Service {
     PaymentDto exchange(long userId, int toNeed) throws Exception;
+
+    List<Payment> findByUserId(Long userId);
 }

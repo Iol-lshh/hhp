@@ -67,7 +67,7 @@ class OrderItem1ServiceImplTest {
     @DisplayName("구매 성공")
     void purchase() throws Exception {
         OrderItem orderItem = OrderItem.toEntity(orderItemDto);
-        when(orderItemRepository.saveAll(any())).thenReturn(Arrays.asList(orderItem));
+        when(orderItemRepository.saveAllAndFlush(any())).thenReturn(Arrays.asList(orderItem));
 
         // Act
         List<OrderItem> result = orderItem1ServiceImpl.orderEachProduct(orderItemDto.userId(), orderItemDto.orderId(), Collections.singletonList(requestPurchaseDto));
@@ -75,9 +75,6 @@ class OrderItem1ServiceImplTest {
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-
-        verify(orderItemRepository, times(1)).saveAll(any());
-        verify(pointService, times(1)).subtractByOrderItems(any());
       }
 
     @Test

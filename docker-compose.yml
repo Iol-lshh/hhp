@@ -49,16 +49,17 @@ services:
       - "./.compose/local/hhp-db-mysql.env"
     volumes:
       - ../hhp_db/mysql:/var/lib/mysql
-#
-#  redis:
+
+  redis:
+    image: redis
 #    build:
 #      context: "./redis"
-#    container_name: "hhp-redis"
-#    networks:
-#      - hhp-net
-#    ports:
-#      - "6379:6379"
-#
+    container_name: "hhp-redis"
+    networks:
+      - hhp-net
+    ports:
+      - "6379:6379"
+
 #  elasticsearch:
 #    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
 #    container_name: elasticsearch

@@ -10,6 +10,11 @@ spring:
       enabled: true
     restart:
       enabled: true
+  # Redis
+#  data:
+#    redis:
+#      host: ${SPRING_DATA_REDIS_HOST}
+#      port: ${SPRING_DATA_REDIS_PORT}
   # Database
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -25,9 +30,11 @@ spring:
     hibernate:
       ddl-auto: none
 #    show-sql: true
-#    properties:
-#      hibernate:
-#        format_sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+
 
 # 액추에이터
 management:

@@ -1,6 +1,7 @@
 package com.lshh.hhp.orderItem;
 
 import com.lshh.hhp.common.Response;
+import com.lshh.hhp.order.Order;
 import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.orderItem.dto.OrderItemDto;
 import jakarta.persistence.*;
@@ -22,9 +23,15 @@ public class OrderItem {
 
     Long userId;
     Long productId;
+
+    @Column(name = "order_id")
     Long orderId;
 
     Integer state;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", insertable = false, updatable = false)
+    Order order;
 
     public OrderItem setPriceTag(Integer price){
         this.toPay = price * count;

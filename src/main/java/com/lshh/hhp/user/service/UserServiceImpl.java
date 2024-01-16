@@ -1,6 +1,6 @@
 package com.lshh.hhp.user.service;
 
-import com.lshh.hhp.common.Service;
+import com.lshh.hhp.common.annotation.Service;
 import com.lshh.hhp.user.User;
 import com.lshh.hhp.user.repository.UserRepository;
 import lombok.AllArgsConstructor;

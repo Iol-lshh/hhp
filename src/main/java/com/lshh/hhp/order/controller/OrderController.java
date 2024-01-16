@@ -1,6 +1,7 @@
 package com.lshh.hhp.order.controller;
 
 import com.lshh.hhp.common.ResultDto;
+import com.lshh.hhp.order.dto.OrderDetailDto;
 import com.lshh.hhp.product.dto.RequestProductSetDto;
 import com.lshh.hhp.order.dto.OrderDto;
 import com.lshh.hhp.order.service.OrderOrchestratorService;
@@ -35,9 +36,9 @@ public class OrderController {
         return ResultDto.ok(orderService.findFailedByUserId(userId));
     }
 
-    @Operation(summary = "주문 실패 내역")
-    @GetMapping("/failed-detail/{userId}")
-    public ResultDto<List<OrderDto>> failedDetail(@PathVariable Long userId){
-        return ResultDto.ok(orderService.findFailedDetailByUserId(userId));
+    @Operation(summary = "주문 상세 내역")
+    @GetMapping("/detail/{orderId}")
+    public ResultDto<OrderDetailDto> findDetail(@PathVariable Long orderId){
+        return ResultDto.ok(orderService.findDetail(orderId));
     }
 }

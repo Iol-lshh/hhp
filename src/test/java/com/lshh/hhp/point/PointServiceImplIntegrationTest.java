@@ -18,6 +18,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+//@ActiveProfiles("test")
 @SpringBootTest
 public class PointServiceImplIntegrationTest {
     
@@ -27,8 +28,9 @@ public class PointServiceImplIntegrationTest {
     private ProductService productService;
     
     @Test
-    @DisplayName("동시성 - 포인트 부족 실패")
+    @DisplayName("동시성 - 포인트 동시 결제 1건만 성공")
     public void testSubtract() throws Exception {
+        // optimistic lock - 1건만 처리
         // Initialization
         long testUserId = 1L;
         OrderItem orderItem2 = OrderItem.createNewOrderItemWithNoPriceTag(testUserId, 1L, 1L, 1);
@@ -43,20 +45,22 @@ public class PointServiceImplIntegrationTest {
                 .forEach(i ->
                         executorService.submit(() -> {
                             try {
-//                                System.out.println(i + " a남은 잔액: "+pointService.countRemain(testUserId));
-                                pointService.subtractByOrderItems(orderItems);
-//                                System.out.println(i + " 차감 성공! b남은 잔액: "+pointService.countRemain(testUserId));
+                                System.out.println(i + " a남은 잔액: "+pointService.countRemain(testUserId));
+                                pointService.subtractByOrderItems(testUserId, orderItems);
+                                System.out.println(i + " 차감 성공! b남은 잔액: "+pointService.countRemain(testUserId));
                             } catch (Exception e) {
-//                                System.out.println(i + " 차감 실패! c남은 잔액: "+pointService.countRemain(testUserId));
+                                System.out.println(i + " 차감 실패! c남은 잔액: "+pointService.countRemain(testUserId));
                                 System.out.println(e.getMessage());
                             }
-//                            System.out.println(i + " d남은 잔액: "+pointService.countRemain(testUserId));
+                            System.out.println(i + " d남은 잔액: "+pointService.countRemain(testUserId));
                         })
                 );
         executorService.awaitTermination(3, TimeUnit.SECONDS);
         System.out.println("남은 잔액: "+pointService.countRemain(testUserId));
         assertTrue(pointService.countRemain(testUserId) >= 0);
     }
+
+
 }
 
 

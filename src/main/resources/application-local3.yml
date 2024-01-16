@@ -3,6 +3,12 @@ server:
   servlet:
     application-display-name: hhp
 spring:
+  # Redis
+  data:
+    redis:
+      host: 172.30.1.11
+      port: 6379
+  # Database
   datasource:
     url: jdbc:h2:mem:test # h2 support in-memory-db
     #    url: jdbc:hsqldb:mem:yourdbname;sql.syntax_mys=true

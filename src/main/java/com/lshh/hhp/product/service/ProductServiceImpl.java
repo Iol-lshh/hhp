@@ -1,6 +1,6 @@
 package com.lshh.hhp.product.service;
 
-import com.lshh.hhp.common.Service;
+import com.lshh.hhp.common.annotation.Service;
 import com.lshh.hhp.common.exception.BusinessException;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.product.dto.RequestProductDto;
@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
                     , String.join(",", orderItems.stream().map(e->e.id().toString()).toList()) ));
         }
 
-        return productRepository.saveAll(products);
+        return productRepository.saveAllAndFlush(products);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
                     , String.join(",", orderItems.stream().map(e->e.id().toString()).toList()) ));
         }
 
-        return productRepository.saveAll(products);
+        return productRepository.saveAllAndFlush(products);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
                     , String.join(",", purchaseDtoList.stream().map(e->e.getProductId().toString()).toList()) ));
         }
 
-        return productRepository.saveAll(products);
+        return productRepository.saveAllAndFlush(products);
     }
 
     @Override

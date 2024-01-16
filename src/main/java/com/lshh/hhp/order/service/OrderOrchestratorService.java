@@ -1,6 +1,7 @@
 package com.lshh.hhp.order.service;
 
 import com.lshh.hhp.order.dto.EventCancelOrderDto;
+import com.lshh.hhp.order.dto.OrderDetailDto;
 import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.order.dto.OrderDto;
 
@@ -75,5 +76,5 @@ public interface OrderOrchestratorService {
 
     List<OrderDto> findFailedByUserId(Long userId);
 
-    List<OrderDto> findFailedDetailByUserId(Long userId);
+    OrderDetailDto findDetail(Long orderId);
 }

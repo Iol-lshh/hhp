@@ -1,7 +1,7 @@
 package com.lshh.hhp.orderItem.service;
 
 import com.lshh.hhp.common.Response;
-import com.lshh.hhp.common.Service;
+import com.lshh.hhp.common.annotation.Service;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.product.dto.RequestProductDto;
 import com.lshh.hhp.orderItem.repository.OrderItemRepository;
@@ -20,6 +20,7 @@ import java.util.List;
 public class OrderItem1ServiceImpl implements OrderItem1Service {
 
     final OrderItemRepository orderItemRepository;
+    final OrderItemService orderItemService;
     final PointService pointService;
     final ProductService productService;
 
@@ -39,23 +40,23 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
         // 주문 리스트 작성
         List<OrderItem> newOrderItems = OrderItem.createNewOrderItemsYetNoPrice(userId, orderId, purchaseRequestList);
         productService.putPrice(newOrderItems);
+        newOrderItems = orderItemRepository.saveAllAndFlush(newOrderItems);
 
-        newOrderItems = orderItemRepository.saveAll(newOrderItems);
         // 포인트 차감
-        pointService.subtractByOrderItems(newOrderItems);
+        pointService.subtractByOrderItems(userId, newOrderItems);
 
         return newOrderItems;
     }
 
     @Override
     @Transactional
-    public List<OrderItem> cancelOrderItem(long orderId) throws Exception {
+    public List<OrderItem> cancelOrderItem(long userId, long orderId) throws Exception {
         List<OrderItem> targetList = orderItemRepository.findByOrderId(orderId);
         targetList.forEach(target -> target.setState(Response.Result.CANCELING.ordinal()));
 
         try{
             // 포인트 캔슬
-            pointService.cancelSubtract(targetList);
+            pointService.subtractByOrderItems(userId, targetList);
             targetList.forEach(target -> target.setState(Response.Result.CANCELED.ordinal()));
 
         }catch (Exception exception){
@@ -63,8 +64,13 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
             throw exception;
 
         }finally {
-            orderItemRepository.saveAll(targetList);
+            orderItemRepository.saveAllAndFlush(targetList);
         }
         return targetList;
+    }
+
+    @Override
+    public List<OrderItem> findByOrderId(Long orderId) {
+        return orderItemRepository.findByOrderId(orderId);
     }
 }

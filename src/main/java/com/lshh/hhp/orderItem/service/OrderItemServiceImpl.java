@@ -1,12 +1,10 @@
 package com.lshh.hhp.orderItem.service;
 
-import com.lshh.hhp.common.Service;
+import com.lshh.hhp.common.annotation.Service;
 import com.lshh.hhp.common.Response.Result;
-import com.lshh.hhp.orderItem.dto.ViewPurchasedProductDto;
 import com.lshh.hhp.orderItem.OrderItem;
 import com.lshh.hhp.orderItem.repository.OrderItemRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,7 +19,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Transactional(rollbackFor = Exception.class)
     public List<OrderItem> save(List<OrderItem> purchaseList) {
         return orderItemRepository
-                .saveAll(purchaseList);
+                .saveAllAndFlush(purchaseList);
     }
 
     @Override
