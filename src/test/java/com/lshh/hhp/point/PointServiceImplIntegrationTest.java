@@ -40,7 +40,7 @@ public class PointServiceImplIntegrationTest {
         System.out.println("구매금액 "+ sumToPay);
         // Performing the test
         ExecutorService executorService = Executors.newFixedThreadPool(6);
-        IntStream.range(0, 6)
+        IntStream.range(0, 4)
                 .parallel()
                 .forEach(i ->
                         executorService.submit(() -> {

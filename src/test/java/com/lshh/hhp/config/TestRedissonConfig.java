@@ -10,7 +10,7 @@ import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration
 public class TestRedissonConfig {
-    private static final String REDIS_CONTAINER_NAME = "redis:6.2.5";
+    private static final String REDIS_CONTAINER_NAME = "redis:latest";
 
     private static final GenericContainer<?> redisContainer;
 
