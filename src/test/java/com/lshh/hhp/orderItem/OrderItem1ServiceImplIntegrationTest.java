@@ -96,6 +96,7 @@ public class OrderItem1ServiceImplIntegrationTest {
 
 
     @Test
+    @DisplayName("인기 조회")
     public void testFavorite() {
         List<ProductDto> favoriteResult = orderItem1Service.favorite(5);
 

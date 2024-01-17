@@ -18,7 +18,7 @@ public class TestRedissonConfig {
         redisContainer = new GenericContainer<>(
                 DockerImageName
                     .parse(REDIS_CONTAINER_NAME)
-                    .asCompatibleSubstituteFor("redis"))
+                    .asCompatibleSubstituteFor("redis:7.2.4"))
                 .withExposedPorts(6379);
         redisContainer.start();
     }

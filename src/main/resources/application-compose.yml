@@ -19,7 +19,7 @@ spring:
   data:
     redis:
 #      host: localhost
-      host: hhp-redis
+      host: host.docker.internal
       port: 6379
   # Database
   datasource:

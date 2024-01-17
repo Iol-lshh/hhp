@@ -7,6 +7,7 @@ services:
     container_name: "hhp"
     ports:
       - 8078:80
+    hostname: host.docker.internal
     networks:
       - hhp-net
     deploy:
@@ -51,7 +52,7 @@ services:
       - ../hhp_db/mysql:/var/lib/mysql
 
   redis:
-    image: redis
+    image: redis:7.2.4
 #    build:
 #      context: "./redis"
     container_name: "hhp-redis"
