@@ -58,7 +58,7 @@ public class HttpRequestLoggerAop {
         Object result;
 
         log.info(String.format("""
-        { "traceId": "%s", "payload": %s }"""
+            { "traceId": "%s", "payload": %s }"""
                 , ThreadTraceHelper.getTraceId()
                 , String.join(",", Arrays.stream(joinPoint.getArgs()).map(o-> {
                     try {

@@ -13,8 +13,8 @@ spring:
         active:
 #            - local3
 #            - local2
-#            - local
-            - compose
+            - local
+#            - compose
 #            - aws2
 #            - aws
     aop:

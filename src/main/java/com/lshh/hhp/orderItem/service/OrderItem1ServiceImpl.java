@@ -40,11 +40,24 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
         // 주문 리스트 작성
         List<OrderItem> newOrderItems = OrderItem.createNewOrderItemsYetNoPrice(userId, orderId, purchaseRequestList);
         productService.putPrice(newOrderItems);
-        newOrderItems = orderItemRepository.saveAllAndFlush(newOrderItems);
+        newOrderItems = orderItemRepository.saveAll(newOrderItems);
+        try{
+            // 포인트 차감
+            pointService.subtractByOrderItems(userId, newOrderItems);
 
-        // 포인트 차감
-        pointService.subtractByOrderItems(userId, newOrderItems);
+            // ## 2. 상품 재고 처리
+            productService.deduct(newOrderItems);
 
+            newOrderItems.forEach(orderItem -> orderItem.setState(Response.Result.SUCCESS.ordinal()));
+
+        }catch (Exception exception){
+            newOrderItems.forEach(orderItem -> orderItem.setState(Response.Result.FAIL.ordinal()));
+            throw exception;
+
+        }finally {
+            orderItemRepository.saveAll(newOrderItems);
+
+        }
         return newOrderItems;
     }
 
@@ -57,6 +70,10 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
         try{
             // 포인트 캔슬
             pointService.subtractByOrderItems(userId, targetList);
+
+            // 재고 다시 추가
+            productService.conduct(targetList);
+
             targetList.forEach(target -> target.setState(Response.Result.CANCELED.ordinal()));
 
         }catch (Exception exception){
@@ -64,7 +81,8 @@ public class OrderItem1ServiceImpl implements OrderItem1Service {
             throw exception;
 
         }finally {
-            orderItemRepository.saveAllAndFlush(targetList);
+            orderItemRepository.saveAll(targetList);
+
         }
         return targetList;
     }

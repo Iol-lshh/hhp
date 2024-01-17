@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -64,25 +65,23 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
             // ## 1. 구매 처리
             List<OrderItem> orderItems = orderItem1Service.orderEachProduct(userId, order.id(), requestProductDtos);
 
-            // ## 2. 상품 재고 처리
-            productService.deduct(orderItems);
-
             // # 3. 주문 완료: 종료
             order.setState(Response.Result.SUCCESS);
-            orderService.save(order);
-            return order.toDto();
 
         }catch (Exception exception){
             order.setState(Response.Result.FAIL);
-            orderService.save(order);
             publisher.publishEvent(new EventCancelOrderDto().orderId(order.id()));
             throw exception;
 
+        }finally {
+            orderService.save(order);
         }
+        return order.toDto();
     }
 
 
     @Override
+    @Async
     @EventListener
     public void onCancelOrderEvent(EventCancelOrderDto event) throws Exception {
         cancel(event.orderId());
@@ -104,12 +103,8 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
             // 4. 포인트 취소
             List<OrderItem> canceledList = orderItem1Service.cancelOrderItem(target.userId(), target.id());
 
-            // 5. 재고 다시 추가
-            productService.conduct(canceledList);
-
             // 6. 취소 완료 - 취소 실패시, 이전 상태로
             target.setState(Response.Result.CANCELED);
-            return target.toDto();
 
         }catch (Exception exception){
             target.setState(Response.Result.FAIL);
@@ -118,6 +113,7 @@ public class OrderOrchestratorServiceImpl implements OrderOrchestratorService {
         }finally {
             orderService.save(target);
         }
+        return target.toDto();
     }
 
     @Override

@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 //import org.springframework.cache.annotation.CachePut;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -88,6 +89,7 @@ public class PointServiceImpl implements PointService {
 
 
     @Override
+    @Async
     @EventListener
     public void onSquashPointEvent(EventSquashPointDto event) {
         squash(event.userId());

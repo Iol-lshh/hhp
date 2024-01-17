@@ -33,14 +33,14 @@ public class HttpRequestLoggerFilter implements Filter {
             // 동작
             filterChain.doFilter(servletRequest, servletResponse);
         } finally {
+            long endTime = Instant.now().toEpochMilli();
+            log.info(String.format("""
+                { "traceId": "%s", "executionTime": "%d ms" }"""
+                    , traceId, endTime - startTime));
+
             // finally는 어떤 경우(break, return, throw)에도, "무조건" 실행된다.
-            ThreadTraceHelper.removeTraceId();
+                ThreadTraceHelper.removeTraceId();
         }
 
-        long endTime = Instant.now().toEpochMilli();
-        long resultTime = endTime - startTime;
-        log.info(String.format("""
-            { "traceId": "%s", "resultTime": "%d ms" }"""
-                , traceId, resultTime));
     }
 }

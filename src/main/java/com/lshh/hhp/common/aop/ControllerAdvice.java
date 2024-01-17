@@ -38,7 +38,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     public <T> ResponseEntity<T> onException(Exception exception){
         String traceId = ThreadTraceHelper.getTraceId();
         log.error(String.format("""
-                { "traceid": "%s", "msg": "%s" }""", traceId, exception.getMessage()));
+                { "traceid": "%s", "msg": "[error] - %s" }""", traceId, exception.getMessage()));
         log.debug("", exception);
         return ResponseEntity.internalServerError().header("msg", exception.getMessage()).build();
     }

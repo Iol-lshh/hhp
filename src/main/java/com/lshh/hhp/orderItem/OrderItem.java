@@ -72,7 +72,7 @@ public class OrderItem {
         newOne.orderId = orderId;
         newOne.productId = productId;
         newOne.count = count;
-        newOne.state = Response.Result.OK.ordinal();
+        newOne.state = Response.Result.START.ordinal();
         return newOne;
     }
 
