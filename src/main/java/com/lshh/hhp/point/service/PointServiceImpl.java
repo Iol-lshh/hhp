@@ -39,10 +39,9 @@ public class PointServiceImpl implements PointService {
         // # 총 차감액
         int sumToPay = orderItems.stream().mapToInt(OrderItem::toPay).sum();
         // # 락 획득
-        List<Point> pointsForLock = pointRepository.findAllByUserIdWithLock(userId);
-
+        List<Point> pointsWithLock = pointRepository.findAllByUserIdWithLock(userId);
         // # 잔고 확인
-        int remain = countRemain(userId);
+        int remain = pointsWithLock.stream().mapToInt(Point::count).sum();
         // # 차감 가능 여부 확인
         if(remain - sumToPay < 0){
             throw new BusinessException(String.format("""
@@ -53,7 +52,7 @@ public class PointServiceImpl implements PointService {
         List<Point> pointList = Point.createNewSubtractPoints(orderItems);
 
         // 새로운 주문을 먼저 받을 수 있도록, 락 범위 너머의 리스트로 새로 제공
-        if(pointsForLock.size() > 10){
+        if(pointsWithLock.size() > 10){
             eventPublisher.publishEvent(EventSquashPointDto.of(userId));
 
         }
