@@ -1,13 +1,12 @@
 package com.lshh.hhp.point;
 
-import com.lshh.hhp.orderItem.OrderItem;
-import com.lshh.hhp.point.service.PointService;
-import com.lshh.hhp.product.service.ProductService;
+import com.lshh.hhp.domain.order.item.OrderItem;
+import com.lshh.hhp.domain.point.PointService;
+import com.lshh.hhp.domain.product.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;

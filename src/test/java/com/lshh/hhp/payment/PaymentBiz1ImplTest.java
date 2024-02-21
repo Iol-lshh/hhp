@@ -1,12 +1,13 @@
 package com.lshh.hhp.payment;
 
-import com.lshh.hhp.payment.dto.PaymentDto;
-import com.lshh.hhp.payment.service.PaymentService;
-import com.lshh.hhp.payment.service.Payment1ServiceImpl;
-import com.lshh.hhp.point.Point;
-import com.lshh.hhp.point.service.PointService;
-import com.lshh.hhp.user.User;
-import com.lshh.hhp.user.service.UserService;
+import com.lshh.hhp.domain.payment.Payment;
+import com.lshh.hhp.domain.payment.Payment1Service;
+import com.lshh.hhp.domain.payment.dto.PaymentDto;
+import com.lshh.hhp.domain.payment.PaymentService;
+import com.lshh.hhp.domain.user.UserService;
+import com.lshh.hhp.domain.point.Point;
+import com.lshh.hhp.domain.point.PointService;
+import com.lshh.hhp.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PaymentBiz1ImplTest {
 
     @InjectMocks
-    Payment1ServiceImpl paymentService;
+    Payment1Service paymentService;
 
     @Mock
     UserService userComponent;

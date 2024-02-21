@@ -2,11 +2,11 @@ package com.lshh.hhp.controller;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lshh.hhp.order.service.OrderOrchestratorService;
-import com.lshh.hhp.order.controller.OrderController;
+import com.lshh.hhp.controller.order.OrderController;
 import com.lshh.hhp.common.Response;
 import com.lshh.hhp.common.ResultDto;
-import com.lshh.hhp.order.dto.OrderDto;
+import com.lshh.hhp.domain.order.OrderOrchestratorService;
+import com.lshh.hhp.domain.order.dto.OrderDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,14 +1,14 @@
 package com.lshh.hhp.orderItem;
 
 import com.lshh.hhp.common.Response;
-import com.lshh.hhp.orderItem.dto.OrderItemDto;
-import com.lshh.hhp.orderItem.repository.OrderItemRepository;
-import com.lshh.hhp.orderItem.service.OrderItem1ServiceImpl;
-import com.lshh.hhp.point.service.PointService;
-import com.lshh.hhp.product.Product;
-import com.lshh.hhp.product.dto.ProductDto;
-import com.lshh.hhp.product.service.ProductService;
-import com.lshh.hhp.product.dto.RequestProductDto;
+import com.lshh.hhp.domain.order.item.OrderItem;
+import com.lshh.hhp.domain.order.item.OrderItem1Service;
+import com.lshh.hhp.domain.order.item.dto.OrderItemDto;
+import com.lshh.hhp.domain.order.item.OrderItemRepository;
+import com.lshh.hhp.domain.product.Product;
+import com.lshh.hhp.domain.product.dto.ProductDto;
+import com.lshh.hhp.domain.product.ProductService;
+import com.lshh.hhp.domain.product.dto.RequestProductDto;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,14 +33,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class OrderItem1ServiceImplTest {
 
     @Mock
-    PointService pointService;
-    @Mock
     OrderItemRepository orderItemRepository;
     @Mock
     ProductService productService;
 
     @InjectMocks
-    OrderItem1ServiceImpl orderItem1ServiceImpl;
+    OrderItem1Service orderItem1Service;
 
     OrderItemDto orderItemDto;
     RequestProductDto requestPurchaseDto;
@@ -70,7 +68,7 @@ class OrderItem1ServiceImplTest {
         when(orderItemRepository.saveAllAndFlush(any())).thenReturn(Arrays.asList(orderItem));
 
         // Act
-        List<OrderItem> result = orderItem1ServiceImpl.orderEachProduct(orderItemDto.userId(), orderItemDto.orderId(), Collections.singletonList(requestPurchaseDto));
+        List<OrderItem> result = orderItem1Service.orderEachProduct(orderItemDto.userId(), orderItemDto.orderId(), Collections.singletonList(requestPurchaseDto));
 
         // Assert
         assertNotNull(result);
@@ -92,7 +90,7 @@ class OrderItem1ServiceImplTest {
         // Mock ProductService's favorite behavior
         when(productService.favorite(5)).thenReturn(favoriteList);
 
-        List<ProductDto> favoriteResult = orderItem1ServiceImpl.favorite(5);
+        List<ProductDto> favoriteResult = orderItem1Service.favorite(5);
 
         assertThat(favoriteResult).hasSize(5);
         AssertionsForClassTypes.assertThat(favoriteResult.get(0).id()).isEqualTo(0L);

@@ -1,13 +1,13 @@
 package com.lshh.hhp.order;
 
-import com.lshh.hhp.order.dto.OrderDto;
-import com.lshh.hhp.order.service.OrderOrchestratorService;
-import com.lshh.hhp.payment.service.Payment1Service;
-import com.lshh.hhp.point.service.PointService;
-import com.lshh.hhp.product.Product;
-import com.lshh.hhp.product.service.ProductService;
+import com.lshh.hhp.domain.order.OrderOrchestratorService;
+import com.lshh.hhp.domain.order.dto.OrderDto;
+import com.lshh.hhp.domain.payment.Payment1Service;
+import com.lshh.hhp.domain.point.PointService;
+import com.lshh.hhp.domain.product.Product;
+import com.lshh.hhp.domain.product.ProductService;
 import com.lshh.hhp.common.Response.Result;
-import com.lshh.hhp.product.dto.RequestProductDto;
+import com.lshh.hhp.domain.product.dto.RequestProductDto;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;

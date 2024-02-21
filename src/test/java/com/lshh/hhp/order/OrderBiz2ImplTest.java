@@ -1,18 +1,19 @@
 package com.lshh.hhp.order;
 
 import com.lshh.hhp.common.exception.BusinessException;
-import com.lshh.hhp.order.dto.OrderDto;
-import com.lshh.hhp.order.service.OrderService;
-import com.lshh.hhp.order.service.OrderOrchestratorServiceImpl;
-import com.lshh.hhp.orderItem.OrderItem;
-import com.lshh.hhp.product.service.ProductService;
-import com.lshh.hhp.user.User;
-import com.lshh.hhp.user.service.UserService;
-import com.lshh.hhp.orderItem.service.OrderItem1Service;
+import com.lshh.hhp.domain.order.Order;
+import com.lshh.hhp.domain.order.OrderOrchestratorService;
+import com.lshh.hhp.domain.order.OrderService;
+import com.lshh.hhp.domain.order.dto.OrderDto;
+import com.lshh.hhp.domain.order.item.OrderItem;
+import com.lshh.hhp.domain.product.ProductService;
+import com.lshh.hhp.domain.user.User;
+import com.lshh.hhp.domain.order.item.OrderItem1Service;
 import com.lshh.hhp.common.Response.Result;
-import com.lshh.hhp.product.dto.ProductDto;
-import com.lshh.hhp.orderItem.dto.OrderItemDto;
-import com.lshh.hhp.product.dto.RequestProductDto;
+import com.lshh.hhp.domain.product.dto.ProductDto;
+import com.lshh.hhp.domain.order.item.dto.OrderItemDto;
+import com.lshh.hhp.domain.product.dto.RequestProductDto;
+import com.lshh.hhp.domain.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.*;
 public class OrderBiz2ImplTest {
 
     @InjectMocks
-    private OrderOrchestratorServiceImpl orderOrchestratorService;
+    private OrderOrchestratorService orderOrchestratorService;
     @Mock
     private OrderService orderService;
 
